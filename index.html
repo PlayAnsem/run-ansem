@@ -465,27 +465,13 @@ function drawSky(){
   ctx.fillStyle=g; ctx.fillRect(0,0,W,hz+2); ops++;
   const sky=IMG.sky;
   if(sky){
-    const par = sim ? (sim.player.laneF-1)*-14 : 0;
-    // cover the full frame width even with parallax offset
-    const sh0 = hz*0.86;
-    let sw = sh0*sky.width/sky.height;
-    let sh = sh0;
-    const need = W + 40; // parallax margin
-    if (sw < need){ const k=need/sw; sw*=k; sh*=k; }
+    // static skyline (no parallax) — only the clean top 62% of the art;
+    // the source image's lower third is rough foreground blocks, cropped out
+    const srcH = sky.height*0.62;
+    const sw = W, sh = W*srcH/sky.width;
     ctx.globalAlpha=0.92;
-    ctx.drawImage(sky, W/2-sw/2+par, hz-sh+4, sw, sh); ops++;
+    ctx.drawImage(sky, 0,0, sky.width,srcH, 0, hz-sh+4, sw, sh); ops++;
     ctx.globalAlpha=1;
-  }
-  // near silhouettes (procedural layer, deterministic, wraps across full width)
-  const par2 = sim ? (sim.player.laneF-1)*-26 : 0;
-  ctx.fillStyle="#0c1f1a";
-  // continuous base band so no gaps ever show at the sides
-  ctx.fillRect(0, hz-hz*0.055, W, hz*0.055+2); ops++;
-  const bw=W*0.16, span=W+bw*2;
-  for(let i=0;i<12;i++){
-    const bh=hz*(0.10+((i*37)%5)*0.028);
-    let bx=((i*bw*1.02+par2)%span+span)%span - bw;
-    ctx.fillRect(bx, hz-bh, bw, bh+2); ops++;
   }
   // horizon glow
   const gg=ctx.createLinearGradient(0,hz-14,0,hz+22);
@@ -504,8 +490,7 @@ function drawRoad(){
   ctx.fillStyle=g;
   ctx.beginPath();
   ctx.moveTo(W/2-roadHalf(proj(0))*1.05, by);
-  ctx.lineTo(W/2-roadHalf(proj(CFG.viewDist))*1.05, yAt(proj(CFG.viewDist)));
-  ctx.lineTo(W/2+roadHalf(proj(CFG.viewDist))*1.05, yAt(proj(CFG.viewDist)));
+  ctx.lineTo(W/2, hz); // converge all the way to the skyline vanishing point
   ctx.lineTo(W/2+roadHalf(proj(0))*1.05, by);
   ctx.closePath(); ctx.fill(); ops++;
   // glowing lime edges
@@ -514,7 +499,7 @@ function drawRoad(){
     ctx.shadowColor="rgba(163,255,60,.9)"; ctx.shadowBlur=12;
     ctx.beginPath();
     ctx.moveTo(W/2+s*roadHalf(proj(0))*1.05, by);
-    ctx.lineTo(W/2+s*roadHalf(proj(CFG.viewDist))*1.05, yAt(proj(CFG.viewDist)));
+    ctx.lineTo(W/2, hz);
     ctx.stroke(); ops++;
     ctx.shadowBlur=0;
   }
@@ -539,6 +524,14 @@ function drawRoad(){
     }
   }
   ctx.globalAlpha=1;
+  // neon vanishing point — the road melts into the glow at the skyline
+  const R=W*0.22;
+  const vg=ctx.createRadialGradient(W/2,hz,0,W/2,hz,R);
+  vg.addColorStop(0,"rgba(210,255,140,.95)");
+  vg.addColorStop(0.35,"rgba(163,255,60,.55)");
+  vg.addColorStop(1,"rgba(163,255,60,0)");
+  ctx.fillStyle=vg;
+  ctx.fillRect(W/2-R,hz-R,R*2,R*2); ops++;
 }
 function drawEntity(e){
   const z=e.z-sim.dist;
@@ -593,19 +586,6 @@ function drawPlayer(){
   if(!pl.airborne){ ctx.translate(0, -Math.abs(Math.sin(sim.runPhase*Math.PI*2))*m*0.05); }
   if(img){ ctx.drawImage(img,-ww/2,-hh/2,ww,hh); ops++; }
   ctx.restore();
-}
-function drawSpeedLines(){
-  if(!sim || sim.speed<26) return;
-  const k=(sim.speed-26)/(CFG.maxSpeed-26);
-  ctx.strokeStyle=`rgba(255,255,255,${0.12+0.3*k})`;
-  ctx.lineWidth=2;
-  const n=Math.floor(3+k*7);
-  for(let i=0;i<n;i++){
-    const seed=(i*127+Math.floor(sim.t*20)*31)%1000;
-    const sx=(seed*7919%W), sy=(seed*104729%(H*0.5))+H*0.05;
-    const len=H*0.06+k*H*0.1;
-    ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(sx,sy+len); ctx.stroke(); ops++;
-  }
 }
 function drawParticles(dt){
   for(const p of parts){
@@ -709,7 +689,6 @@ function frameFn(now){
     for(const e of list) drawEntity(e);
     drawPlayer();
   }
-  drawSpeedLines();
   drawParticles(dt);
   runningDust(dt);
   ctx.restore();
