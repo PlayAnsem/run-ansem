@@ -35,6 +35,38 @@
   @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.12)}}
   #againBtn{margin-top:22px;padding:14px 34px;border-radius:16px;background:linear-gradient(180deg,#2a3f33,#152820);border:3px solid #a3ff3c;box-shadow:0 0 24px rgba(163,255,60,.4),inset 0 2px 0 rgba(255,255,255,.15)}
   #againBtn span{font-size:24px;font-weight:900;font-style:italic;letter-spacing:2px;background:linear-gradient(180deg,#ffd23f,#ff7a1a,#ff3d2e);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6))}
+  /* ---- Bull Casino ---- */
+  #casinoBtns{display:flex;gap:12px;margin-top:12px}
+  .cBtn{padding:11px 18px;border-radius:14px;background:linear-gradient(180deg,#1a1408,#0d0a04);border:2px solid #c9a13d;box-shadow:0 0 18px rgba(201,161,61,.35),inset 0 1px 0 rgba(255,235,170,.25);color:#ffd76a;font-weight:900;font-style:italic;font-size:14px;letter-spacing:1px;font-family:inherit}
+  #casino{display:none;background:radial-gradient(120% 90% at 50% 30%,#17130a 0%,#0c0906 55%,#050403 100%);justify-content:flex-start;z-index:7}
+  #casHead{width:100%;display:flex;align-items:center;justify-content:space-between;padding:max(10px,env(safe-area-inset-top)) 12px 6px;box-sizing:border-box}
+  #casBack{font-size:22px;color:#ffd76a;width:42px;height:42px;border-radius:12px;border:2px solid rgba(201,161,61,.6);background:rgba(20,15,6,.6)}
+  #casTitle{font-size:20px;font-style:italic;letter-spacing:2px;background:linear-gradient(180deg,#ffe9a8,#c9a13d);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px #000)}
+  #casWallet{color:#ffd23f;font-size:16px;text-shadow:0 2px 6px #000;margin-right:56px}
+  #felt{position:relative;width:94%;flex:1;margin:2px auto 6px;border-radius:26px;border:3px solid #c9a13d;box-shadow:inset 0 0 60px rgba(0,0,0,.75),0 0 30px rgba(201,161,61,.18);background:radial-gradient(90% 70% at 50% 40%,#14402a 0%,#0d2b1c 60%,#081b12 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:10px 6px;box-sizing:border-box;overflow:hidden}
+  #feltBrand{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;opacity:.42;pointer-events:none}
+  #feltBrand .bull{font-size:46px;filter:sepia(1) saturate(2.6) drop-shadow(0 0 12px rgba(201,161,61,.7))}
+  #feltBrand .brand{font-size:22px;font-style:italic;letter-spacing:3px;color:#c9a13d;text-shadow:0 0 14px rgba(201,161,61,.55)}
+  .area{display:flex;flex-direction:column;align-items:center;gap:4px;z-index:1}
+  .cardRow{display:flex;gap:5px;justify-content:center;min-height:70px;align-items:center;z-index:1}
+  .rowLbl{color:#c9b380;font-size:11px;font-style:italic;letter-spacing:2px;text-shadow:0 1px 4px #000}
+  .pcard{width:46px;height:66px;border-radius:7px;background:#f7f2e6;color:#16130c;position:relative;box-shadow:0 3px 8px rgba(0,0,0,.65);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;animation:dealIn .28s ease both}
+  .pcard .rk{font-size:19px;font-weight:900;line-height:1}
+  .pcard .st{font-size:17px;line-height:1.15}
+  .pcard.red{color:#c22a1e}
+  .pcard.back{background:linear-gradient(135deg,#11150c,#1d2410);border:2px solid #c9a13d;box-sizing:border-box}
+  .pcard.back::after{content:"🐂";font-size:20px;filter:sepia(1) saturate(2.4)}
+  @keyframes dealIn{from{transform:translateY(-16px) scale(.7);opacity:0}to{transform:none;opacity:1}}
+  #casMsg{min-height:24px;color:#ffe9a8;font-size:15px;font-style:italic;text-shadow:0 2px 6px #000;text-align:center;padding:0 10px}
+  #casCtrl{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;align-items:center;padding:8px 6px max(12px,env(safe-area-inset-bottom))}
+  .chip{width:52px;height:52px;border-radius:50%;border:4px dashed rgba(255,255,255,.75);background:radial-gradient(circle at 35% 30%,#e8c15a,#a5762a);color:#1a1408;font-weight:900;font-size:13px;box-shadow:0 3px 8px rgba(0,0,0,.6);font-family:inherit}
+  .chip.c25{background:radial-gradient(circle at 35% 30%,#e05a4e,#8d2b22);color:#fff}
+  .chip.c50{background:radial-gradient(circle at 35% 30%,#4ea0e0,#22538d);color:#fff}
+  .chip.c100{background:radial-gradient(circle at 35% 30%,#3a3a3a,#0a0a0a);color:#ffd76a;border-color:#ffd76a}
+  .act{padding:12px 20px;border-radius:14px;border:2px solid #c9a13d;background:linear-gradient(180deg,#2a2210,#151004);color:#ffd76a;font-weight:900;font-size:15px;letter-spacing:1px;font-style:italic;font-family:inherit;box-shadow:0 0 16px rgba(201,161,61,.3)}
+  .act.green{border-color:#a3ff3c;color:#c8ff9a;box-shadow:0 0 16px rgba(163,255,60,.3)}
+  .act.red{border-color:#ff5a4e;color:#ffb3ad;box-shadow:0 0 16px rgba(255,90,78,.3)}
+  button:disabled{opacity:.35}
   #dev{position:absolute;top:4px;left:4px;color:#0f0;font:12px monospace;display:none;z-index:99;background:rgba(0,0,0,.5);padding:2px 6px}
   #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:6}
 </style>
@@ -50,6 +82,10 @@
   <div id="title" class="screen">
     <div id="titleArt"></div><div id="titleShade"></div>
     <button id="playBtn" class="btn" aria-label="Play"><img src="./assets/play_btn.png" alt="PLAY"></button>
+    <div id="casinoBtns">
+      <button id="bjBtn" class="btn cBtn">♠ BULL JACK</button>
+      <button id="pkBtn" class="btn cBtn">♣ BULL POKER</button>
+    </div>
     <div id="hint"></div>
     <div id="bestTitle"></div>
   </div>
@@ -61,6 +97,21 @@
     <div class="stat" id="ovBest"></div>
     <div id="newBest"></div>
     <button id="againBtn" class="btn"><span></span></button>
+  </div>
+  <div id="casino" class="screen">
+    <div id="casHead">
+      <button id="casBack" class="btn" aria-label="Back">←</button>
+      <div id="casTitle">BULL JACK</div>
+      <div id="casWallet">$ 0</div>
+    </div>
+    <div id="felt">
+      <div id="feltBrand"><div class="bull">🐂</div><div class="brand">$ANSEM</div></div>
+      <div class="area"><div class="rowLbl" id="dealerLbl">DEALER</div><div class="cardRow" id="dealerRow"></div></div>
+      <div class="cardRow" id="boardRow"></div>
+      <div class="area"><div class="cardRow" id="playerRow"></div><div class="rowLbl" id="playerLbl">YOU</div></div>
+    </div>
+    <div id="casMsg"></div>
+    <div id="casCtrl"></div>
   </div>
   <button id="mute" class="btn" aria-label="Mute"></button>
   <div id="dev"></div>
@@ -430,6 +481,7 @@ if (dev) $("dev").style.display="block";
 function showTitle(){
   state="title";
   $("title").style.display="flex"; $("over").style.display="none"; $("hud").style.display="none";
+  $("casino").style.display="none";
   $("bestTitle").textContent = best()>0 ? `${STR.best}: ${best()} ${STR.distanceUnit}` : STR.tapToStart;
 }
 function startRun(){
@@ -456,6 +508,183 @@ function gameOver(){
 function uiAdvance(){ if(state==="title"||state==="over") startRun(); }
 $("playBtn").addEventListener("click", startRun);
 $("againBtn").addEventListener("click", startRun);
+
+// ---------- BULL CASINO: Bull Jack (blackjack) + Bull Poker (heads-up hold'em) ----------
+// Wallet is the shared run-coin balance — you gamble what you collected on the road.
+const SUITS=["♠","♥","♦","♣"];
+const rkTxt=r=>r<=10?String(r):{11:"J",12:"Q",13:"K",14:"A"}[r];
+function newDeck(){
+  const d=[];
+  for(const s of SUITS)for(let r=2;r<=14;r++)d.push({r,s});
+  for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]];}
+  return d;
+}
+function cardEl(c,down){
+  const e=document.createElement("div");
+  e.className="pcard"+(down?" back":(c.s==="♥"||c.s==="♦")?" red":"");
+  if(!down)e.innerHTML=`<div class="rk">${rkTxt(c.r)}</div><div class="st">${c.s}</div>`;
+  return e;
+}
+const getW=()=>Number(localStorage.getItem("bullrun.coins")||0);
+const setW=v=>{localStorage.setItem("bullrun.coins",String(v));$("casWallet").textContent="$ "+v;};
+let casGame=null,casSeq=0,bet=0,deck=null,pHand=[],dHand=[],board=[];
+function casLater(ms,fn){const s=casSeq;setTimeout(()=>{if(s===casSeq)fn();},ms);}
+function casMsg(t){$("casMsg").textContent=t;}
+function casRows(dealer,brd,player){
+  const put=(id,arr)=>{const el=$(id);el.innerHTML="";for(const [c,down] of arr)el.appendChild(cardEl(c,down));};
+  put("dealerRow",dealer);put("boardRow",brd);put("playerRow",player);
+}
+function casCtrl(btns){
+  const c=$("casCtrl");c.innerHTML="";
+  for(const b of btns){
+    const e=document.createElement("button");
+    e.className="btn "+(b.cls||"act");e.textContent=b.t;e.disabled=!!b.dis;e.onclick=b.f;
+    c.appendChild(e);
+  }
+}
+function openCasino(g){
+  casGame=g;casSeq++;state="casino";
+  $("title").style.display="none";$("over").style.display="none";$("casino").style.display="flex";
+  $("casTitle").textContent=g==="bj"?"BULL JACK":"BULL POKER";
+  if(getW()<25){setW(getW()+250);}else setW(getW());
+  initAudio();
+  betPhase(getW()<=250?"HOUSE STAKE 🐂 GOOD LUCK":"");
+}
+$("bjBtn").addEventListener("click",()=>openCasino("bj"));
+$("pkBtn").addEventListener("click",()=>openCasino("pk"));
+$("casBack").addEventListener("click",()=>{casSeq++;$("casino").style.display="none";showTitle();});
+function betPhase(note){
+  bet=0;pHand=[];dHand=[];board=[];
+  casRows([],[],[]);
+  $("dealerLbl").textContent="DEALER";$("playerLbl").textContent="YOU";
+  $("boardRow").style.display=casGame==="pk"?"flex":"none";
+  updateBet(note);
+}
+function updateBet(note){
+  casMsg(note||((casGame==="bj"?"BET":"ANTE")+": $"+bet+(bet?"":" · TAP A CHIP")));
+  const chips=[10,25,50,100].map(v=>({t:"$"+v,cls:"chip c"+v,dis:getW()<v,
+    f:()=>{setW(getW()-v);bet+=v;updateBet();}}));
+  casCtrl([...chips,
+    {t:"DEAL",cls:"act green",dis:bet<=0,f:()=>casGame==="bj"?bjDeal():pkDeal()},
+    {t:"RESET",dis:bet<=0,f:()=>{setW(getW()+bet);bet=0;updateBet();}}]);
+}
+function casEnd(txt,ret,won){
+  casMsg(txt);
+  if(ret>0)setW(getW()+ret);
+  if(won)sfx("sfx_coin",0.9);else if(won===false)sfx("sfx_crash",0.45);
+  bet=0;
+  casCtrl([{t:"NEW HAND",cls:"act green",f:()=>betPhase()}]);
+}
+// --- Bull Jack ---
+const bjVal=h=>{
+  let t=0,a=0;
+  for(const c of h){ if(c.r===14){a++;t+=11;} else t+=Math.min(10,c.r); }
+  while(t>21&&a>0){t-=10;a--;}
+  return t;
+};
+function bjRows(hideHole){
+  casRows(dHand.map((c,i)=>[c,hideHole&&i===0]),[],pHand.map(c=>[c,false]));
+  $("dealerLbl").textContent="DEALER"+(hideHole?"":" · "+bjVal(dHand));
+  $("playerLbl").textContent="YOU · "+bjVal(pHand);
+}
+function bjDeal(){
+  deck=newDeck();pHand=[deck.pop(),deck.pop()];dHand=[deck.pop(),deck.pop()];
+  bjRows(true);casCtrl([]);
+  if(bjVal(pHand)===21){
+    bjRows(false);
+    if(bjVal(dHand)===21)return casEnd("BOTH BLACKJACK — PUSH",bet);
+    return casEnd("BLACKJACK! 🐂 +$"+Math.floor(bet*1.5),bet+Math.floor(bet*1.5),true);
+  }
+  bjTurn();
+}
+function bjTurn(){
+  if(bjVal(pHand)>21){bjRows(false);return casEnd("BUST — REKT 🐻",0,false);}
+  const canDbl=pHand.length===2&&getW()>=bet;
+  casMsg("YOUR MOVE · BET $"+bet);
+  casCtrl([
+    {t:"HIT",f:()=>{pHand.push(deck.pop());bjRows(true);bjTurn();}},
+    {t:"STAND",cls:"act green",f:bjStand},
+    {t:"DOUBLE",dis:!canDbl,f:()=>{
+      setW(getW()-bet);bet*=2;pHand.push(deck.pop());bjRows(true);
+      if(bjVal(pHand)>21){bjRows(false);casEnd("BUST — REKT 🐻",0,false);}else bjStand();
+    }}]);
+}
+function bjStand(){
+  casCtrl([]);bjRows(false);casMsg("DEALER DRAWS...");
+  const step=()=>{
+    if(bjVal(dHand)<17){
+      casLater(550,()=>{dHand.push(deck.pop());bjRows(false);step();});
+    }else casLater(550,()=>{
+      const dv=bjVal(dHand),pv=bjVal(pHand);
+      if(dv>21)casEnd("DEALER BUSTS! +$"+bet,bet*2,true);
+      else if(pv>dv)casEnd("YOU WIN! +$"+bet,bet*2,true);
+      else if(pv<dv)casEnd("DEALER WINS 🐻",0,false);
+      else casEnd("PUSH",bet);
+    });
+  };
+  step();
+}
+// --- Bull Poker (heads-up showdown vs dealer) ---
+const HAND_NAMES=["HIGH CARD","PAIR","TWO PAIR","TRIPS","STRAIGHT","FLUSH","FULL HOUSE","QUADS","STRAIGHT FLUSH"];
+function rank5(cs){
+  const rs=cs.map(c=>c.r).sort((a,b)=>b-a);
+  const flush=cs.every(c=>c.s===cs[0].s);
+  const cnt={};for(const r of rs)cnt[r]=(cnt[r]||0)+1;
+  const groups=Object.entries(cnt).map(([r,n])=>[n,+r]).sort((a,b)=>b[0]-a[0]||b[1]-a[1]);
+  const uniq=[...new Set(rs)];
+  let str=0;
+  if(uniq.length===5){
+    if(uniq[0]-uniq[4]===4)str=uniq[0];
+    else if(uniq[0]===14&&uniq[1]===5)str=5; // wheel A-2-3-4-5
+  }
+  if(flush&&str)return [8,str];
+  if(groups[0][0]===4)return [7,groups[0][1],groups[1][1]];
+  if(groups[0][0]===3&&groups[1][0]===2)return [6,groups[0][1],groups[1][1]];
+  if(flush)return [5,...rs];
+  if(str)return [4,str];
+  if(groups[0][0]===3)return [3,groups[0][1],groups[1][1],groups[2][1]];
+  if(groups[0][0]===2&&groups[1][0]===2)return [2,groups[0][1],groups[1][1],groups[2][1]];
+  if(groups[0][0]===2)return [1,groups[0][1],groups[1][1],groups[2][1],groups[3][1]];
+  return [0,...rs];
+}
+const cmpRank=(a,b)=>{for(let i=0;i<Math.max(a.length,b.length);i++){const d=(a[i]||0)-(b[i]||0);if(d)return d;}return 0;};
+function best7(cs){
+  let best=null;
+  for(let i=0;i<7;i++)for(let j=i+1;j<7;j++){
+    const r=rank5(cs.filter((_,x)=>x!==i&&x!==j));
+    if(!best||cmpRank(r,best)>0)best=r;
+  }
+  return best;
+}
+function pkRows(revBoard,revDealer){
+  casRows(dHand.map(c=>[c,!revDealer]),board.map((c,i)=>[c,i>=revBoard]),pHand.map(c=>[c,false]));
+}
+function pkDeal(){
+  deck=newDeck();pHand=[deck.pop(),deck.pop()];dHand=[deck.pop(),deck.pop()];
+  board=[deck.pop(),deck.pop(),deck.pop(),deck.pop(),deck.pop()];
+  pkRows(0,false);
+  const callCost=Math.min(bet,getW());
+  casMsg("FOLD, OR CALL +$"+callCost+" TO SEE THE BOARD");
+  casCtrl([
+    {t:"FOLD",cls:"act red",f:()=>{pkRows(5,true);casEnd("FOLDED — ANTE LOST 🐻",0);}},
+    {t:"CALL +$"+callCost,cls:"act green",f:()=>{setW(getW()-callCost);bet+=callCost;pkShowdown();}}]);
+}
+function pkShowdown(){
+  casCtrl([]);casMsg("FLOP...");
+  casLater(650,()=>{pkRows(3,false);casMsg("TURN...");
+  casLater(750,()=>{pkRows(4,false);casMsg("RIVER...");
+  casLater(750,()=>{pkRows(5,false);casMsg("SHOWDOWN 🐂");
+  casLater(800,()=>{
+    pkRows(5,true);
+    const pr=best7([...pHand,...board]),dr=best7([...dHand,...board]),c=cmpRank(pr,dr);
+    const pn=HAND_NAMES[pr[0]],dn=HAND_NAMES[dr[0]];
+    casLater(700,()=>{
+      if(c>0)casEnd(pn+" BEATS "+dn+" — +$"+bet,bet*2,true);
+      else if(c<0)casEnd(dn+" BEATS "+pn+" — REKT 🐻",0,false);
+      else casEnd(pn+" — PUSH",bet);
+    });
+  });});});});
+}
 
 // ---------- render helpers ----------
 function drawSky(){
@@ -703,7 +932,13 @@ function frameFn(now){
     $("dev").textContent=`${fps} fps · ${opsShown} ops · ${sim?sim.entities.length:0} ent`;
   }
 }
-imgReady.then(()=>{ showTitle(); if(new URLSearchParams(location.search).has("auto")) startRun(); requestAnimationFrame(frameFn); });
+imgReady.then(()=>{
+  showTitle();
+  const q=new URLSearchParams(location.search);
+  if(q.has("auto")) startRun();
+  const cas=q.get("cas"); if(cas==="bj"||cas==="pk") openCasino(cas);
+  requestAnimationFrame(frameFn);
+});
 </script>
 </body>
 </html>
