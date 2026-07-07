@@ -1,0 +1,15 @@
+BULL RUN — Offline Surumu
+=========================
+
+NASIL OYNANIR
+1. Bu klasoru oldugu gibi Masaustune cikarin (BullRun klasoru).
+2. index.html dosyasina cift tiklayin — tarayicida acilir, internet gerekmez.
+
+KONTROLLER
+- Sol/Sag ok veya A/D : serit degistir
+- Bosluk / Yukari ok / W : zipla
+- Dokunmatik: sola/saga kaydir, ziplamak icin dokun veya yukari kaydir
+- Sag ustteki hoparlor simgesi: ses ac/kapa
+
+En iyi mesafe kaydiniz tarayicinizda saklanir.
+Iyi kosular! REKT olmayin.
