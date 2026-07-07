@@ -533,38 +533,6 @@ function drawRoad(){
   ctx.fillStyle=vg;
   ctx.fillRect(W/2-R,hz-R,R*2,R*2); ops++;
 }
-// ---------- roadside city (billboards cropped from the skyline art, both sides) ----------
-const hashK = k => { let h=(k*2654435761)>>>0; h^=h>>>13; h=(h*2246822519)>>>0; h=(h^(h>>>16))>>>0; return h/4294967296; };
-// horizontal crops of skyline_far.jpg containing clean building clusters (avoid the central glow)
-const CITY_CROPS = [
-  {sx:  40, sw: 380},
-  {sx: 140, sw: 400},
-  {sx: 780, sw: 400},
-  {sx: 870, sw: 380},
-];
-const CITY_SY = 200, CITY_SH = 230; // dense dark building band — avoids bright sky and rough foreground blocks
-function drawScenery(){
-  const sky=IMG.sky; if(!sky) return;
-  const dist = sim?sim.dist:0, SP=7;
-  const k0=Math.ceil((dist-2)/SP), k1=Math.floor((dist+CFG.viewDist)/SP);
-  for(let k=k1;k>=k0;k--){ // far → near, painter order
-    const z=k*SP-dist, p=proj(z);
-    if(p<=0.03||p>1.6) continue;
-    const y=yAt(p), m=meterPx(p);
-    const fade=z<0?Math.max(0,1+z/2):Math.min(1,(CFG.viewDist-z)/16);
-    if(fade<=0) continue;
-    ctx.globalAlpha=fade;
-    for(const side of [-1,1]){
-      const r=hashK(k*2+(side+1)/2);
-      const crop=CITY_CROPS[Math.floor(hashK(k*7+side+9)*CITY_CROPS.length)];
-      const bh=(6.5+r*3)*m;                       // building block height in world meters
-      const bw=bh*(crop.sw/CITY_SH);
-      const x=W/2+side*(roadHalf(p)*1.12+bw*0.5); // inner edge hugs the road, block extends outward
-      ctx.drawImage(sky, crop.sx, CITY_SY, crop.sw, CITY_SH, x-bw/2, y-bh, bw, bh); ops++;
-    }
-  }
-  ctx.globalAlpha=1;
-}
 function drawEntity(e){
   const z=e.z-sim.dist;
   if(z<-4.2||z>CFG.viewDist) return;
@@ -713,7 +681,6 @@ function frameFn(now){
     ctx.translate((Math.random()-0.5)*shake,(Math.random()-0.5)*shake); }
   drawSky();
   drawRoad();
-  drawScenery();
   if(sim){
     // painter order: far → near
     const list=sim.entities;
