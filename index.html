@@ -57,8 +57,8 @@
   .stat b{color:#ffd23f;font-weight:400}
   #newBest{color:#a3ff3c;font-size:24px;margin-top:8px;text-shadow:0 0 14px rgba(163,255,60,.9);display:none;animation:pulse 1s infinite alternate;letter-spacing:2px}
   @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.12)}}
-  #againBtn{margin-top:22px;padding:14px 36px;border-radius:18px;background:linear-gradient(170deg,#2f4636,#152820);border:2px solid rgba(163,255,60,.75);box-shadow:0 6px 20px rgba(0,0,0,.5),0 0 24px rgba(163,255,60,.35),inset 0 2px 0 rgba(255,255,255,.16),inset 0 -4px 10px rgba(0,0,0,.4)}
-  #againBtn span{font-family:"Lilita One","Arial Black",sans-serif;font-size:26px;letter-spacing:2px;background:linear-gradient(180deg,#ffd23f,#ff7a1a,#ff3d2e);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6))}
+  #againBtn{margin-top:22px;background:none;border:none;box-shadow:none;padding:0;cursor:pointer}
+  #againBtn img{width:min(52vw,250px);display:block;filter:drop-shadow(0 0 20px rgba(163,255,60,.35)) drop-shadow(0 5px 12px rgba(0,0,0,.6))}
   /* ---- topbar: modern game HUD ---- */
   #topbar{position:absolute;top:max(10px,env(safe-area-inset-top));left:10px;right:10px;display:flex;align-items:center;gap:9px;z-index:8}
   .tbBtn{width:46px;height:46px;border-radius:16px;flex-shrink:0;
@@ -83,16 +83,12 @@
     text-shadow:0 1px 3px rgba(0,0,0,.7)}
   #tbGold img{width:24px;height:24px;filter:drop-shadow(0 0 6px rgba(255,210,63,.6))}
   #playRow{display:flex;align-items:center;gap:13px}
-  .sideBtn{padding:12px 15px;border-radius:16px;cursor:pointer;transform:rotate(-2.5deg);
-    background:linear-gradient(170deg,#46586a,#232e38 60%,#161e25);
-    border:3px solid #0d1318;
-    box-shadow:0 6px 16px rgba(0,0,0,.55),0 0 14px rgba(163,255,60,.15),inset 0 2px 0 rgba(255,255,255,.18),inset 0 -4px 10px rgba(0,0,0,.45)}
+  .sideBtn{background:none;border:none;box-shadow:none;padding:0;cursor:pointer;transform:rotate(-2.5deg)}
   .sideBtn:last-child{transform:rotate(2.5deg)}
-  .sideBtn span{font-size:15px;font-weight:900;font-style:italic;letter-spacing:1px;
-    background:linear-gradient(180deg,#ffd23f,#ff7a1a 70%,#ff3d2e);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    filter:drop-shadow(0 2px 2px rgba(0,0,0,.7))}
+  .sideBtn img{height:48px;display:block;filter:drop-shadow(0 5px 14px rgba(0,0,0,.55))}
   #lbBtn{margin-left:auto}
+  .imgBtn{background:none!important;border:none!important;box-shadow:none!important;padding:0;cursor:pointer;backdrop-filter:none!important}
+  .imgBtn img{display:block;height:46px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.55))}
   #tbLives{display:flex;align-items:center;gap:6px;height:46px;padding:0 13px;border-radius:16px;flex-shrink:0;
     border:1px solid rgba(255,80,92,.38);
     background:linear-gradient(160deg,rgba(92,20,28,.88),rgba(28,6,9,.92));
@@ -219,15 +215,8 @@
     text-shadow:0 1px 2px rgba(0,0,0,.8)}
   #potChips{display:flex;gap:7px;align-items:flex-end;min-height:54px}
   .pile{position:relative;width:30px;height:58px}
-  .mchip{position:absolute;left:0;width:30px;height:30px;border-radius:50%;box-sizing:border-box;
-    border:3px dashed rgba(255,255,255,.72);
-    box-shadow:0 2px 5px rgba(0,0,0,.55),inset 0 1px 2px rgba(255,255,255,.3),inset 0 -2px 3px rgba(0,0,0,.3);
-    animation:chipDrop .22s ease-out both}
+  .mchip{position:absolute;left:0;width:30px;height:30px;animation:chipDrop .22s ease-out both;filter:drop-shadow(0 2px 5px rgba(0,0,0,.5))}
   @keyframes chipDrop{from{transform:translateY(-14px) scale(.7);opacity:0}to{transform:none;opacity:1}}
-  .mchip.c10{background:radial-gradient(circle at 35% 30%,#e8c15a,#a5762a)}
-  .mchip.c25{background:radial-gradient(circle at 35% 30%,#e05a4e,#8d2b22)}
-  .mchip.c50{background:radial-gradient(circle at 35% 30%,#4ea0e0,#22538d)}
-  .mchip.c100{background:radial-gradient(circle at 35% 30%,#3a3a3a,#0a0a0a);border-color:rgba(255,215,106,.85)}
   .rowLbl.active{border-color:rgba(163,255,60,.75);color:#dfffc6;animation:actPulse .9s ease-in-out infinite alternate}
   @keyframes actPulse{from{box-shadow:0 3px 10px rgba(0,0,0,.5),0 0 7px rgba(163,255,60,.25),inset 0 1px 0 rgba(255,255,255,.18)}
     to{box-shadow:0 3px 10px rgba(0,0,0,.5),0 0 18px rgba(163,255,60,.6),inset 0 1px 0 rgba(255,255,255,.18)}}
@@ -293,10 +282,10 @@
   #casCtrl{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;align-items:center;
     width:100%;box-sizing:border-box;
     padding:13px 10px max(15px,env(safe-area-inset-bottom))}
-  .chip{width:52px;height:52px;border-radius:50%;cursor:pointer;border:4px dashed rgba(255,255,255,.75);background:radial-gradient(circle at 35% 30%,#e8c15a,#a5762a);color:#1a1408;font-weight:900;font-size:13px;box-shadow:0 4px 10px rgba(0,0,0,.6),inset 0 2px 4px rgba(255,255,255,.35),inset 0 -3px 6px rgba(0,0,0,.35);font-family:inherit;text-shadow:0 1px 1px rgba(255,255,255,.3)}
-  .chip.c25{background:radial-gradient(circle at 35% 30%,#e05a4e,#8d2b22);color:#fff}
-  .chip.c50{background:radial-gradient(circle at 35% 30%,#4ea0e0,#22538d);color:#fff}
-  .chip.c100{background:radial-gradient(circle at 35% 30%,#3a3a3a,#0a0a0a);color:#ffd76a;border-color:#ffd76a}
+  .chip{background:none;border:none;box-shadow:none;padding:0;cursor:pointer}
+  .chip img{width:58px;height:58px;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,.55))}
+  .imgAct{background:none;border:none;box-shadow:none;padding:0;cursor:pointer}
+  .imgAct img{height:52px;display:block;filter:drop-shadow(0 4px 12px rgba(0,0,0,.55))}
   .act{padding:13px 21px;border-radius:16px;cursor:pointer;border:1px solid rgba(201,161,61,.6);
     background:linear-gradient(160deg,#2f2512,#141004);color:#ffd76a;font-weight:900;font-size:15px;letter-spacing:1px;font-style:italic;font-family:inherit;
     box-shadow:0 4px 12px rgba(0,0,0,.5),0 0 14px rgba(201,161,61,.25),inset 0 1px 0 rgba(255,235,170,.25),inset 0 -3px 8px rgba(0,0,0,.4);
@@ -314,11 +303,9 @@
   <div id="flash"></div>
   <div id="hud">
     <div class="hudRow"><span id="hudDist">0</span><span id="hudDistU">m</span></div>
-    <div id="hudCoinsC"><img src="./assets/coin_gold.png" alt="$"><span id="hudCoinsV">0</span></div>
+    <div id="hudCoinsC"><img src="./assets/icon_coin.png" alt="$"><span id="hudCoinsV">0</span></div>
   </div>
-  <button id="gearBtn" class="btn tbBtn" aria-label="Settings">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-  </button>
+  <button id="gearBtn" class="btn imgBtn" aria-label="Settings"><img src="./assets/btn_settings.png" alt="Settings"></button>
   <div id="pause" class="screen">
     <div id="pauseCard">
       <div id="pauseTitle">PAUSED</div>
@@ -330,26 +317,20 @@
   <div id="title" class="screen">
     <div id="titleArt"></div><div id="titleShade"></div>
     <div id="topbar">
-      <button id="menuBtn" class="btn tbBtn" aria-label="Menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 9h16M4 15h16"/></svg>
-      </button>
+      <button id="menuBtn" class="btn imgBtn" aria-label="Menu"><img src="./assets/btn_menu.png" alt="Menu"></button>
       <div id="tbLives">
-        <svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        <img src="./assets/icon_heart.png" alt="" style="width:22px;height:auto">
         <span id="livesV">5</span><span class="cd" id="livesCd"></span>
       </div>
-      <button id="lbBtn" class="btn tbBtn" aria-label="Leaderboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-      </button>
-      <div id="tbGold"><img src="./assets/coin_gold.png" alt="$"><span id="tbGoldV">0</span></div>
-      <button id="cwBtn" class="btn tbBtn" aria-label="Connect Wallet">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
-      </button>
+      <button id="lbBtn" class="btn tbBtn" aria-label="Leaderboard"><img src="./assets/icon_trophy.png" alt="" style="width:27px;height:auto"></button>
+      <div id="tbGold"><img src="./assets/icon_coin.png" alt="$"><span id="tbGoldV">0</span></div>
+      <button id="cwBtn" class="btn tbBtn" aria-label="Connect Wallet"><img src="./assets/icon_wallet.png" alt="" style="width:28px;height:auto"></button>
     </div>
     <div id="menuPanel"></div>
     <div id="playRow">
-      <button id="bjBtn" class="btn sideBtn"><span>B-JACK</span></button>
+      <button id="bjBtn" class="btn sideBtn"><img src="./assets/btn_bjack.png" alt="B-JACK"></button>
       <button id="playBtn" class="btn" aria-label="Play"><img src="./assets/play_btn.png" alt="PLAY"></button>
-      <button id="pkBtn" class="btn sideBtn"><span>POKER</span></button>
+      <button id="pkBtn" class="btn sideBtn"><img src="./assets/btn_poker.png" alt="POKER"></button>
     </div>
     <div id="hint"></div>
     <div id="bestTitle"></div>
@@ -361,18 +342,16 @@
     <div class="stat" id="ovCoins"></div>
     <div class="stat" id="ovBest"></div>
     <div id="newBest"></div>
-    <button id="againBtn" class="btn"><span></span></button>
+    <button id="againBtn" class="btn"><img src="./assets/btn_run_again.png" alt="RUN AGAIN"></button>
     <button id="ovClose">CLOSE</button>
   </div>
   <div id="casino" class="screen">
     <div id="casHead">
-      <button id="casBack" class="btn tbBtn gold" aria-label="Back">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-      </button>
+      <button id="casBack" class="btn imgBtn" aria-label="Back"><img src="./assets/btn_back.png" alt="Back"></button>
       <div id="casTitle">BULL JACK</div>
       <div id="casRight">
-        <div id="casWallet"><img src="./assets/coin_gold.png" alt="$"><span id="casWalletV">0</span></div>
-        <button id="casSound" class="btn tbBtn gold" aria-label="Sound"></button>
+        <div id="casWallet"><img src="./assets/icon_coin.png" alt="$"><span id="casWalletV">0</span></div>
+        <button id="casSound" class="btn imgBtn" aria-label="Sound"></button>
       </div>
     </div>
     <div id="felt">
@@ -407,7 +386,7 @@
         <div class="swRow">
           <div class="swAmt">0</div>
           <button class="btn swToken">
-            <img src="./assets/coin_gold.png" alt="">
+            <img src="./assets/icon_coin.png" alt="">
             <span>GOLD</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </button>
@@ -677,7 +656,7 @@ const isTouch = matchMedia("(pointer:coarse)").matches;
 
 // ---------- strings into DOM (zero literals) ----------
 $("hint").textContent = isTouch ? STR.hint_touch : STR.hint_desktop;
-$("againBtn").querySelector("span").textContent = STR.runAgain;
+
 $("newBest").textContent = STR.newBest;
 $("titleArt").style.backgroundImage = "url(./assets/title_poster.jpg)";
 document.title = STR.title;
@@ -701,7 +680,7 @@ const SVG_VOLX='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strok
 function setMuteIcon(){
   $("mute").textContent = muted ? STR.muteOn : STR.muteOff;
   const m=$("mSoundLbl"); if(m) m.textContent = muted ? "SOUND: OFF" : "SOUND: ON";
-  const cs=$("casSound"); if(cs) cs.innerHTML = muted ? SVG_VOLX : SVG_VOL;
+  const cs=$("casSound"); if(cs) cs.innerHTML = '<img src="./assets/btn_sound_'+(muted?'off':'on')+'.png" alt="Sound">';
   const ps=$("pSound"); if(ps) ps.textContent = muted ? "SOUND: OFF" : "SOUND: ON";
 }
 function toggleMute(){
@@ -960,14 +939,15 @@ function potShow(amt,label){ // center stage: amount pill + real chip stacks
   $("potV").textContent=(label||"POT")+" $"+amt;
   const c=$("potChips");c.innerHTML="";
   let a=amt;
-  for(const [v,cls] of [[100,"c100"],[50,"c50"],[25,"c25"],[10,"c10"]]){
+  for(const v of [100,50,25,10]){
     let n=Math.floor(a/v);a-=n*v;
     if(v===10&&a>0){n++;a=0;}
     if(!n)continue;
     const pile=document.createElement("div");pile.className="pile";
     const shown=Math.min(n,8);
     for(let i=0;i<shown;i++){
-      const ch=document.createElement("div");ch.className="mchip "+cls;
+      const ch=document.createElement("img");ch.className="mchip";
+      ch.src="./assets/chip_"+v+".png";
       ch.style.bottom=(i*5)+"px";ch.style.animationDelay=(i*0.03)+"s";
       pile.appendChild(ch);
     }
@@ -999,7 +979,7 @@ function chipFly(){ // coin shower from pot to player
   const x0=src.left+src.width/2-cas.left, y0=src.top+src.height/2-cas.top;
   const x1=dst.left+dst.width/2-cas.left, y1=dst.top+dst.height/2-cas.top;
   for(let i=0;i<14;i++){
-    const img=document.createElement("img");img.src="./assets/coin_gold.png";
+    const img=document.createElement("img");img.src="./assets/icon_coin.png";
     img.style.left=(x0-13)+"px";img.style.top=(y0-13)+"px";
     fx.appendChild(img);
     const dx=x1-x0+(Math.random()-0.5)*80, dy=y1-y0+(Math.random()-0.5)*34;
@@ -1037,7 +1017,10 @@ function casCtrl(btns){
   const c=$("casCtrl");c.innerHTML="";
   for(const b of btns){
     const e=document.createElement("button");
-    e.className="btn "+(b.cls||"act");e.textContent=b.t;e.disabled=!!b.dis;e.onclick=b.f;
+    e.className="btn "+(b.cls||"act");
+    if(b.img)e.innerHTML='<img src="'+b.img+'" alt="'+b.t+'">';
+    else e.textContent=b.t;
+    e.disabled=!!b.dis;e.onclick=b.f;
     c.appendChild(e);
   }
 }
@@ -1075,11 +1058,11 @@ function betPhase(note){
 function updateBet(note){
   casMsg(note||(bet>0?"DEAL WHEN READY":"PLACE YOUR "+(casGame==="bj"?"BET":"ANTE")+" · TAP A CHIP"));
   if(bet>0)potShow(bet,casGame==="bj"?"BET":"ANTE");else potHide();
-  const chips=[10,25,50,100].map(v=>({t:"$"+v,cls:"chip c"+v,dis:getW()<v,
+  const chips=[10,25,50,100].map(v=>({t:"$"+v,img:"./assets/chip_"+v+".png",cls:"chip",dis:getW()<v,
     f:()=>{chipSfx(1);setW(getW()-v);bet+=v;updateBet();}}));
   casCtrl([...chips,
-    {t:"DEAL",cls:"act green",dis:bet<=0,f:()=>{chipSfx(3,0.06);casGame==="bj"?bjDeal():pkDeal();}},
-    {t:"RESET",dis:bet<=0,f:()=>{chipSfx(2);setW(getW()+bet);bet=0;updateBet();}}]);
+    {t:"DEAL",img:"./assets/btn_deal.png",cls:"imgAct",dis:bet<=0,f:()=>{chipSfx(3,0.06);casGame==="bj"?bjDeal():pkDeal();}},
+    {t:"RESET",img:"./assets/btn_reset.png",cls:"imgAct",dis:bet<=0,f:()=>{chipSfx(2);setW(getW()+bet);bet=0;updateBet();}}]);
 }
 // 50% win-rate controller: dealing gently rebalances when rate drifts off target
 function casStats(){
