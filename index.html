@@ -101,10 +101,11 @@
   #tbLives{background-image:url(./assets/hud_heart_counter.png);color:#ffb3ad;flex-shrink:0;
     justify-content:center;font-family:"Lilita One","Arial Black",sans-serif;font-weight:400;
     text-shadow:0 1px 3px rgba(0,0,0,.8)}
-  #livesV{position:absolute;left:25%;top:44%;transform:translate(-50%,-50%);font-size:16px;color:#fff;
+  #livesV{position:absolute;left:25%;top:48%;transform:translate(-50%,-50%);font-size:16px;color:#fff;
     font-family:"Lilita One","Arial Black",sans-serif;line-height:1;
     text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.95),0 0 2px #000}
-  #tbLives .cd{font-size:11px;letter-spacing:.3px;font-style:normal}
+  #tbLives{width:104px}
+  #tbLives .cd{font-size:16px;letter-spacing:.3px;font-style:normal;color:#ffd0cb}
   /* ---- swap screen ---- */
   #swap{display:none;background:radial-gradient(120% 90% at 50% 20%,#0c1f16 0%,#060f0a 60%,#030705 100%);justify-content:flex-start;z-index:11}
   #swapHead{width:100%;display:flex;align-items:center;justify-content:space-between;padding:max(10px,env(safe-area-inset-top)) 12px 8px;box-sizing:border-box}
@@ -151,8 +152,8 @@
   /* ---- centered modal ---- */
   #modalWrap{position:absolute;inset:0;z-index:40;display:none;align-items:center;justify-content:center;
     background:rgba(2,8,5,.72);backdrop-filter:blur(5px)}
-  #modalCard{position:relative;width:84%;max-width:330px;padding:20px 18px 18px;border-radius:22px;
-    display:flex;flex-direction:column;gap:10px;align-items:stretch;
+  #modalCard{position:relative;width:76%;max-width:280px;padding:16px 14px 14px;border-radius:22px;
+    display:flex;flex-direction:column;gap:8px;align-items:stretch;
     border:1px solid rgba(163,255,60,.35);
     background:linear-gradient(165deg,rgba(20,42,28,.97),rgba(6,16,11,.99));
     box-shadow:0 20px 60px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.14)}
@@ -164,11 +165,12 @@
     display:flex;align-items:center;justify-content:center}
   #modalX svg{width:16px;height:16px}
   .wItem img{border-radius:8px}
-  .wItem{display:flex;align-items:center;gap:12px;padding:7px 14px;cursor:pointer;
-    border:14px solid transparent;border-image:url(./assets/frame_pill.png) 70 fill stretch;
-    color:#eaffdb;font-weight:900;font-size:15px;font-family:inherit;letter-spacing:.6px;text-align:left;
+  #modalBody{display:flex;flex-direction:column;gap:13px}
+  .wItem{display:flex;align-items:center;justify-content:center;gap:11px;padding:5px 10px;cursor:pointer;
+    border:11px solid transparent;border-image:url(./assets/frame_pill.png) 70 fill stretch;
+    color:#eaffdb;font-weight:900;font-size:15px;font-family:inherit;letter-spacing:.8px;
     filter:drop-shadow(0 4px 10px rgba(0,0,0,.4))}
-  .wItem svg,.wItem img{width:30px;height:30px;flex-shrink:0}
+  .wItem svg,.wItem img{width:28px;height:28px;flex-shrink:0}
   .wItem.danger{color:#ffb3ad}
   #wAddr2{text-align:center;padding:9px;border-radius:12px;border:1px dashed rgba(163,255,60,.35);
     color:#c8ff9a;font-size:13px;font-weight:800;letter-spacing:1px;background:rgba(10,25,16,.6)}
@@ -1607,7 +1609,7 @@ function openWalletConnect(){
     wItem(body,PHANTOM_SVG,"PHANTOM",()=>{closeModal();location.href="https://phantom.app/ul/browse/"+dapp+"?ref="+ref;});
     wItem(body,SOLFLARE_SVG,"SOLFLARE",()=>{closeModal();location.href="https://solflare.com/ul/v1/browse/"+dapp+"?ref="+ref;});
     const note=document.createElement("div");
-    note.style.cssText="text-align:center;color:#8fb894;font-size:11px;letter-spacing:.5px;margin-top:2px";
+    note.style.cssText="text-align:center;color:#8fb894;font-size:9px;letter-spacing:.4px;margin-top:1px";
     note.textContent="OPENS THE GAME INSIDE YOUR WALLET APP";
     body.appendChild(note);
   }
