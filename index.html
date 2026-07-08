@@ -47,6 +47,10 @@
   .tbBtn svg{width:23px;height:23px;filter:drop-shadow(0 0 5px rgba(163,255,60,.45))}
   #lbBtn{color:#ffd76a}
   #lbBtn svg{filter:drop-shadow(0 0 6px rgba(255,210,63,.55))}
+  .tbBtn.gold{color:#ffd76a;border-color:rgba(255,210,63,.4);
+    background:linear-gradient(160deg,rgba(85,63,16,.88),rgba(26,18,5,.93));
+    box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 12px rgba(255,210,63,.14),inset 0 1px 0 rgba(255,235,170,.22),inset 0 -3px 8px rgba(0,0,0,.4)}
+  .tbBtn.gold svg{filter:drop-shadow(0 0 5px rgba(255,210,63,.5))}
   #tbGold{display:flex;align-items:center;gap:7px;height:46px;padding:0 15px 0 9px;border-radius:16px;flex-shrink:0;
     border:1px solid rgba(255,210,63,.38);
     background:linear-gradient(160deg,rgba(95,70,18,.88),rgba(30,20,5,.92));
@@ -54,7 +58,17 @@
     backdrop-filter:blur(10px);color:#ffd76a;font-size:16px;font-style:italic;font-weight:900;box-sizing:border-box;
     text-shadow:0 1px 3px rgba(0,0,0,.7)}
   #tbGold img{width:24px;height:24px;filter:drop-shadow(0 0 6px rgba(255,210,63,.6))}
-  #cwBtn{margin-left:auto}
+  #playRow{display:flex;align-items:center;gap:13px}
+  .sideBtn{padding:12px 15px;border-radius:16px;cursor:pointer;transform:rotate(-2.5deg);
+    background:linear-gradient(170deg,#46586a,#232e38 60%,#161e25);
+    border:3px solid #0d1318;
+    box-shadow:0 6px 16px rgba(0,0,0,.55),0 0 14px rgba(163,255,60,.15),inset 0 2px 0 rgba(255,255,255,.18),inset 0 -4px 10px rgba(0,0,0,.45)}
+  .sideBtn:last-child{transform:rotate(2.5deg)}
+  .sideBtn span{font-size:15px;font-weight:900;font-style:italic;letter-spacing:1px;
+    background:linear-gradient(180deg,#ffd23f,#ff7a1a 70%,#ff3d2e);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.7))}
+  #lbBtn{margin-left:auto}
   #cwBtn.on{border-color:rgba(255,210,63,.6);color:#ffd76a;
     background:linear-gradient(160deg,rgba(95,70,18,.88),rgba(30,20,5,.92));
     box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 16px rgba(255,210,63,.3),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -3px 8px rgba(0,0,0,.4)}
@@ -93,26 +107,27 @@
   .lrow .cn{color:#ffd23f;font-size:12px}
   .lrow .sc{color:#a3ff3c;font-size:14px;font-style:italic;min-width:52px;text-align:right}
   /* ---- Bull Casino ---- */
-  #casinoBtns{display:flex;gap:12px;margin-top:12px}
-  .cBtn{padding:12px 19px;border-radius:16px;cursor:pointer;
-    background:linear-gradient(160deg,#2b2210,#0d0a04);border:1px solid rgba(201,161,61,.65);
-    box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 16px rgba(201,161,61,.28),inset 0 1px 0 rgba(255,235,170,.3),inset 0 -3px 8px rgba(0,0,0,.45);
-    color:#ffd76a;font-weight:900;font-style:italic;font-size:14px;letter-spacing:1px;font-family:inherit;
-    text-shadow:0 1px 3px rgba(0,0,0,.7);transition:border-color .2s,box-shadow .2s}
   #casino{display:none;background:radial-gradient(120% 90% at 50% 30%,#17130a 0%,#0c0906 55%,#050403 100%);justify-content:flex-start;z-index:7}
   #casHead{width:100%;display:flex;align-items:center;justify-content:space-between;padding:max(10px,env(safe-area-inset-top)) 12px 6px;box-sizing:border-box}
-  #casBack{font-size:20px;color:#ffd76a;width:44px;height:44px;border-radius:15px;cursor:pointer;
-    border:1px solid rgba(201,161,61,.5);
-    background:linear-gradient(160deg,rgba(60,48,18,.88),rgba(18,13,5,.94));
-    box-shadow:0 4px 12px rgba(0,0,0,.5),0 0 10px rgba(201,161,61,.15),inset 0 1px 0 rgba(255,235,170,.22),inset 0 -3px 8px rgba(0,0,0,.4);
-    display:flex;align-items:center;justify-content:center;transition:border-color .2s}
+  #casRight{display:flex;align-items:center;gap:8px}
   #casTitle{font-size:20px;font-style:italic;letter-spacing:2px;background:linear-gradient(180deg,#ffe9a8,#c9a13d);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px #000)}
-  #casWallet{display:flex;align-items:center;height:38px;padding:0 14px;border-radius:999px;margin-right:56px;
-    border:1px solid rgba(255,210,63,.35);
-    background:linear-gradient(160deg,rgba(85,63,16,.88),rgba(26,18,5,.93));
-    color:#ffd76a;font-size:15px;font-style:italic;font-weight:900;
-    box-shadow:0 3px 10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,235,170,.2);
+  #casWallet{display:flex;align-items:center;gap:6px;height:44px;padding:0 13px 0 8px;border-radius:16px;
+    border:1px solid rgba(255,210,63,.38);
+    background:linear-gradient(160deg,rgba(95,70,18,.88),rgba(30,20,5,.92));
+    color:#ffd76a;font-size:15px;font-style:italic;font-weight:900;box-sizing:border-box;
+    box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 12px rgba(255,210,63,.15),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -3px 8px rgba(0,0,0,.4);
     text-shadow:0 1px 3px rgba(0,0,0,.7)}
+  #casWallet img{width:22px;height:22px;filter:drop-shadow(0 0 6px rgba(255,210,63,.6))}
+  #potPill{display:none;align-items:center;gap:6px;padding:7px 16px;border-radius:999px;z-index:1;
+    border:1px solid rgba(255,210,63,.45);
+    background:linear-gradient(160deg,rgba(62,46,10,.93),rgba(20,14,4,.96));
+    color:#ffd76a;font-size:13px;font-weight:900;font-style:italic;letter-spacing:1px;
+    box-shadow:0 4px 12px rgba(0,0,0,.5),0 0 14px rgba(255,210,63,.2),inset 0 1px 0 rgba(255,235,170,.2);
+    text-shadow:0 1px 2px rgba(0,0,0,.8)}
+  #potPill img{width:18px;height:18px;filter:drop-shadow(0 0 5px rgba(255,210,63,.6))}
+  .rowLbl.active{border-color:rgba(163,255,60,.75);color:#dfffc6;animation:actPulse .9s ease-in-out infinite alternate}
+  @keyframes actPulse{from{box-shadow:0 3px 10px rgba(0,0,0,.5),0 0 7px rgba(163,255,60,.25),inset 0 1px 0 rgba(255,255,255,.18)}
+    to{box-shadow:0 3px 10px rgba(0,0,0,.5),0 0 18px rgba(163,255,60,.6),inset 0 1px 0 rgba(255,255,255,.18)}}
   #felt{position:relative;width:93%;flex:0 1 auto;height:66%;margin:10px auto 6px;
     border-radius:46% 46% 30px 30px/22% 22% 30px 30px;
     background:radial-gradient(110% 85% at 50% 28%,#1a5535 0%,#124228 45%,#0b2d1d 75%,#082115 100%);
@@ -162,13 +177,19 @@
     color:#ffe9a8;font-size:14px;font-style:italic;letter-spacing:.5px;text-align:center;
     box-shadow:0 4px 14px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,235,170,.15);
     text-shadow:0 1px 2px rgba(0,0,0,.8)}
-  #casCtrl{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;align-items:center;
-    width:100%;margin-top:auto;box-sizing:border-box;
-    padding:13px 10px max(15px,env(safe-area-inset-bottom));
+  #dock{width:100%;margin-top:auto;box-sizing:border-box;
     border-radius:26px 26px 0 0;
     background:linear-gradient(180deg,rgba(26,21,9,.88),rgba(8,6,2,.97));
     border-top:1px solid rgba(201,161,61,.28);
     box-shadow:0 -8px 28px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,235,170,.12)}
+  #timerBar{display:none;height:5px;margin:11px 16px 0;border-radius:3px;background:rgba(0,0,0,.55);overflow:hidden;
+    box-shadow:inset 0 1px 3px rgba(0,0,0,.7)}
+  #timerFill{height:100%;width:100%;border-radius:3px;
+    background:linear-gradient(90deg,#ff3d2e,#ffd23f 40%,#a3ff3c);
+    box-shadow:0 0 8px rgba(163,255,60,.6)}
+  #casCtrl{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;align-items:center;
+    width:100%;box-sizing:border-box;
+    padding:13px 10px max(15px,env(safe-area-inset-bottom))}
   .chip{width:52px;height:52px;border-radius:50%;cursor:pointer;border:4px dashed rgba(255,255,255,.75);background:radial-gradient(circle at 35% 30%,#e8c15a,#a5762a);color:#1a1408;font-weight:900;font-size:13px;box-shadow:0 4px 10px rgba(0,0,0,.6),inset 0 2px 4px rgba(255,255,255,.35),inset 0 -3px 6px rgba(0,0,0,.35);font-family:inherit;text-shadow:0 1px 1px rgba(255,255,255,.3)}
   .chip.c25{background:radial-gradient(circle at 35% 30%,#e05a4e,#8d2b22);color:#fff}
   .chip.c50{background:radial-gradient(circle at 35% 30%,#4ea0e0,#22538d);color:#fff}
@@ -207,10 +228,10 @@
       </button>
     </div>
     <div id="menuPanel"></div>
-    <button id="playBtn" class="btn" aria-label="Play"><img src="./assets/play_btn.png" alt="PLAY"></button>
-    <div id="casinoBtns">
-      <button id="bjBtn" class="btn cBtn">♠ BULL JACK</button>
-      <button id="pkBtn" class="btn cBtn">♣ BULL POKER</button>
+    <div id="playRow">
+      <button id="bjBtn" class="btn sideBtn"><span>B-JACK</span></button>
+      <button id="playBtn" class="btn" aria-label="Play"><img src="./assets/play_btn.png" alt="PLAY"></button>
+      <button id="pkBtn" class="btn sideBtn"><span>POKER</span></button>
     </div>
     <div id="hint"></div>
     <div id="bestTitle"></div>
@@ -226,18 +247,27 @@
   </div>
   <div id="casino" class="screen">
     <div id="casHead">
-      <button id="casBack" class="btn" aria-label="Back">←</button>
+      <button id="casBack" class="btn tbBtn gold" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
       <div id="casTitle">BULL JACK</div>
-      <div id="casWallet">$ 0</div>
+      <div id="casRight">
+        <div id="casWallet"><img src="./assets/coin_gold.png" alt="$"><span id="casWalletV">0</span></div>
+        <button id="casSound" class="btn tbBtn gold" aria-label="Sound"></button>
+      </div>
     </div>
     <div id="felt">
       <div id="feltBrand"><div class="bull">🐂</div><div class="brand">$ANSEM</div></div>
       <div class="seatRow" id="rowTop"></div>
+      <div id="potPill"><img src="./assets/coin_gold.png" alt=""><span id="potV"></span></div>
       <div class="cardRow" id="boardRow"></div>
       <div class="seatRow" id="rowBottom"></div>
     </div>
     <div id="casMsg"></div>
-    <div id="casCtrl"></div>
+    <div id="dock">
+      <div id="timerBar"><div id="timerFill"></div></div>
+      <div id="casCtrl"></div>
+    </div>
   </div>
   <div id="lead" class="screen">
     <div id="leadHead"><div id="leadTitle">🏆 LEADERBOARD</div><button id="leadClose" class="btn">✕</button></div>
@@ -500,9 +530,12 @@ const imgReady = Promise.all([
 // ---------- audio (WebAudio, master mute) ----------
 let AC=null, master=null, musicGain=null, buffers={}, musicSrc=null;
 let muted = localStorage.getItem("bullrun.muted")==="1";
+const SVG_VOL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+const SVG_VOLX='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
 function setMuteIcon(){
   $("mute").textContent = muted ? STR.muteOn : STR.muteOff;
   const m=$("mSoundLbl"); if(m) m.textContent = muted ? "SOUND: OFF" : "SOUND: ON";
+  const cs=$("casSound"); if(cs) cs.innerHTML = muted ? SVG_VOLX : SVG_VOL;
 }
 function toggleMute(){
   muted=!muted;
@@ -669,7 +702,7 @@ function cardEl(c,down){
   return e;
 }
 const getW=()=>Number(localStorage.getItem("bullrun.coins")||0);
-const setW=v=>{localStorage.setItem("bullrun.coins",String(v));$("casWallet").textContent="$ "+v;};
+const setW=v=>{localStorage.setItem("bullrun.coins",String(v));$("casWalletV").textContent=v;};
 let casGame=null,casSeq=0,bet=0,deck=null,board=[],HS=null,pot=0,ante=0;
 const BOTS={b1:"🐻 BEAR",b2:"🦍 APE"};
 function casLater(ms,fn){const s=casSeq;setTimeout(()=>{if(s===casSeq)fn();},ms);}
@@ -685,7 +718,25 @@ function setCards(id,arr,sm){
   const el=$("cards_"+id);el.innerHTML="";
   for(const [c,down] of arr){const e=cardEl(c,down);if(sm)e.classList.add("sm");el.appendChild(e);}
 }
-function setLbl(id,t){$("lbl_"+id).textContent=t;}
+function setLbl(id,t){const e=$("lbl_"+id);if(e)e.textContent=t;}
+function setActive(id){
+  document.querySelectorAll(".rowLbl.active").forEach(e=>e.classList.remove("active"));
+  if(id){const e=$("lbl_"+id);if(e)e.classList.add("active");}
+}
+function potShow(t){$("potPill").style.display="flex";$("potV").textContent=t;}
+function potHide(){$("potPill").style.display="none";}
+let casTmr=null;
+function stopTimer(){if(casTmr){clearInterval(casTmr);casTmr=null;}$("timerBar").style.display="none";}
+function startTimer(sec,onEnd){
+  stopTimer();
+  $("timerBar").style.display="block";$("timerFill").style.width="100%";
+  const t0=performance.now();
+  casTmr=setInterval(()=>{
+    const k=1-(performance.now()-t0)/(sec*1000);
+    if(k<=0){stopTimer();onEnd();}
+    else $("timerFill").style.width=(k*100)+"%";
+  },100);
+}
 function casCtrl(btns){
   const c=$("casCtrl");c.innerHTML="";
   for(const b of btns){
@@ -697,7 +748,8 @@ function casCtrl(btns){
 function openCasino(g){
   casGame=g;casSeq++;state="casino";
   $("title").style.display="none";$("over").style.display="none";$("casino").style.display="flex";
-  $("mute").style.display="flex";
+  $("mute").style.display="none"; // masa başlığındaki ses düğmesi devralıyor
+  setMuteIcon();
   $("casTitle").textContent=g==="bj"?"BULL JACK":"BULL POKER";
   if(getW()<25){setW(getW()+250);}else setW(getW());
   initAudio();
@@ -705,9 +757,11 @@ function openCasino(g){
 }
 $("bjBtn").addEventListener("click",()=>openCasino("bj"));
 $("pkBtn").addEventListener("click",()=>openCasino("pk"));
-$("casBack").addEventListener("click",()=>{casSeq++;$("casino").style.display="none";showTitle();});
+$("casSound").addEventListener("click",e=>{e.stopPropagation();toggleMute();});
+$("casBack").addEventListener("click",()=>{casSeq++;stopTimer();$("casino").style.display="none";showTitle();});
 function betPhase(note){
   bet=0;board=[];HS=null;pot=0;
+  stopTimer();potHide();setActive(null);
   $("rowTop").innerHTML="";$("rowBottom").innerHTML="";$("boardRow").innerHTML="";
   $("boardRow").style.display=casGame==="pk"?"flex":"none";
   if(casGame==="bj"){
@@ -731,6 +785,7 @@ function updateBet(note){
     {t:"RESET",dis:bet<=0,f:()=>{setW(getW()+bet);bet=0;updateBet();}}]);
 }
 function casEnd(txt,ret,won){
+  stopTimer();setActive(null);
   casMsg(txt);
   if(ret>0)setW(getW()+ret);
   if(won)sfx("sfx_coin",0.9);else if(won===false)sfx("sfx_crash",0.45);
@@ -759,26 +814,30 @@ function bjDeal(){
   deck=newDeck();
   HS={you:[deck.pop(),deck.pop()],b1:[deck.pop(),deck.pop()],b2:[deck.pop(),deck.pop()],d:[deck.pop(),deck.pop()]};
   bjRender(true);casCtrl([]);
+  potShow("BET $"+bet);
   if(bjVal(HS.you)===21){casMsg("BLACKJACK! 🐂");casLater(800,bjBots);}
   else bjYourTurn();
 }
 function bjYourTurn(){
-  if(bjVal(HS.you)>21){casMsg("BUST — TABLE PLAYS ON...");return casLater(800,bjBots);}
+  if(bjVal(HS.you)>21){stopTimer();casMsg("BUST — TABLE PLAYS ON...");return casLater(800,bjBots);}
   const canDbl=HS.you.length===2&&getW()>=bet;
+  setActive("you");
   casMsg("YOUR MOVE · BET $"+bet);
   casCtrl([
-    {t:"HIT",f:()=>{HS.you.push(deck.pop());bjRender(true);bjYourTurn();}},
-    {t:"STAND",cls:"act green",f:()=>{casCtrl([]);bjBots();}},
+    {t:"HIT",f:()=>{stopTimer();HS.you.push(deck.pop());bjRender(true);bjYourTurn();}},
+    {t:"STAND",cls:"act green",f:()=>{stopTimer();casCtrl([]);bjBots();}},
     {t:"DOUBLE",dis:!canDbl,f:()=>{
-      setW(getW()-bet);bet*=2;HS.you.push(deck.pop());bjRender(true);
+      stopTimer();setW(getW()-bet);bet*=2;potShow("BET $"+bet);HS.you.push(deck.pop());bjRender(true);
       if(bjVal(HS.you)>21){casMsg("BUST — TABLE PLAYS ON...");casLater(800,bjBots);}
       else{casCtrl([]);bjBots();}
     }}]);
+  startTimer(12,()=>{casCtrl([]);casMsg("TIME! AUTO-STAND");casLater(500,bjBots);});
 }
 function bjBots(){
-  casCtrl([]);
+  casCtrl([]);setActive(null);
   const play=(id,next)=>{
     const hand=HS[id];
+    setActive(id);
     const step=()=>{
       const v=bjVal(hand);
       if(v<16||(v===16&&Math.random()<0.5)){
@@ -791,6 +850,7 @@ function bjBots(){
   play("b1",()=>play("b2",bjDealer));
 }
 function bjDealer(){
+  setActive("d");
   bjRender(false);casMsg("DEALER DRAWS...");
   const step=()=>{
     if(bjVal(HS.d)<17)casLater(550,()=>{HS.d.push(deck.pop());bjRender(false);step();});
@@ -842,14 +902,23 @@ function rank5(cs){
   return [0,...rs];
 }
 const cmpRank=(a,b)=>{for(let i=0;i<Math.max(a.length,b.length);i++){const d=(a[i]||0)-(b[i]||0);if(d)return d;}return 0;};
-function best7(cs){
+function bestHand(cs){ // 5-7 karttan en iyi 5'li el
+  const n=cs.length;
+  if(n===5)return rank5(cs);
   let best=null;
+  if(n===6){
+    for(let i=0;i<6;i++){const r=rank5(cs.filter((_,x)=>x!==i));if(!best||cmpRank(r,best)>0)best=r;}
+    return best;
+  }
   for(let i=0;i<7;i++)for(let j=i+1;j<7;j++){
     const r=rank5(cs.filter((_,x)=>x!==i&&x!==j));
     if(!best||cmpRank(r,best)>0)best=r;
   }
   return best;
 }
+// --- Bull Poker: 3 kişilik Texas Hold'em (sabit limit, sokak başına 1 artırma) ---
+const PK_REVEAL=[0,3,4,5], PK_NAMES=["PRE-FLOP","FLOP","TURN","RIVER"];
+let pkSt=null;
 function pkRender(revBoard,revBots){
   setCards("b1",HS.b1.map(c=>[c,!revBots]),true);
   setCards("b2",HS.b2.map(c=>[c,!revBots]),true);
@@ -857,50 +926,119 @@ function pkRender(revBoard,revBots){
   const el=$("boardRow");el.innerHTML="";
   board.forEach((c,i)=>el.appendChild(cardEl(c,i>=revBoard)));
 }
-function pkHands(includeYou){
-  const hs=[["b1",BOTS.b1,best7([...HS.b1,...board])],["b2",BOTS.b2,best7([...HS.b2,...board])]];
-  if(includeYou)hs.push(["you","YOU 🐂",best7([...HS.you,...board])]);
-  return hs;
+const pkAlive=()=>["you","b1","b2"].filter(id=>!pkSt.folded[id]);
+const pkName=id=>id==="you"?"YOU 🐂":BOTS[id];
+function botDecide(id,toCall,canRaise){
+  const n=PK_REVEAL[pkSt.street];
+  let s;
+  if(n===0){ // el gücü: cep kartları
+    const [a,b]=HS[id];
+    s=a.r===b.r ? 0.62+a.r/30 : (a.r+b.r)/58+(a.s===b.s?0.05:0)+(Math.abs(a.r-b.r)<=2?0.04:0);
+  }else{ // board ile gerçek değerlendirme
+    const r=bestHand([...HS[id],...board.slice(0,n)]);
+    s=r[0]/8+(r[1]||0)/220;
+  }
+  s+=(Math.random()-0.5)*0.18;
+  if(toCall<=0) return (s>0.52&&canRaise)?"raise":"check";
+  if(s>0.74&&canRaise) return "raise";
+  if(s<0.3&&Math.random()<0.65) return "fold";
+  return "call";
 }
 function pkDeal(){
   deck=newDeck();
   HS={you:[deck.pop(),deck.pop()],b1:[deck.pop(),deck.pop()],b2:[deck.pop(),deck.pop()]};
   board=[deck.pop(),deck.pop(),deck.pop(),deck.pop(),deck.pop()];
-  ante=bet;pot=ante*3; // all three ante
-  pkRender(0,false);
-  const callCost=Math.min(ante,getW());
-  casMsg("POT $"+pot+" · FOLD, OR CALL +$"+callCost);
-  casCtrl([
-    {t:"FOLD",cls:"act red",f:pkFold},
-    {t:"CALL +$"+callCost,cls:"act green",f:()=>{setW(getW()-callCost);pot=ante*6;pkShowdown();}}]);
+  ante=bet;
+  pkSt={street:0,pot:ante*3,folded:{}};
+  potShow("POT $"+pkSt.pot);
+  setLbl("you","YOU 🐂");setLbl("b1",BOTS.b1);setLbl("b2",BOTS.b2);
+  pkStreet();
 }
-function pkFold(){
-  pkRender(5,true);
-  const hs=pkHands(false);
-  for(const [id,name,r] of hs)setLbl(id,name+" · "+HAND_NAMES[r[0]]);
-  const w=cmpRank(hs[0][2],hs[1][2])>=0?hs[0]:hs[1];
-  casEnd("FOLDED — "+w[1]+" TAKES THE POT",0);
-}
-function pkShowdown(){
-  casCtrl([]);casMsg("BEAR & APE CALL · POT $"+pot);
-  casLater(700,()=>{pkRender(3,false);casMsg("POT $"+pot+" · FLOP...");
-  casLater(750,()=>{pkRender(4,false);casMsg("POT $"+pot+" · TURN...");
-  casLater(750,()=>{pkRender(5,false);casMsg("POT $"+pot+" · RIVER...");
-  casLater(800,()=>{
-    pkRender(5,true);casMsg("SHOWDOWN 🐂");
-    const hs=pkHands(true);
-    let best=null;for(const h of hs)if(!best||cmpRank(h[2],best[2])>0)best=h;
-    const winners=hs.filter(h=>cmpRank(h[2],best[2])===0);
-    for(const [id,name,r] of hs)setLbl(id,name+" · "+HAND_NAMES[r[0]]);
+function pkStreet(){
+  const u=pkSt.street<2?ante:ante*2; // turn/river'da bahis büyür
+  let curBet=0;const contrib={you:0,b1:0,b2:0};
+  pkSt.raises=0;
+  pkRender(PK_REVEAL[pkSt.street],false);
+  casMsg(PK_NAMES[pkSt.street]+" · POT $"+pkSt.pot);
+  const pay=(id,amt)=>{
+    if(id==="you")setW(getW()-Math.min(amt,getW()));
+    pkSt.pot+=amt;contrib[id]+=amt;potShow("POT $"+pkSt.pot);
+  };
+  const finishStreet=()=>{
+    setActive(null);
+    const alive=pkAlive();
+    if(alive.length===1)return pkAward(alive[0]);
+    if(pkSt.street===3)return pkShowdownFinal();
+    pkSt.street++;casLater(750,pkStreet);
+  };
+  const botAct=(id,next)=>{
+    if(pkSt.folded[id])return next();
+    setActive(id);
     casLater(800,()=>{
-      if(winners.some(w=>w[0]==="you")){
-        const share=Math.floor(pot/winners.length);
-        casEnd(winners.length>1?"SPLIT POT — +$"+share:"YOU WIN $"+pot+" — "+HAND_NAMES[best[2][0]]+" 🐂",share,true);
-      }else{
-        casEnd(winners[0][1]+" WINS — "+HAND_NAMES[best[2][0]],0,false);
-      }
+      const owe=curBet-contrib[id];
+      const d=botDecide(id,owe,pkSt.raises<1);
+      if(d==="fold"){pkSt.folded[id]=true;setLbl(id,BOTS[id]+" · FOLD");}
+      else if(d==="raise"){pkSt.raises++;const nb=curBet+u;pay(id,nb-contrib[id]);curBet=nb;setLbl(id,BOTS[id]+" · "+(owe>0?"RAISE":"BET")+" $"+u);}
+      else if(owe>0){pay(id,owe);setLbl(id,BOTS[id]+" · CALL");}
+      else setLbl(id,BOTS[id]+" · CHECK");
+      next();
     });
-  });});});});
+  };
+  const settle=()=>{ // artırma olduysa herkes eşitlesin (tek artırma → tek tur yeter)
+    const meOwes=!pkSt.folded.you&&contrib.you<curBet;
+    const youPart=done=>{
+      if(!meOwes)return done();
+      setActive("you");
+      const owe=curBet-contrib.you,c=Math.min(owe,getW());
+      casMsg("RAISE! POT $"+pkSt.pot);
+      casCtrl([
+        {t:"FOLD",cls:"act red",f:()=>{stopTimer();casCtrl([]);pkSt.folded.you=true;setLbl("you","YOU 🐂 · FOLD");done();}},
+        {t:"CALL $"+c,cls:"act green",f:()=>{stopTimer();casCtrl([]);pay("you",owe);setLbl("you","YOU 🐂 · CALL");done();}}
+      ]);
+      startTimer(12,()=>{casCtrl([]);pkSt.folded.you=true;setLbl("you","YOU 🐂 · FOLD");done();});
+    };
+    youPart(()=>{
+      const rest=["b1","b2"].filter(id=>!pkSt.folded[id]&&contrib[id]<curBet);
+      const go=i=>{
+        if(i>=rest.length)return finishStreet();
+        const id=rest[i];setActive(id);
+        casLater(750,()=>{
+          const owe=curBet-contrib[id];
+          if(botDecide(id,owe,false)==="fold"){pkSt.folded[id]=true;setLbl(id,BOTS[id]+" · FOLD");}
+          else{pay(id,owe);setLbl(id,BOTS[id]+" · CALL");}
+          go(i+1);
+        });
+      };
+      go(0);
+    });
+  };
+  const bots=()=>botAct("b1",()=>botAct("b2",settle));
+  if(pkSt.folded.you)return bots();
+  setActive("you");
+  const bAmt=Math.min(u,getW());
+  casCtrl([
+    {t:"CHECK",f:()=>{stopTimer();casCtrl([]);setLbl("you","YOU 🐂 · CHECK");bots();}},
+    {t:"BET $"+bAmt,cls:"act green",dis:getW()<=0,f:()=>{stopTimer();casCtrl([]);pkSt.raises++;pay("you",u);curBet=u;setLbl("you","YOU 🐂 · BET $"+u);bots();}},
+    {t:"FOLD",cls:"act red",f:()=>{stopTimer();casCtrl([]);pkSt.folded.you=true;setLbl("you","YOU 🐂 · FOLD");bots();}}
+  ]);
+  startTimer(12,()=>{casCtrl([]);setLbl("you","YOU 🐂 · CHECK");casMsg("TIME! AUTO-CHECK");bots();});
+}
+function pkAward(id){ // herkes fold etti
+  if(id==="you")casEnd("THEY ALL FOLD — YOU TAKE $"+pkSt.pot+" 🐂",pkSt.pot,true);
+  else casEnd(BOTS[id]+" TAKES THE POT",0,pkSt.folded.you?undefined:false);
+}
+function pkShowdownFinal(){
+  pkRender(5,true);casMsg("SHOWDOWN 🐂");
+  const hs=pkAlive().map(id=>[id,pkName(id),bestHand([...HS[id],...board])]);
+  let best=null;for(const h of hs)if(!best||cmpRank(h[2],best[2])>0)best=h;
+  const winners=hs.filter(h=>cmpRank(h[2],best[2])===0);
+  for(const [id,name,r] of hs)setLbl(id,name+" · "+HAND_NAMES[r[0]]);
+  casLater(900,()=>{
+    if(winners.some(w=>w[0]==="you")){
+      const share=Math.floor(pkSt.pot/winners.length);
+      casEnd(winners.length>1?"SPLIT POT — +$"+share:"YOU WIN $"+pkSt.pot+" — "+HAND_NAMES[best[2][0]]+" 🐂",share,true);
+    }else casEnd(winners[0][1]+" WINS — "+HAND_NAMES[best[2][0]],0,pkSt.folded.you?undefined:false);
+  });
 }
 
 // ---------- topbar: menu / gold / leaderboard / Solana wallet ----------
