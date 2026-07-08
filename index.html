@@ -75,7 +75,8 @@
     background:linear-gradient(160deg,rgba(85,63,16,.88),rgba(26,18,5,.93));
     box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 12px rgba(255,210,63,.14),inset 0 1px 0 rgba(255,235,170,.22),inset 0 -3px 8px rgba(0,0,0,.4)}
   .tbBtn.gold svg{filter:drop-shadow(0 0 5px rgba(255,210,63,.5))}
-  #tbGold{background-image:url(./assets/hud_coin_counter.png);color:#ffd76a;font-size:13px;font-weight:900;flex-shrink:0;cursor:pointer;
+  #tbGold{background-image:url(./assets/hud_coin_counter.png);color:#ffd76a;flex-shrink:0;cursor:pointer;
+    font-family:"Lilita One","Arial Black",sans-serif;font-size:16px;font-weight:400;
     text-shadow:0 1px 3px rgba(0,0,0,.8)}
   #playRow{display:flex;align-items:center;gap:13px}
   .sideBtn{background:none;border:none;box-shadow:none;padding:0;cursor:pointer;transform:rotate(-2.5deg)}
@@ -97,12 +98,13 @@
   #coinFlyL{position:absolute;inset:0;z-index:15;pointer-events:none}
   #coinFlyL img{position:absolute;width:26px;height:26px;filter:drop-shadow(0 0 7px rgba(255,210,63,.7))}
   .brk{flex-basis:100%;height:0}
-  #tbLives{background-image:url(./assets/hud_heart_counter.png);color:#ffb3ad;font-size:11px;font-weight:900;flex-shrink:0;
-    justify-content:center;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-  #livesV{position:absolute;left:20px;top:50%;transform:translate(-50%,-54%);font-size:14px;color:#fff;
-    font-family:"Lilita One","Arial Black",sans-serif;
-    text-shadow:0 1px 2px #000,0 0 5px rgba(0,0,0,.9),0 0 2px #000}
-  #tbLives .cd{font-size:10px;letter-spacing:.3px;font-style:normal}
+  #tbLives{background-image:url(./assets/hud_heart_counter.png);color:#ffb3ad;flex-shrink:0;
+    justify-content:center;font-family:"Lilita One","Arial Black",sans-serif;font-weight:400;
+    text-shadow:0 1px 3px rgba(0,0,0,.8)}
+  #livesV{position:absolute;left:25%;top:44%;transform:translate(-50%,-50%);font-size:16px;color:#fff;
+    font-family:"Lilita One","Arial Black",sans-serif;line-height:1;
+    text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.95),0 0 2px #000}
+  #tbLives .cd{font-size:11px;letter-spacing:.3px;font-style:normal}
   /* ---- swap screen ---- */
   #swap{display:none;background:radial-gradient(120% 90% at 50% 20%,#0c1f16 0%,#060f0a 60%,#030705 100%);justify-content:flex-start;z-index:11}
   #swapHead{width:100%;display:flex;align-items:center;justify-content:space-between;padding:max(10px,env(safe-area-inset-top)) 12px 8px;box-sizing:border-box}
@@ -158,7 +160,10 @@
     background:linear-gradient(180deg,#d6ffb0,#7cd93a);-webkit-background-clip:text;background-clip:text;color:transparent;
     filter:drop-shadow(0 2px 3px #000)}
   #modalX{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:10px;cursor:pointer;
-    border:1px solid rgba(163,255,60,.35);background:rgba(10,25,16,.7);color:#a3ff3c;font-size:15px;font-family:inherit}
+    border:1px solid rgba(163,255,60,.35);background:rgba(10,25,16,.7);color:#a3ff3c;
+    display:flex;align-items:center;justify-content:center}
+  #modalX svg{width:16px;height:16px}
+  .wItem img{border-radius:8px}
   .wItem{display:flex;align-items:center;gap:12px;padding:7px 14px;cursor:pointer;
     border:14px solid transparent;border-image:url(./assets/frame_pill.png) 70 fill stretch;
     color:#eaffdb;font-weight:900;font-size:15px;font-family:inherit;letter-spacing:.6px;text-align:left;
@@ -225,7 +230,8 @@
   #casHead{width:100%;display:flex;align-items:center;justify-content:space-between;padding:max(10px,env(safe-area-inset-top)) 12px 6px;box-sizing:border-box}
   #casRight{display:flex;align-items:center;gap:8px}
   #casTitle{font-size:20px;font-style:italic;letter-spacing:2px;background:linear-gradient(180deg,#ffe9a8,#c9a13d);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px #000)}
-  #casWallet{background-image:url(./assets/hud_coin_counter.png);color:#ffd76a;font-size:13px;font-weight:900;
+  #casWallet{background-image:url(./assets/hud_coin_counter.png);color:#ffd76a;
+    font-family:"Lilita One","Arial Black",sans-serif;font-size:16px;font-weight:400;
     text-shadow:0 1px 3px rgba(0,0,0,.8)}
   #potZone{display:none;flex-direction:column;align-items:center;gap:5px;z-index:1}
   #potV{display:flex;align-items:center;padding:3px 12px;
@@ -433,7 +439,7 @@
     <div id="leadMsg"></div>
     <div id="leadList"></div>
   </div>
-  <div id="modalWrap"><div id="modalCard"><button id="modalX" class="btn">X</button><div id="modalTitle"></div><div id="modalBody"></div></div></div>
+  <div id="modalWrap"><div id="modalCard"><button id="modalX" class="btn" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button><div id="modalTitle"></div><div id="modalBody"></div></div></div>
   <div id="celeb"></div>
   <div id="loader"><img src="./assets/logo_round.png" alt=""><div id="loaderTxt">LOADING...</div></div>
   <div id="toast"></div>
@@ -976,8 +982,20 @@ function cardEl(c,down){
   if(!down)e.innerHTML=`<div class="rk">${rkTxt(c.r)}</div><div class="st">${c.s}</div>`;
   return e;
 }
+function fmtNum(n){
+  n=Number(n)||0;
+  if(n<1000)return String(n);
+  const units=[["T",1e12],["B",1e9],["M",1e6],["K",1e3]];
+  for(const [u,v] of units){
+    if(n>=v){
+      const x=n/v;
+      return (x>=100?Math.round(x):x>=10?(Math.round(x*10)/10):(Math.round(x*100)/100))+u;
+    }
+  }
+  return String(n);
+}
 const getW=()=>Number(localStorage.getItem("bullrun.coins")||0);
-const setW=v=>{localStorage.setItem("bullrun.coins",String(v));$("casWalletV").textContent=v;};
+const setW=v=>{localStorage.setItem("bullrun.coins",String(v));$("casWalletV").textContent=fmtNum(v);};
 let casGame=null,casSeq=0,bet=0,deck=null,board=[],HS=null,pot=0,ante=0;
 const BOTS={b1:"🐻 BEAR",b2:"🦍 APE"};
 function casLater(ms,fn){const s=casSeq;setTimeout(()=>{if(s===casSeq)fn();},ms);}
@@ -1428,7 +1446,7 @@ let goldShown=null;
 function refreshGold(){
   const t=totalCoins();
   if(goldShown===null||t<=goldShown||state!=="title"){
-    goldShown=t;$("tbGoldV").textContent=t;return;
+    goldShown=t;$("tbGoldV").textContent=fmtNum(t);return;
   }
   coinFlyHome(t); // kazanılan altınlar sayaca süzülür
 }
@@ -1457,13 +1475,13 @@ function coinFlyHome(target){
     const t0=performance.now(),dur=850;
     const iv=setInterval(()=>{
       const k=Math.min(1,(performance.now()-t0)/dur);
-      $("tbGoldV").textContent=Math.round(from+(target-from)*k);
+      $("tbGoldV").textContent=fmtNum(Math.round(from+(target-from)*k));
       if(k>=1)clearInterval(iv);
     },40);
   },820+n*80);
 }
 function openSwap(){
-  $("swBal").textContent="Balance: "+totalCoins();
+  $("swBal").textContent="Balance: "+fmtNum(totalCoins());
   $("swap").style.display="flex";
 }
 $("tbGold").style.cursor="pointer";
@@ -1553,8 +1571,8 @@ function solDisconnect(){
   if(window.FB&&window.FB.setWallet)window.FB.setWallet(null);
 }
 // simplified brand marks for the connect list
-const PHANTOM_SVG='<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#AB9FF2"/><path fill="#fff" d="M20 8c-6.6 0-12 5.4-12 12v8.6c0 .9 1.1 1.4 1.8.8l2.2-1.8 2.5 2 2.5-2 2.5 2 2.5-2 2.2 1.8c.7.6 1.8.1 1.8-.8V20c0-6.6-5.4-12-12-12z"/><circle cx="15.6" cy="19" r="2" fill="#AB9FF2"/><circle cx="24.4" cy="19" r="2" fill="#AB9FF2"/></svg>';
-const SOLFLARE_SVG='<svg viewBox="0 0 40 40"><defs><radialGradient id="sfg" cx="50%" cy="45%"><stop offset="0%" stop-color="#FFEF46"/><stop offset="100%" stop-color="#FC7227"/></radialGradient></defs><rect width="40" height="40" rx="11" fill="#241505"/><circle cx="20" cy="20" r="6.5" fill="url(#sfg)"/><g stroke="url(#sfg)" stroke-width="2.4" stroke-linecap="round"><path d="M20 5.5v5M20 29.5v5M5.5 20h5M29.5 20h5M9.8 9.8l3.5 3.5M26.7 26.7l3.5 3.5M30.2 9.8l-3.5 3.5M13.3 26.7l-3.5 3.5"/></g></svg>';
+const PHANTOM_SVG='<img src="./assets/wallet_phantom.svg" alt="">';
+const SOLFLARE_SVG='<img src="./assets/wallet_solflare.svg" alt="">';
 function openModal(title){
   $("modalTitle").textContent=title;
   $("modalBody").innerHTML="";
@@ -1625,7 +1643,7 @@ function openLead(){
       d.className="lrow"+(r.uid===window.FB.uid?" me":"");
       const rk=document.createElement("div");rk.className="rk2";rk.textContent=i===0?"🥇":i===1?"🥈":i===2?"🥉":String(i+1);
       const nm=document.createElement("div");nm.className="nm";nm.textContent=(r.name||"BULL")+(r.uid===window.FB.uid?" (YOU)":"");
-      const cn=document.createElement("div");cn.className="cn";cn.textContent="$ "+(r.coins||0);
+      const cn=document.createElement("div");cn.className="cn";cn.textContent="$ "+fmtNum(r.coins||0);
       const sc=document.createElement("div");sc.className="sc";sc.textContent=(r.best||0)+" m";
       d.append(rk,nm,cn,sc);list.appendChild(d);
     });
@@ -1896,7 +1914,7 @@ function frameFn(now){
   // HUD
   if(state==="running"&&sim){
     $("hudDist").textContent=Math.floor(sim.dist);
-    $("hudCoinsV").textContent=sim.coins;
+    $("hudCoinsV").textContent=fmtNum(sim.coins);
   }
   if(dev&&(frames++,now-fpsAt>=500)){
     fps=Math.round(frames*1000/(now-fpsAt));frames=0;fpsAt=now;opsShown=ops;
