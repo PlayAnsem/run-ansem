@@ -35,16 +35,49 @@
   @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.12)}}
   #againBtn{margin-top:22px;padding:14px 34px;border-radius:16px;background:linear-gradient(180deg,#2a3f33,#152820);border:3px solid #a3ff3c;box-shadow:0 0 24px rgba(163,255,60,.4),inset 0 2px 0 rgba(255,255,255,.15)}
   #againBtn span{font-size:24px;font-weight:900;font-style:italic;letter-spacing:2px;background:linear-gradient(180deg,#ffd23f,#ff7a1a,#ff3d2e);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6))}
-  /* ---- topbar: menu / gold / leaderboard / wallet ---- */
-  #topbar{position:absolute;top:max(10px,env(safe-area-inset-top));left:10px;right:10px;display:flex;align-items:center;gap:8px;z-index:8}
-  .tbBtn{width:44px;height:44px;border-radius:14px;border:2px solid rgba(163,255,60,.5);background:rgba(7,18,15,.6);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:19px;color:#a3ff3c}
-  #menuBtn .mline{display:block;width:18px;height:3px;border-radius:2px;background:#a3ff3c}
-  #tbGold{display:flex;align-items:center;gap:6px;height:44px;padding:0 12px;border-radius:14px;border:2px solid rgba(255,210,63,.45);background:rgba(7,18,15,.6);color:#ffd23f;font-size:15px;font-style:italic;font-weight:900;backdrop-filter:blur(3px);box-sizing:border-box}
-  #tbGold img{width:20px;height:20px}
-  #cwBtn{margin-left:auto;height:44px;padding:0 13px;border-radius:14px;border:2px solid #9945FF;background:linear-gradient(180deg,rgba(60,20,110,.75),rgba(25,8,50,.85));color:#e6d5ff;font-weight:900;font-size:11px;letter-spacing:.5px;font-style:italic;font-family:inherit;backdrop-filter:blur(3px);box-shadow:0 0 14px rgba(153,69,255,.35)}
-  #cwBtn.on{border-color:#14F195;color:#b8ffe3;box-shadow:0 0 14px rgba(20,241,149,.35)}
-  #menuPanel{position:absolute;top:64px;left:10px;z-index:9;display:none;flex-direction:column;gap:8px;padding:10px;border-radius:16px;border:2px solid rgba(163,255,60,.4);background:rgba(7,18,15,.94);backdrop-filter:blur(6px)}
-  #menuPanel button{padding:11px 16px;border-radius:12px;border:1px solid rgba(163,255,60,.3);background:rgba(20,40,30,.6);color:#cfeeb0;font-weight:700;font-size:13px;font-family:inherit;text-align:left;letter-spacing:.5px}
+  /* ---- topbar: modern game HUD ---- */
+  #topbar{position:absolute;top:max(10px,env(safe-area-inset-top));left:10px;right:10px;display:flex;align-items:center;gap:9px;z-index:8}
+  .tbBtn{width:46px;height:46px;border-radius:16px;flex-shrink:0;
+    border:1px solid rgba(163,255,60,.35);
+    background:linear-gradient(160deg,rgba(52,92,56,.88),rgba(9,22,15,.92));
+    box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 12px rgba(163,255,60,.16),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -3px 8px rgba(0,0,0,.4);
+    backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;
+    color:#c8ff9a;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+  .tbBtn:active{border-color:rgba(163,255,60,.8);box-shadow:0 2px 8px rgba(0,0,0,.5),0 0 20px rgba(163,255,60,.4),inset 0 1px 0 rgba(255,255,255,.2)}
+  .tbBtn svg{width:23px;height:23px;filter:drop-shadow(0 0 5px rgba(163,255,60,.45))}
+  #lbBtn{color:#ffd76a}
+  #lbBtn svg{filter:drop-shadow(0 0 6px rgba(255,210,63,.55))}
+  #tbGold{display:flex;align-items:center;gap:7px;height:46px;padding:0 15px 0 9px;border-radius:16px;flex-shrink:0;
+    border:1px solid rgba(255,210,63,.38);
+    background:linear-gradient(160deg,rgba(95,70,18,.88),rgba(30,20,5,.92));
+    box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 12px rgba(255,210,63,.15),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -3px 8px rgba(0,0,0,.4);
+    backdrop-filter:blur(10px);color:#ffd76a;font-size:16px;font-style:italic;font-weight:900;box-sizing:border-box;
+    text-shadow:0 1px 3px rgba(0,0,0,.7)}
+  #tbGold img{width:24px;height:24px;filter:drop-shadow(0 0 6px rgba(255,210,63,.6))}
+  #cwBtn{margin-left:auto;height:46px;padding:0 15px;border-radius:16px;
+    display:flex;align-items:center;gap:8px;cursor:pointer;
+    border:1px solid rgba(153,69,255,.5);
+    background:linear-gradient(160deg,rgba(105,48,190,.88),rgba(32,10,68,.94));
+    box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 16px rgba(153,69,255,.3),inset 0 1px 0 rgba(255,255,255,.25),inset 0 -3px 8px rgba(0,0,0,.4);
+    backdrop-filter:blur(10px);color:#efe3ff;font-weight:900;font-size:11px;letter-spacing:.6px;font-style:italic;font-family:inherit;
+    text-shadow:0 1px 3px rgba(0,0,0,.7);transition:border-color .2s,box-shadow .2s}
+  #cwBtn svg{width:19px;height:19px;flex-shrink:0;filter:drop-shadow(0 0 5px rgba(200,150,255,.5))}
+  #cwBtn.on{border-color:rgba(20,241,149,.55);color:#c9ffe8;
+    background:linear-gradient(160deg,rgba(16,120,80,.88),rgba(5,45,30,.94));
+    box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 16px rgba(20,241,149,.3),inset 0 1px 0 rgba(255,255,255,.25),inset 0 -3px 8px rgba(0,0,0,.4)}
+  #cwBtn.on svg{filter:drop-shadow(0 0 5px rgba(20,241,149,.6))}
+  #menuPanel{position:absolute;top:66px;left:10px;z-index:9;display:none;flex-direction:column;gap:7px;padding:9px;border-radius:18px;
+    border:1px solid rgba(163,255,60,.3);
+    background:linear-gradient(160deg,rgba(20,42,28,.96),rgba(6,16,11,.97));
+    box-shadow:0 10px 30px rgba(0,0,0,.6),0 0 18px rgba(163,255,60,.12),inset 0 1px 0 rgba(255,255,255,.14);
+    backdrop-filter:blur(12px)}
+  #menuPanel button{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(163,255,60,.18);
+    background:linear-gradient(160deg,rgba(40,70,45,.5),rgba(15,30,20,.6));
+    color:#dfffc6;font-weight:800;font-size:13px;font-family:inherit;text-align:left;letter-spacing:.6px;font-style:italic;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.1);transition:border-color .2s,background .2s}
+  #menuPanel button:active{border-color:rgba(163,255,60,.6)}
+  #menuPanel button svg{width:18px;height:18px;flex-shrink:0;filter:drop-shadow(0 0 4px rgba(163,255,60,.4))}
   /* ---- leaderboard ---- */
   #lead{display:none;background:rgba(4,12,10,.93);backdrop-filter:blur(6px);justify-content:flex-start;z-index:10}
   #leadHead{width:100%;display:flex;align-items:center;justify-content:space-between;padding:max(12px,env(safe-area-inset-top)) 14px 8px;box-sizing:border-box}
@@ -60,13 +93,17 @@
   .lrow .sc{color:#a3ff3c;font-size:14px;font-style:italic;min-width:52px;text-align:right}
   /* ---- Bull Casino ---- */
   #casinoBtns{display:flex;gap:12px;margin-top:12px}
-  .cBtn{padding:11px 18px;border-radius:14px;background:linear-gradient(180deg,#1a1408,#0d0a04);border:2px solid #c9a13d;box-shadow:0 0 18px rgba(201,161,61,.35),inset 0 1px 0 rgba(255,235,170,.25);color:#ffd76a;font-weight:900;font-style:italic;font-size:14px;letter-spacing:1px;font-family:inherit}
+  .cBtn{padding:12px 19px;border-radius:16px;cursor:pointer;
+    background:linear-gradient(160deg,#2b2210,#0d0a04);border:1px solid rgba(201,161,61,.65);
+    box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 16px rgba(201,161,61,.28),inset 0 1px 0 rgba(255,235,170,.3),inset 0 -3px 8px rgba(0,0,0,.45);
+    color:#ffd76a;font-weight:900;font-style:italic;font-size:14px;letter-spacing:1px;font-family:inherit;
+    text-shadow:0 1px 3px rgba(0,0,0,.7);transition:border-color .2s,box-shadow .2s}
   #casino{display:none;background:radial-gradient(120% 90% at 50% 30%,#17130a 0%,#0c0906 55%,#050403 100%);justify-content:flex-start;z-index:7}
   #casHead{width:100%;display:flex;align-items:center;justify-content:space-between;padding:max(10px,env(safe-area-inset-top)) 12px 6px;box-sizing:border-box}
   #casBack{font-size:22px;color:#ffd76a;width:42px;height:42px;border-radius:12px;border:2px solid rgba(201,161,61,.6);background:rgba(20,15,6,.6)}
   #casTitle{font-size:20px;font-style:italic;letter-spacing:2px;background:linear-gradient(180deg,#ffe9a8,#c9a13d);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px #000)}
   #casWallet{color:#ffd23f;font-size:16px;text-shadow:0 2px 6px #000;margin-right:56px}
-  #felt{position:relative;width:94%;flex:0 1 auto;height:52%;margin:2px auto 6px;border-radius:26px;border:3px solid #c9a13d;box-shadow:inset 0 0 60px rgba(0,0,0,.75),0 0 30px rgba(201,161,61,.18);background:radial-gradient(90% 70% at 50% 40%,#14402a 0%,#0d2b1c 60%,#081b12 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:10px 6px;box-sizing:border-box;overflow:hidden}
+  #felt{position:relative;width:94%;flex:0 1 auto;height:72%;margin:2px auto 6px;border-radius:26px;border:3px solid #c9a13d;box-shadow:inset 0 0 60px rgba(0,0,0,.75),0 0 30px rgba(201,161,61,.18);background:radial-gradient(90% 70% at 50% 40%,#14402a 0%,#0d2b1c 60%,#081b12 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:10px 6px;box-sizing:border-box;overflow:hidden}
   #feltBrand{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;opacity:.42;pointer-events:none}
   #feltBrand .bull{font-size:46px;filter:sepia(1) saturate(2.6) drop-shadow(0 0 12px rgba(201,161,61,.7))}
   #feltBrand .brand{font-size:22px;font-style:italic;letter-spacing:3px;color:#c9a13d;text-shadow:0 0 14px rgba(201,161,61,.55)}
@@ -95,7 +132,10 @@
   .chip.c25{background:radial-gradient(circle at 35% 30%,#e05a4e,#8d2b22);color:#fff}
   .chip.c50{background:radial-gradient(circle at 35% 30%,#4ea0e0,#22538d);color:#fff}
   .chip.c100{background:radial-gradient(circle at 35% 30%,#3a3a3a,#0a0a0a);color:#ffd76a;border-color:#ffd76a}
-  .act{padding:12px 20px;border-radius:14px;border:2px solid #c9a13d;background:linear-gradient(180deg,#2a2210,#151004);color:#ffd76a;font-weight:900;font-size:15px;letter-spacing:1px;font-style:italic;font-family:inherit;box-shadow:0 0 16px rgba(201,161,61,.3)}
+  .act{padding:13px 21px;border-radius:16px;cursor:pointer;border:1px solid rgba(201,161,61,.6);
+    background:linear-gradient(160deg,#2f2512,#141004);color:#ffd76a;font-weight:900;font-size:15px;letter-spacing:1px;font-style:italic;font-family:inherit;
+    box-shadow:0 4px 12px rgba(0,0,0,.5),0 0 14px rgba(201,161,61,.25),inset 0 1px 0 rgba(255,235,170,.25),inset 0 -3px 8px rgba(0,0,0,.4);
+    text-shadow:0 1px 3px rgba(0,0,0,.7);transition:border-color .2s,box-shadow .2s}
   .act.green{border-color:#a3ff3c;color:#c8ff9a;box-shadow:0 0 16px rgba(163,255,60,.3)}
   .act.red{border-color:#ff5a4e;color:#ffb3ad;box-shadow:0 0 16px rgba(255,90,78,.3)}
   button:disabled{opacity:.35}
@@ -114,10 +154,17 @@
   <div id="title" class="screen">
     <div id="titleArt"></div><div id="titleShade"></div>
     <div id="topbar">
-      <button id="menuBtn" class="btn tbBtn" aria-label="Menu"><span class="mline"></span><span class="mline"></span></button>
+      <button id="menuBtn" class="btn tbBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 9h16M4 15h16"/></svg>
+      </button>
       <div id="tbGold"><img src="./assets/coin_gold.png" alt="$"><span id="tbGoldV">0</span></div>
-      <button id="lbBtn" class="btn tbBtn" aria-label="Leaderboard">🏆</button>
-      <button id="cwBtn" class="btn">CONNECT WALLET</button>
+      <button id="lbBtn" class="btn tbBtn" aria-label="Leaderboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+      </button>
+      <button id="cwBtn" class="btn" aria-label="Connect Wallet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+        <span id="cwLbl">CONNECT WALLET</span>
+      </button>
     </div>
     <div id="menuPanel"></div>
     <button id="playBtn" class="btn" aria-label="Play"><img src="./assets/play_btn.png" alt="PLAY"></button>
@@ -414,7 +461,7 @@ let AC=null, master=null, musicGain=null, buffers={}, musicSrc=null;
 let muted = localStorage.getItem("bullrun.muted")==="1";
 function setMuteIcon(){
   $("mute").textContent = muted ? STR.muteOn : STR.muteOff;
-  const m=$("mSound"); if(m) m.textContent = muted ? "🔇 SOUND: OFF" : "🔊 SOUND: ON";
+  const m=$("mSoundLbl"); if(m) m.textContent = muted ? "SOUND: OFF" : "SOUND: ON";
 }
 function toggleMute(){
   muted=!muted;
@@ -817,12 +864,18 @@ function pkShowdown(){
 
 // ---------- topbar: menu / gold / leaderboard / Solana wallet ----------
 function refreshGold(){ $("tbGoldV").textContent=totalCoins(); }
+const SVG_SOUND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>';
+const SVG_TROPHY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
+const SVG_WALLET='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>';
 function buildMenu(){
   const p=$("menuPanel");
   p.style.left="10px";p.style.right="auto";
   p.innerHTML="";
-  const bS=document.createElement("button");bS.id="mSound";bS.onclick=toggleMute;
-  const bL=document.createElement("button");bL.textContent="🏆 LEADERBOARD";
+  const bS=document.createElement("button");
+  bS.innerHTML=SVG_SOUND+'<span id="mSoundLbl"></span>';
+  bS.onclick=toggleMute;
+  const bL=document.createElement("button");
+  bL.innerHTML=SVG_TROPHY+"<span>LEADERBOARD</span>";
   bL.onclick=()=>{p.style.display="none";openLead();};
   p.append(bS,bL);
   setMuteIcon();
@@ -854,7 +907,7 @@ async function solConnect(prov){
     const r=await prov.connect();
     const pk=((r&&r.publicKey)?r.publicKey:prov.publicKey).toString();
     solPk=pk;solProv=prov;
-    $("cwBtn").textContent="👛 "+shortPk(pk);$("cwBtn").classList.add("on");
+    $("cwLbl").textContent=shortPk(pk);$("cwBtn").classList.add("on");
     if(window.FB&&window.FB.setWallet)window.FB.setWallet(pk);
   }catch(e){/* kullanıcı reddetti */}
 }
@@ -863,21 +916,22 @@ $("cwBtn").addEventListener("click",e=>{
   if(solPk){
     try{solProv&&solProv.disconnect&&solProv.disconnect();}catch(_){}
     solPk=null;solProv=null;
-    $("cwBtn").textContent="CONNECT WALLET";$("cwBtn").classList.remove("on");
+    $("cwLbl").textContent="CONNECT WALLET";$("cwBtn").classList.remove("on");
     if(window.FB&&window.FB.setWallet)window.FB.setWallet(null);
     return;
   }
   const provs=solList();
   if(!provs.length){
-    $("cwBtn").textContent="NO SOLANA WALLET";
-    setTimeout(()=>{if(!solPk)$("cwBtn").textContent="CONNECT WALLET";},2000);
+    $("cwLbl").textContent="NO SOLANA WALLET";
+    setTimeout(()=>{if(!solPk)$("cwLbl").textContent="CONNECT WALLET";},2000);
     return;
   }
   if(provs.length===1)return solConnect(provs[0][1]);
   const p=$("menuPanel");
   p.innerHTML="";p.style.left="auto";p.style.right="10px";
   for(const [n,pr] of provs){
-    const b=document.createElement("button");b.textContent="👛 "+n;
+    const b=document.createElement("button");
+    b.innerHTML=SVG_WALLET+"<span>"+n+"</span>";
     b.onclick=()=>{p.style.display="none";buildMenu();solConnect(pr);};
     p.appendChild(b);
   }
