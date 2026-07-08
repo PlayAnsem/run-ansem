@@ -35,6 +35,29 @@
   @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.12)}}
   #againBtn{margin-top:22px;padding:14px 34px;border-radius:16px;background:linear-gradient(180deg,#2a3f33,#152820);border:3px solid #a3ff3c;box-shadow:0 0 24px rgba(163,255,60,.4),inset 0 2px 0 rgba(255,255,255,.15)}
   #againBtn span{font-size:24px;font-weight:900;font-style:italic;letter-spacing:2px;background:linear-gradient(180deg,#ffd23f,#ff7a1a,#ff3d2e);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6))}
+  /* ---- topbar: menu / gold / leaderboard / wallet ---- */
+  #topbar{position:absolute;top:max(10px,env(safe-area-inset-top));left:10px;right:10px;display:flex;align-items:center;gap:8px;z-index:8}
+  .tbBtn{width:44px;height:44px;border-radius:14px;border:2px solid rgba(163,255,60,.5);background:rgba(7,18,15,.6);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:19px;color:#a3ff3c}
+  #menuBtn .mline{display:block;width:18px;height:3px;border-radius:2px;background:#a3ff3c}
+  #tbGold{display:flex;align-items:center;gap:6px;height:44px;padding:0 12px;border-radius:14px;border:2px solid rgba(255,210,63,.45);background:rgba(7,18,15,.6);color:#ffd23f;font-size:15px;font-style:italic;font-weight:900;backdrop-filter:blur(3px);box-sizing:border-box}
+  #tbGold img{width:20px;height:20px}
+  #cwBtn{margin-left:auto;height:44px;padding:0 13px;border-radius:14px;border:2px solid #9945FF;background:linear-gradient(180deg,rgba(60,20,110,.75),rgba(25,8,50,.85));color:#e6d5ff;font-weight:900;font-size:11px;letter-spacing:.5px;font-style:italic;font-family:inherit;backdrop-filter:blur(3px);box-shadow:0 0 14px rgba(153,69,255,.35)}
+  #cwBtn.on{border-color:#14F195;color:#b8ffe3;box-shadow:0 0 14px rgba(20,241,149,.35)}
+  #menuPanel{position:absolute;top:64px;left:10px;z-index:9;display:none;flex-direction:column;gap:8px;padding:10px;border-radius:16px;border:2px solid rgba(163,255,60,.4);background:rgba(7,18,15,.94);backdrop-filter:blur(6px)}
+  #menuPanel button{padding:11px 16px;border-radius:12px;border:1px solid rgba(163,255,60,.3);background:rgba(20,40,30,.6);color:#cfeeb0;font-weight:700;font-size:13px;font-family:inherit;text-align:left;letter-spacing:.5px}
+  /* ---- leaderboard ---- */
+  #lead{display:none;background:rgba(4,12,10,.93);backdrop-filter:blur(6px);justify-content:flex-start;z-index:10}
+  #leadHead{width:100%;display:flex;align-items:center;justify-content:space-between;padding:max(12px,env(safe-area-inset-top)) 14px 8px;box-sizing:border-box}
+  #leadTitle{font-size:20px;font-style:italic;letter-spacing:2px;color:#ffd23f;text-shadow:0 0 12px rgba(255,210,63,.5)}
+  #leadClose{width:42px;height:42px;border-radius:12px;border:2px solid rgba(163,255,60,.5);background:rgba(7,18,15,.6);color:#a3ff3c;font-size:18px}
+  #leadMsg{color:#cfeeb0;font-size:13px;margin:8px 16px;text-align:center;letter-spacing:1px}
+  #leadList{width:92%;flex:1;overflow-y:auto;margin-bottom:max(12px,env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+  .lrow{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:6px;border-radius:12px;background:rgba(20,40,30,.55);border:1px solid rgba(163,255,60,.15)}
+  .lrow.me{border-color:#a3ff3c;background:rgba(40,70,40,.6);box-shadow:0 0 12px rgba(163,255,60,.25)}
+  .lrow .rk2{width:34px;text-align:center;color:#ffd23f;font-size:15px;font-style:italic;flex-shrink:0}
+  .lrow .nm{flex:1;color:#e8ffe0;font-size:13px;letter-spacing:.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lrow .cn{color:#ffd23f;font-size:12px}
+  .lrow .sc{color:#a3ff3c;font-size:14px;font-style:italic;min-width:52px;text-align:right}
   /* ---- Bull Casino ---- */
   #casinoBtns{display:flex;gap:12px;margin-top:12px}
   .cBtn{padding:11px 18px;border-radius:14px;background:linear-gradient(180deg,#1a1408,#0d0a04);border:2px solid #c9a13d;box-shadow:0 0 18px rgba(201,161,61,.35),inset 0 1px 0 rgba(255,235,170,.25);color:#ffd76a;font-weight:900;font-style:italic;font-size:14px;letter-spacing:1px;font-family:inherit}
@@ -43,7 +66,7 @@
   #casBack{font-size:22px;color:#ffd76a;width:42px;height:42px;border-radius:12px;border:2px solid rgba(201,161,61,.6);background:rgba(20,15,6,.6)}
   #casTitle{font-size:20px;font-style:italic;letter-spacing:2px;background:linear-gradient(180deg,#ffe9a8,#c9a13d);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px #000)}
   #casWallet{color:#ffd23f;font-size:16px;text-shadow:0 2px 6px #000;margin-right:56px}
-  #felt{position:relative;width:94%;flex:1;margin:2px auto 6px;border-radius:26px;border:3px solid #c9a13d;box-shadow:inset 0 0 60px rgba(0,0,0,.75),0 0 30px rgba(201,161,61,.18);background:radial-gradient(90% 70% at 50% 40%,#14402a 0%,#0d2b1c 60%,#081b12 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:10px 6px;box-sizing:border-box;overflow:hidden}
+  #felt{position:relative;width:94%;flex:0 1 auto;height:52%;margin:2px auto 6px;border-radius:26px;border:3px solid #c9a13d;box-shadow:inset 0 0 60px rgba(0,0,0,.75),0 0 30px rgba(201,161,61,.18);background:radial-gradient(90% 70% at 50% 40%,#14402a 0%,#0d2b1c 60%,#081b12 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:10px 6px;box-sizing:border-box;overflow:hidden}
   #feltBrand{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;opacity:.42;pointer-events:none}
   #feltBrand .bull{font-size:46px;filter:sepia(1) saturate(2.6) drop-shadow(0 0 12px rgba(201,161,61,.7))}
   #feltBrand .brand{font-size:22px;font-style:italic;letter-spacing:3px;color:#c9a13d;text-shadow:0 0 14px rgba(201,161,61,.55)}
@@ -90,6 +113,13 @@
   </div>
   <div id="title" class="screen">
     <div id="titleArt"></div><div id="titleShade"></div>
+    <div id="topbar">
+      <button id="menuBtn" class="btn tbBtn" aria-label="Menu"><span class="mline"></span><span class="mline"></span></button>
+      <div id="tbGold"><img src="./assets/coin_gold.png" alt="$"><span id="tbGoldV">0</span></div>
+      <button id="lbBtn" class="btn tbBtn" aria-label="Leaderboard">🏆</button>
+      <button id="cwBtn" class="btn">CONNECT WALLET</button>
+    </div>
+    <div id="menuPanel"></div>
     <button id="playBtn" class="btn" aria-label="Play"><img src="./assets/play_btn.png" alt="PLAY"></button>
     <div id="casinoBtns">
       <button id="bjBtn" class="btn cBtn">♠ BULL JACK</button>
@@ -121,6 +151,11 @@
     </div>
     <div id="casMsg"></div>
     <div id="casCtrl"></div>
+  </div>
+  <div id="lead" class="screen">
+    <div id="leadHead"><div id="leadTitle">🏆 LEADERBOARD</div><button id="leadClose" class="btn">✕</button></div>
+    <div id="leadMsg"></div>
+    <div id="leadList"></div>
   </div>
   <button id="mute" class="btn" aria-label="Mute"></button>
   <div id="dev"></div>
@@ -377,7 +412,16 @@ const imgReady = Promise.all([
 // ---------- audio (WebAudio, master mute) ----------
 let AC=null, master=null, musicGain=null, buffers={}, musicSrc=null;
 let muted = localStorage.getItem("bullrun.muted")==="1";
-function setMuteIcon(){ $("mute").textContent = muted ? STR.muteOn : STR.muteOff; }
+function setMuteIcon(){
+  $("mute").textContent = muted ? STR.muteOn : STR.muteOff;
+  const m=$("mSound"); if(m) m.textContent = muted ? "🔇 SOUND: OFF" : "🔊 SOUND: ON";
+}
+function toggleMute(){
+  muted=!muted;
+  localStorage.setItem("bullrun.muted", muted?"1":"0");
+  if(master) master.gain.value=muted?0:1;
+  setMuteIcon();
+}
 setMuteIcon();
 async function initAudio(){
   if (AC) { if (AC.state==="suspended") AC.resume(); return; }
@@ -400,9 +444,7 @@ function startMusic(){
   musicSrc=AC.createBufferSource(); musicSrc.buffer=buffers.music_loop; musicSrc.loop=true;
   musicSrc.connect(musicGain); musicSrc.start();
 }
-$("mute").addEventListener("click", e=>{ e.stopPropagation(); muted=!muted;
-  localStorage.setItem("bullrun.muted", muted?"1":"0");
-  if(master) master.gain.value=muted?0:1; setMuteIcon(); });
+$("mute").addEventListener("click", e=>{ e.stopPropagation(); toggleMute(); });
 
 // ---------- canvas sizing ----------
 const DPR_CAP = 2;
@@ -491,12 +533,15 @@ function showTitle(){
   state="title";
   $("title").style.display="flex"; $("over").style.display="none"; $("hud").style.display="none";
   $("casino").style.display="none";
+  $("mute").style.display="none"; // topbar menüsü ses kontrolünü devralıyor
+  refreshGold();
   $("bestTitle").textContent = best()>0 ? `${STR.best}: ${best()} ${STR.distanceUnit}` : STR.tapToStart;
 }
 function startRun(){
   sim = createSim((Date.now() ^ (Math.random()*1e9))>>>0);
   state="running"; crashT=0;
   $("title").style.display="none"; $("over").style.display="none"; $("hud").style.display="flex";
+  $("mute").style.display="flex";
   for(const p of parts)p.on=false; for(const p of pops)p.on=false;
   initAudio().then(startMusic);
 }
@@ -506,6 +551,7 @@ function gameOver(){
   const nb = d>prev;
   if(nb) localStorage.setItem("bullrun.best", String(d));
   localStorage.setItem("bullrun.coins", String(totalCoins()+sim.coins));
+  if(window.FB&&window.FB.submitRun) window.FB.submitRun(Math.max(d,prev), totalCoins());
   setTimeout(()=>{
     $("over").style.display="flex"; $("hud").style.display="none";
     $("ovDist").innerHTML = `${STR.distance}: <b>${d} ${STR.distanceUnit}</b>`;
@@ -563,6 +609,7 @@ function casCtrl(btns){
 function openCasino(g){
   casGame=g;casSeq++;state="casino";
   $("title").style.display="none";$("over").style.display="none";$("casino").style.display="flex";
+  $("mute").style.display="flex";
   $("casTitle").textContent=g==="bj"?"BULL JACK":"BULL POKER";
   if(getW()<25){setW(getW()+250);}else setW(getW());
   initAudio();
@@ -600,6 +647,7 @@ function casEnd(txt,ret,won){
   if(ret>0)setW(getW()+ret);
   if(won)sfx("sfx_coin",0.9);else if(won===false)sfx("sfx_crash",0.45);
   bet=0;
+  if(window.FB&&window.FB.submitRun) window.FB.submitRun(best(), getW());
   casCtrl([{t:"NEW HAND",cls:"act green",f:()=>betPhase()}]);
 }
 // --- Bull Jack ---
@@ -766,6 +814,97 @@ function pkShowdown(){
     });
   });});});});
 }
+
+// ---------- topbar: menu / gold / leaderboard / Solana wallet ----------
+function refreshGold(){ $("tbGoldV").textContent=totalCoins(); }
+function buildMenu(){
+  const p=$("menuPanel");
+  p.style.left="10px";p.style.right="auto";
+  p.innerHTML="";
+  const bS=document.createElement("button");bS.id="mSound";bS.onclick=toggleMute;
+  const bL=document.createElement("button");bL.textContent="🏆 LEADERBOARD";
+  bL.onclick=()=>{p.style.display="none";openLead();};
+  p.append(bS,bL);
+  setMuteIcon();
+}
+buildMenu();
+$("menuBtn").addEventListener("click",e=>{
+  e.stopPropagation();
+  const p=$("menuPanel");
+  const open=p.style.display==="flex";
+  buildMenu();
+  p.style.display=open?"none":"flex";
+});
+document.addEventListener("click",()=>{$("menuPanel").style.display="none";});
+$("menuPanel").addEventListener("click",e=>e.stopPropagation());
+// --- Solana wallet ---
+let solPk=null,solProv=null;
+const shortPk=pk=>pk.slice(0,4)+"…"+pk.slice(-4);
+function solList(){
+  const out=[],seen=new Set();
+  const add=(n,p)=>{if(p&&typeof p.connect==="function"&&!seen.has(p)){seen.add(p);out.push([n,p]);}};
+  add("Phantom",window.phantom&&window.phantom.solana);
+  add("Solflare",window.solflare);
+  add("Backpack",window.backpack);
+  add("Wallet",window.solana); // diğer Phantom-uyumlu enjekte cüzdanlar
+  return out;
+}
+async function solConnect(prov){
+  try{
+    const r=await prov.connect();
+    const pk=((r&&r.publicKey)?r.publicKey:prov.publicKey).toString();
+    solPk=pk;solProv=prov;
+    $("cwBtn").textContent="👛 "+shortPk(pk);$("cwBtn").classList.add("on");
+    if(window.FB&&window.FB.setWallet)window.FB.setWallet(pk);
+  }catch(e){/* kullanıcı reddetti */}
+}
+$("cwBtn").addEventListener("click",e=>{
+  e.stopPropagation();
+  if(solPk){
+    try{solProv&&solProv.disconnect&&solProv.disconnect();}catch(_){}
+    solPk=null;solProv=null;
+    $("cwBtn").textContent="CONNECT WALLET";$("cwBtn").classList.remove("on");
+    if(window.FB&&window.FB.setWallet)window.FB.setWallet(null);
+    return;
+  }
+  const provs=solList();
+  if(!provs.length){
+    $("cwBtn").textContent="NO SOLANA WALLET";
+    setTimeout(()=>{if(!solPk)$("cwBtn").textContent="CONNECT WALLET";},2000);
+    return;
+  }
+  if(provs.length===1)return solConnect(provs[0][1]);
+  const p=$("menuPanel");
+  p.innerHTML="";p.style.left="auto";p.style.right="10px";
+  for(const [n,pr] of provs){
+    const b=document.createElement("button");b.textContent="👛 "+n;
+    b.onclick=()=>{p.style.display="none";buildMenu();solConnect(pr);};
+    p.appendChild(b);
+  }
+  p.style.display="flex";
+});
+// --- leaderboard ---
+function openLead(){
+  $("lead").style.display="flex";
+  $("leadList").innerHTML="";$("leadMsg").textContent="LOADING...";
+  if(!window.FB||!window.FB.ready){$("leadMsg").textContent="LEADERBOARD OFFLINE — CHECK CONNECTION";return;}
+  window.FB.top(100).then(all=>{
+    const rows=all.filter(r=>(r.best||0)>0||(r.coins||0)>0);
+    $("leadMsg").textContent=rows.length?"":"NO RUNNERS YET — BE THE FIRST! 🐂";
+    const list=$("leadList");
+    rows.forEach((r,i)=>{
+      const d=document.createElement("div");
+      d.className="lrow"+(r.uid===window.FB.uid?" me":"");
+      const rk=document.createElement("div");rk.className="rk2";rk.textContent=i===0?"🥇":i===1?"🥈":i===2?"🥉":String(i+1);
+      const nm=document.createElement("div");nm.className="nm";nm.textContent=(r.name||"BULL")+(r.uid===window.FB.uid?" (YOU)":"");
+      const cn=document.createElement("div");cn.className="cn";cn.textContent="$ "+(r.coins||0);
+      const sc=document.createElement("div");sc.className="sc";sc.textContent=(r.best||0)+" m";
+      d.append(rk,nm,cn,sc);list.appendChild(d);
+    });
+  }).catch(()=>{$("leadMsg").textContent="LEADERBOARD ERROR";});
+}
+$("lbBtn").addEventListener("click",openLead);
+$("leadClose").addEventListener("click",()=>{$("lead").style.display="none";refreshGold();});
 
 // ---------- render helpers ----------
 function drawSky(){
@@ -1018,8 +1157,56 @@ imgReady.then(()=>{
   const q=new URLSearchParams(location.search);
   if(q.has("auto")) startRun();
   const cas=q.get("cas"); if(cas==="bj"||cas==="pk") openCasino(cas);
+  if(q.has("lead")){ // anonim giriş tamamlanınca aç
+    let tr=0;const it=setInterval(()=>{if((window.FB&&window.FB.ready)||++tr>40){clearInterval(it);openLead();}},250);
+  }
   requestAnimationFrame(frameFn);
 });
+</script>
+<script type="module">
+// ---------- Firebase: anonim auth + Firestore leaderboard ----------
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {getFirestore,doc,setDoc,getDocs,collection,query,orderBy,limit,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const cfg={
+  apiKey:"AIzaSyAcshv0yrq3RJtif-2oCSeN0-HbZvW8bRU",
+  authDomain:"playansem.firebaseapp.com",
+  projectId:"playansem",
+  storageBucket:"playansem.firebasestorage.app",
+  messagingSenderId:"504795807147",
+  appId:"1:504795807147:web:ba37047592a48ff089e6ee"
+};
+const FB={ready:false,uid:null,wallet:localStorage.getItem("bullrun.wallet")||null};
+window.FB=FB;
+try{
+  const app=initializeApp(cfg);
+  const auth=getAuth(app), db=getFirestore(app);
+  const myName=()=>FB.wallet?(FB.wallet.slice(0,4)+"…"+FB.wallet.slice(-4)):("BULL-"+(FB.uid||"0000").slice(0,4).toUpperCase());
+  FB.submitRun=(best,coins)=>{
+    if(!FB.ready)return;
+    setDoc(doc(db,"players",FB.uid),{
+      name:myName(),wallet:FB.wallet||null,
+      best:Number(best)||0,coins:Number(coins)||0,
+      updatedAt:serverTimestamp()
+    },{merge:true}).catch(()=>{});
+  };
+  FB.setWallet=w=>{
+    FB.wallet=w;
+    if(w)localStorage.setItem("bullrun.wallet",w);else localStorage.removeItem("bullrun.wallet");
+    FB.submitRun(Number(localStorage.getItem("bullrun.best")||0),Number(localStorage.getItem("bullrun.coins")||0));
+  };
+  FB.top=async n=>{
+    const snap=await getDocs(query(collection(db,"players"),orderBy("best","desc"),limit(n)));
+    const rows=[];snap.forEach(d=>rows.push({uid:d.id,...d.data()}));
+    return rows;
+  };
+  onAuthStateChanged(auth,u=>{
+    if(!u)return;
+    FB.uid=u.uid;FB.ready=true;
+    FB.submitRun(Number(localStorage.getItem("bullrun.best")||0),Number(localStorage.getItem("bullrun.coins")||0));
+  });
+  signInAnonymously(auth).catch(()=>{});
+}catch(e){/* çevrimdışı — leaderboard kapalı kalır */}
 </script>
 </body>
 </html>
