@@ -22,7 +22,11 @@
     rgba(0,0,0,0) 52%,rgba(0,0,0,.5) 72%,rgba(0,0,0,.9) 88%,#000 100%)}
   .btn{position:relative;border:none;background:none;cursor:pointer;padding:0;transition:transform .08s ease;-webkit-tap-highlight-color:transparent}
   .btn:active{transform:scale(.93)}
-  #playBtn img{width:min(23vw,125px);display:block;filter:drop-shadow(0 6px 24px rgba(163,255,60,.45))}
+  #playBtn img{width:min(23vw,125px);display:block;filter:drop-shadow(0 6px 24px rgba(163,255,60,.45));animation:heartbeat 1.8s ease-in-out infinite}
+  @keyframes heartbeat{0%,100%{transform:scale(1)}12%{transform:scale(1.07)}24%{transform:scale(1)}36%{transform:scale(1.05)}48%{transform:scale(1)}}
+  #loader{position:absolute;inset:0;z-index:99;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .45s}
+  #loader img{width:110px;animation:heartbeat 1.4s ease-in-out infinite;filter:drop-shadow(0 0 24px rgba(163,255,60,.35))}
+  #loaderTxt{font-family:"Lilita One","Arial Black",sans-serif;color:#a3ff3c;font-size:16px;letter-spacing:4px;text-shadow:0 0 14px rgba(163,255,60,.6);animation:pulse 1s infinite alternate}
   #hint{color:#cfeeb0;font-size:13px;font-weight:700;letter-spacing:.4px;text-align:center;margin:14px 16px 8px;text-shadow:0 2px 6px #000;line-height:1.6}
   #bestTitle{color:#ffd23f;font-size:15px;margin-bottom:max(20px,env(safe-area-inset-bottom));text-shadow:0 2px 8px #000;letter-spacing:1px}
   #mute{position:absolute;top:max(10px,env(safe-area-inset-top));right:12px;z-index:9;font-size:24px;width:46px;height:46px;border-radius:12px;border:2px solid rgba(163,255,60,.5);background:rgba(7,18,15,.55);color:#a3ff3c;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
@@ -125,6 +129,17 @@
     box-shadow:0 4px 14px rgba(0,0,0,.55),0 0 16px rgba(163,255,60,.35),inset 0 1px 0 rgba(255,255,255,.35);
     display:flex;align-items:center;justify-content:center;color:#0a1f0c}
   #swFlip svg{width:22px;height:22px}
+  .swCard{position:relative}
+  #swDrop{display:none;position:absolute;right:14px;top:76px;z-index:6;flex-direction:column;gap:6px;padding:8px;border-radius:16px;
+    border:1px solid rgba(163,255,60,.3);
+    background:linear-gradient(160deg,rgba(20,42,28,.97),rgba(6,16,11,.98));
+    box-shadow:0 12px 32px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.12)}
+  #swDrop button{display:flex;align-items:center;gap:9px;padding:9px 14px;border-radius:11px;cursor:pointer;
+    border:1px solid rgba(163,255,60,.15);
+    background:rgba(30,55,38,.5);color:#dfffc6;font-weight:900;font-size:14px;font-family:inherit;letter-spacing:.5px}
+  #swDrop button img,#swDrop button svg{width:24px;height:24px;border-radius:50%}
+  #swTok2Ic{display:flex;align-items:center}
+  #swTok2Ic img,#swTok2Ic svg{width:26px;height:26px;border-radius:50%;filter:drop-shadow(0 0 5px rgba(163,255,60,.35))}
   #swGo{margin-top:18px;padding:16px;border-radius:18px;border:1px solid rgba(163,255,60,.3);
     background:linear-gradient(165deg,rgba(50,84,40,.7),rgba(18,34,16,.9));
     color:#9ac79b;font-family:"Lilita One","Arial Black",sans-serif;font-size:17px;letter-spacing:2px;
@@ -367,10 +382,10 @@
         <div id="potV"></div>
         <div id="potChips"></div>
       </div>
+      <div id="casMsg"></div>
       <div class="cardRow" id="boardRow"></div>
       <div class="seatRow" id="rowBottom"></div>
     </div>
-    <div id="casMsg"></div>
     <div id="dock">
       <div id="timerBar"><div id="timerFill"></div></div>
       <div id="casCtrl"></div>
@@ -406,11 +421,12 @@
         <div class="swLbl">You receive:</div>
         <div class="swRow">
           <div class="swAmt">0</div>
-          <button class="btn swToken">
-            <img src="./assets/logo_round.png" alt="">
-            <span>$ANSEM</span>
+          <button class="btn swToken" id="swTok2">
+            <span id="swTok2Ic"><img src="./assets/logo_round.png" alt=""></span>
+            <span id="swTok2Lbl">$ANSEM</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </button>
+          <div id="swDrop"></div>
         </div>
         <div class="swSub"><span>$0.00</span></div>
       </div>
@@ -422,6 +438,7 @@
     <div id="leadMsg"></div>
     <div id="leadList"></div>
   </div>
+  <div id="loader"><img src="./assets/logo_round.png" alt=""><div id="loaderTxt">LOADING...</div></div>
   <div id="toast"></div>
   <button id="mute" class="btn" aria-label="Mute"></button>
   <div id="dev"></div>
@@ -673,6 +690,7 @@ const imgReady = Promise.all([
   loadImg("jump","./assets/player_jump.png"),
   loadImg("wall","./assets/wall_bear.png"), loadImg("hurdle","./assets/hurdle_low.png"),
   loadImg("coin","./assets/coin_gold.png"), loadImg("sky","./assets/skyline_far.jpg"),
+  loadImg("poster","./assets/title_poster.jpg"), loadImg("playbtn","./assets/play_btn.png"),
 ]);
 
 // ---------- audio (WebAudio, master mute) ----------
@@ -1361,6 +1379,29 @@ function openSwap(){
 $("tbGold").style.cursor="pointer";
 $("tbGold").addEventListener("click",e=>{e.stopPropagation();openSwap();});
 $("swapBack").addEventListener("click",()=>{$("swap").style.display="none";});
+const SOL_SVG='<svg viewBox="0 0 397.7 311.7"><defs><linearGradient id="solg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#9945FF"/><stop offset="1" stop-color="#14F195"/></linearGradient></defs><path fill="url(#solg)" d="M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7z"/><path fill="url(#solg)" d="M64.6 3.8C67.1 1.4 70.4 0 73.8 0h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1L64.6 3.8z"/><path fill="url(#solg)" d="M330.1 120.3c-2.4-2.4-5.7-3.8-9.2-3.8H3.5c-5.8 0-8.7 7-4.6 11.1l62.7 62.7c2.4 2.4 5.7 3.8 9.2 3.8h317.4c5.8 0 8.7-7 4.6-11.1l-62.7-62.7z"/></svg>';
+const SW_TOKENS=[
+  {lbl:"$ANSEM",ic:'<img src="./assets/logo_round.png" alt="">'},
+  {lbl:"SOL",ic:SOL_SVG}
+];
+function swDropBuild(){
+  const d=$("swDrop");d.innerHTML="";
+  for(const t of SW_TOKENS){
+    const b=document.createElement("button");
+    b.innerHTML=t.ic+"<span>"+t.lbl+"</span>";
+    b.onclick=e=>{e.stopPropagation();
+      $("swTok2Ic").innerHTML=t.ic;$("swTok2Lbl").textContent=t.lbl;
+      d.style.display="none";};
+    d.appendChild(b);
+  }
+}
+swDropBuild();
+$("swTok2").addEventListener("click",e=>{
+  e.stopPropagation();
+  const d=$("swDrop");
+  d.style.display=d.style.display==="flex"?"none":"flex";
+});
+document.addEventListener("click",()=>{$("swDrop").style.display="none";});
 const SVG_SOUND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>';
 const SVG_TROPHY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
 const SVG_WALLET='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>';
@@ -1748,8 +1789,9 @@ function frameFn(now){
     $("dev").textContent=`${fps} fps · ${opsShown} ops · ${sim?sim.entities.length:0} ent`;
   }
 }
-imgReady.then(()=>{
+Promise.all([imgReady, document.fonts?document.fonts.ready:Promise.resolve()]).then(()=>{
   showTitle();
+  const L=$("loader");L.style.opacity="0";setTimeout(()=>L.style.display="none",500);
   const q=new URLSearchParams(location.search);
   if(q.has("auto")) startRun();
   const cas=q.get("cas"); if(cas==="bj"||cas==="pk") openCasino(cas);
