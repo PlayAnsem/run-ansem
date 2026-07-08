@@ -95,6 +95,18 @@
     text-shadow:0 1px 3px rgba(0,0,0,.7)}
   #tbLives svg{width:19px;height:19px;fill:#ff5a66;stroke:none;filter:drop-shadow(0 0 5px rgba(255,90,102,.55))}
   #tbLives .cd{font-size:10px;color:#ffb3ad;letter-spacing:.4px;font-style:normal}
+  /* ---- casino kazanç efektleri ---- */
+  #casFx{position:absolute;inset:0;pointer-events:none;z-index:30;overflow:hidden}
+  #casFx img{position:absolute;width:26px;height:26px;filter:drop-shadow(0 0 7px rgba(255,210,63,.75))}
+  #casBanner{position:absolute;left:50%;top:37%;transform:translate(-50%,-50%);z-index:31;pointer-events:none;
+    font-family:"Lilita One","Arial Black",sans-serif;font-size:46px;letter-spacing:2px;text-align:center;
+    white-space:nowrap;opacity:0}
+  #casBanner.win{background:linear-gradient(180deg,#fff3b0,#ffd23f 40%,#ff9a1a);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 22px rgba(255,210,63,.85)) drop-shadow(0 4px 6px rgba(0,0,0,.8))}
+  #casBanner.lose{background:linear-gradient(180deg,#ff9d94,#ff3d2e 60%,#b3170c);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 18px rgba(255,61,46,.7)) drop-shadow(0 4px 6px rgba(0,0,0,.8))}
   #wAddr{padding:10px 16px;border-radius:12px;text-align:center;
     border:1px dashed rgba(163,255,60,.35);color:#c8ff9a;font-size:13px;font-weight:800;letter-spacing:1px;
     background:rgba(10,25,16,.6)}
@@ -315,6 +327,8 @@
       <div id="timerBar"><div id="timerFill"></div></div>
       <div id="casCtrl"></div>
     </div>
+    <div id="casFx"></div>
+    <div id="casBanner"></div>
   </div>
   <div id="lead" class="screen">
     <div id="leadHead"><div id="leadTitle">🏆 LEADERBOARD</div><button id="leadClose" class="btn">✕</button></div>
@@ -832,6 +846,52 @@ function setActive(id){
 }
 function potShow(t){$("potPill").style.display="flex";$("potV").textContent=t;}
 function potHide(){$("potPill").style.display="none";}
+function chipSfx(n=2,spread=0.05){ // sentezlenmiş poker çipi klikleri
+  if(!AC||muted)return;
+  const t0=AC.currentTime;
+  for(let i=0;i<n;i++){
+    const t=t0+i*spread+Math.random()*0.02;
+    const dur=0.04;
+    const buf=AC.createBuffer(1,Math.floor(AC.sampleRate*dur),AC.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let j=0;j<d.length;j++)d[j]=(Math.random()*2-1)*Math.pow(1-j/d.length,2.2);
+    const src=AC.createBufferSource();src.buffer=buf;
+    const bp=AC.createBiquadFilter();bp.type="bandpass";
+    bp.frequency.value=1900+Math.random()*1100;bp.Q.value=7;
+    const g=AC.createGain();g.gain.value=0.55;
+    src.connect(bp);bp.connect(g);g.connect(master);
+    src.start(t);
+  }
+}
+function chipFly(){ // pottan oyuncuya coin yağmuru
+  const fx=$("casFx"),cas=$("casino").getBoundingClientRect();
+  const pp=$("potPill"),src=(pp.style.display!=="none"?pp:$("felt")).getBoundingClientRect();
+  const dstEl=$("cards_you"),dst=(dstEl||$("felt")).getBoundingClientRect();
+  const x0=src.left+src.width/2-cas.left, y0=src.top+src.height/2-cas.top;
+  const x1=dst.left+dst.width/2-cas.left, y1=dst.top+dst.height/2-cas.top;
+  for(let i=0;i<14;i++){
+    const img=document.createElement("img");img.src="./assets/coin_gold.png";
+    img.style.left=(x0-13)+"px";img.style.top=(y0-13)+"px";
+    fx.appendChild(img);
+    const dx=x1-x0+(Math.random()-0.5)*80, dy=y1-y0+(Math.random()-0.5)*34;
+    img.animate([
+      {transform:"translate(0,0) scale(.5)",opacity:0},
+      {transform:`translate(${dx*0.5}px,${dy*0.5-55-Math.random()*45}px) scale(1.15)`,opacity:1,offset:.5},
+      {transform:`translate(${dx}px,${dy}px) scale(.8)`,opacity:0}
+    ],{duration:680+Math.random()*260,delay:i*48,easing:"cubic-bezier(.3,.6,.4,1)"}).onfinish=()=>img.remove();
+  }
+}
+function casBanner(text,win){
+  const b=$("casBanner");
+  b.textContent=text;b.className=win?"win":"lose";
+  b.animate([
+    {transform:"translate(-50%,-50%) scale(.15)",opacity:0},
+    {transform:"translate(-50%,-50%) scale(1.18)",opacity:1,offset:.4},
+    {transform:"translate(-50%,-50%) scale(1)",opacity:1,offset:.55},
+    {transform:"translate(-50%,-50%) scale(1)",opacity:1,offset:.82},
+    {transform:"translate(-50%,-50%) scale(.9)",opacity:0}
+  ],{duration:2000,easing:"ease-out"});
+}
 let casTmr=null;
 function stopTimer(){if(casTmr){clearInterval(casTmr);casTmr=null;}$("timerBar").style.display="none";}
 function startTimer(sec,onEnd){
@@ -886,10 +946,10 @@ function betPhase(note){
 function updateBet(note){
   casMsg(note||((casGame==="bj"?"BET":"ANTE")+": $"+bet+(bet?"":" · TAP A CHIP")));
   const chips=[10,25,50,100].map(v=>({t:"$"+v,cls:"chip c"+v,dis:getW()<v,
-    f:()=>{setW(getW()-v);bet+=v;updateBet();}}));
+    f:()=>{chipSfx(1);setW(getW()-v);bet+=v;updateBet();}}));
   casCtrl([...chips,
-    {t:"DEAL",cls:"act green",dis:bet<=0,f:()=>casGame==="bj"?bjDeal():pkDeal()},
-    {t:"RESET",dis:bet<=0,f:()=>{setW(getW()+bet);bet=0;updateBet();}}]);
+    {t:"DEAL",cls:"act green",dis:bet<=0,f:()=>{chipSfx(3,0.06);casGame==="bj"?bjDeal():pkDeal();}},
+    {t:"RESET",dis:bet<=0,f:()=>{chipSfx(2);setW(getW()+bet);bet=0;updateBet();}}]);
 }
 // %50 kazanma oranı kontrolcüsü: oran hedeften saparsa dağıtım hafifçe dengelenir
 function casStats(){
@@ -911,6 +971,8 @@ function casEnd(txt,ret,won){
   casMsg(txt);
   if(ret>0)setW(getW()+ret);
   if(won===true)recCas(true);else if(won===false)recCas(false);
+  if(won===true){chipFly();chipSfx(11,0.06);casBanner("+$"+ret,true);}
+  else if(won===false)casBanner("REKT",false);
   if(won)sfx("sfx_coin",0.9);else if(won===false)sfx("sfx_crash",0.45);
   bet=0;
   if(window.FB&&window.FB.submitRun) window.FB.submitRun(best(), getW());
@@ -959,7 +1021,7 @@ function bjYourTurn(){
     {t:"HIT",f:()=>{stopTimer();HS.you.push(deck.pop());bjRender(true);bjYourTurn();}},
     {t:"STAND",cls:"act green",f:()=>{stopTimer();casCtrl([]);bjBots();}},
     {t:"DOUBLE",dis:!canDbl,f:()=>{
-      stopTimer();setW(getW()-bet);bet*=2;potShow("BET $"+bet);HS.you.push(deck.pop());bjRender(true);
+      stopTimer();chipSfx(3,0.06);setW(getW()-bet);bet*=2;potShow("BET $"+bet);HS.you.push(deck.pop());bjRender(true);
       if(bjVal(HS.you)>21){casMsg("BUST — TABLE PLAYS ON...");casLater(800,bjBots);}
       else{casCtrl([]);bjBots();}
     }}]);
@@ -1102,6 +1164,7 @@ function pkStreet(){
   pkRender(PK_REVEAL[pkSt.street],false);
   casMsg(PK_NAMES[pkSt.street]+" · POT $"+pkSt.pot);
   const pay=(id,amt)=>{
+    chipSfx(2);
     if(id==="you")setW(getW()-Math.min(amt,getW()));
     pkSt.pot+=amt;contrib[id]+=amt;potShow("POT $"+pkSt.pot);
   };
