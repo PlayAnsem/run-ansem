@@ -672,7 +672,7 @@ function drainEvents(s) { const ev = s.events; s.events = []; return ev; }
 
 
 const $ = id => document.getElementById(id);
-const frame = $("frame"), canvas = $("c"), ctx = canvas.getContext("2d");
+const frame = $("frame"), canvas = $("c"), ctx = canvas.getContext("2d",{alpha:false,desynchronized:true});
 const isTouch = matchMedia("(pointer:coarse)").matches;
 
 // ---------- strings into DOM (zero literals) ----------
@@ -737,12 +737,17 @@ $("mute").addEventListener("click", e=>{ e.stopPropagation(); toggleMute(); });
 // ---------- canvas sizing ----------
 const DPR_CAP = 2;
 let W=0,H=0;
+let DPR=1;
 function resize(){
   const r = frame.getBoundingClientRect();
-  const dpr = Math.min(devicePixelRatio||1, DPR_CAP);
+  let dpr = Math.min(devicePixelRatio||1, DPR_CAP);
+  // cap total pixel area so weak GPUs keep a steady frame rate
+  if(r.width*r.height*dpr*dpr > 1500000) dpr=Math.max(1,Math.sqrt(1500000/(r.width*r.height)));
+  DPR=dpr;
   W = r.width; H = r.height;
   canvas.width = Math.round(W*dpr); canvas.height = Math.round(H*dpr);
   ctx.setTransform(dpr,0,0,dpr,0,0);
+  try{buildStatic();}catch(e){} // first parse-time call runs before helpers exist; rebaked after load
 }
 addEventListener("resize", resize); addEventListener("orientationchange", resize); resize();
 
@@ -1544,51 +1549,73 @@ $("lbBtn").addEventListener("click",openLead);
 $("leadClose").addEventListener("click",()=>{$("lead").style.display="none";refreshGold();});
 
 // ---------- render helpers ----------
-function drawSky(){
-  const hz=horizonY();
-  const g=ctx.createLinearGradient(0,0,0,hz*1.25);
+// ---------- pre-rendered static layers (sky + road) — rebuilt on resize ----------
+// per-frame gradient allocation and shadowBlur were the main stutter sources;
+// everything static is baked once into offscreen canvases and blitted per frame
+let offSky=null, offRoad=null, vanishGrad=null;
+function buildStatic(){
+  if(!W||!H)return;
+  const hz=horizonY(), by=bottomY();
+  const mk=()=>{
+    const o=document.createElement("canvas");
+    o.width=canvas.width; o.height=canvas.height;
+    const c=o.getContext("2d");
+    c.setTransform(DPR,0,0,DPR,0,0);
+    return [o,c];
+  };
+  // sky layer
+  const [o1,c1]=mk();
+  const g=c1.createLinearGradient(0,0,0,hz*1.25);
   g.addColorStop(0,"#0a2e26"); g.addColorStop(0.62,"#14523c"); g.addColorStop(1,"#7cd93a");
-  ctx.fillStyle=g; ctx.fillRect(0,0,W,hz+2); ops++;
+  c1.fillStyle=g; c1.fillRect(0,0,W,hz+2);
   const sky=IMG.sky;
-  if(sky){
-    // static skyline (no parallax) — only the clean top 62% of the art;
-    // the source image's lower third is rough foreground blocks, cropped out
-    const srcH = sky.height*0.62;
-    const sw = W, sh = W*srcH/sky.width;
-    ctx.globalAlpha=0.92;
-    ctx.drawImage(sky, 0,0, sky.width,srcH, 0, hz-sh+4, sw, sh); ops++;
-    ctx.globalAlpha=1;
+  if(sky){ // static skyline — clean top 62% of the art
+    const srcH=sky.height*0.62, sh=W*srcH/sky.width;
+    c1.globalAlpha=0.92;
+    c1.drawImage(sky,0,0,sky.width,srcH,0,hz-sh+4,W,sh);
+    c1.globalAlpha=1;
   }
-  // horizon glow
-  const gg=ctx.createLinearGradient(0,hz-14,0,hz+22);
+  const gg=c1.createLinearGradient(0,hz-14,0,hz+22);
   gg.addColorStop(0,"rgba(163,255,60,0)"); gg.addColorStop(0.5,"rgba(163,255,60,.5)"); gg.addColorStop(1,"rgba(163,255,60,0)");
-  ctx.fillStyle=gg; ctx.fillRect(0,hz-14,W,36); ops++;
+  c1.fillStyle=gg; c1.fillRect(0,hz-14,W,36);
+  offSky=o1;
+  // road layer: ground + asphalt + layered edge glow (no shadowBlur)
+  const [o2,c2]=mk();
+  const gnd=c2.createLinearGradient(0,hz,0,H);
+  gnd.addColorStop(0,"#0c1f1a"); gnd.addColorStop(1,"#071009");
+  c2.fillStyle=gnd; c2.fillRect(0,hz,W,H-hz);
+  const ga=c2.createLinearGradient(0,hz,0,by);
+  ga.addColorStop(0,"#26231f"); ga.addColorStop(1,"#3a352c");
+  c2.fillStyle=ga;
+  c2.beginPath();
+  c2.moveTo(W/2-roadHalf(proj(0))*1.05,by);
+  c2.lineTo(W/2,hz);
+  c2.lineTo(W/2+roadHalf(proj(0))*1.05,by);
+  c2.closePath(); c2.fill();
+  c2.lineCap="round";
+  for(const sd of [-1,1]){
+    for(const [lw,a] of [[Math.max(10,W*0.022),.10],[Math.max(6,W*0.013),.24],[Math.max(3,W*0.008),.85]]){
+      c2.strokeStyle="rgba(163,255,60,"+a+")"; c2.lineWidth=lw;
+      c2.beginPath();
+      c2.moveTo(W/2+sd*roadHalf(proj(0))*1.05,by);
+      c2.lineTo(W/2,hz);
+      c2.stroke();
+    }
+  }
+  offRoad=o2;
+  // cached vanish-point glow gradient
+  const R=W*0.085;
+  vanishGrad=ctx.createRadialGradient(W/2,hz,0,W/2,hz,R);
+  vanishGrad.addColorStop(0,"rgba(210,255,140,.95)");
+  vanishGrad.addColorStop(0.35,"rgba(163,255,60,.55)");
+  vanishGrad.addColorStop(1,"rgba(163,255,60,0)");
+}
+function drawSky(){
+  if(offSky){ctx.drawImage(offSky,0,0,W,H);ops++;}
 }
 function drawRoad(){
   const hz=horizonY(), by=bottomY();
-  // ground beside the road — repainted every frame so stray draws never accumulate
-  const gnd=ctx.createLinearGradient(0,hz,0,H);
-  gnd.addColorStop(0,"#0c1f1a"); gnd.addColorStop(1,"#071009");
-  ctx.fillStyle=gnd; ctx.fillRect(0,hz,W,H-hz); ops++;
-  // asphalt
-  const g=ctx.createLinearGradient(0,hz,0,by);
-  g.addColorStop(0,"#26231f"); g.addColorStop(1,"#3a352c");
-  ctx.fillStyle=g;
-  ctx.beginPath();
-  ctx.moveTo(W/2-roadHalf(proj(0))*1.05, by);
-  ctx.lineTo(W/2, hz); // converge all the way to the skyline vanishing point
-  ctx.lineTo(W/2+roadHalf(proj(0))*1.05, by);
-  ctx.closePath(); ctx.fill(); ops++;
-  // glowing lime edges
-  for(const s of [-1,1]){
-    ctx.strokeStyle="rgba(163,255,60,.85)"; ctx.lineWidth=Math.max(3,W*0.008);
-    ctx.shadowColor="rgba(163,255,60,.9)"; ctx.shadowBlur=12;
-    ctx.beginPath();
-    ctx.moveTo(W/2+s*roadHalf(proj(0))*1.05, by);
-    ctx.lineTo(W/2, hz);
-    ctx.stroke(); ops++;
-    ctx.shadowBlur=0;
-  }
+  if(offRoad){ctx.drawImage(offRoad,0,0,W,H);ops++;}
   // dashed yellow lane dividers, scrolling with distance
   const dist = sim?sim.dist:0;
   ctx.fillStyle="#ffd23f";
@@ -1610,14 +1637,12 @@ function drawRoad(){
     }
   }
   ctx.globalAlpha=1;
-  // neon vanishing point — the road melts into the glow at the skyline
-  const R=W*0.085;
-  const vg=ctx.createRadialGradient(W/2,hz,0,W/2,hz,R);
-  vg.addColorStop(0,"rgba(210,255,140,.95)");
-  vg.addColorStop(0.35,"rgba(163,255,60,.55)");
-  vg.addColorStop(1,"rgba(163,255,60,0)");
-  ctx.fillStyle=vg;
-  ctx.fillRect(W/2-R,hz-R,R*2,R*2); ops++;
+  // neon vanishing point — cached gradient
+  if(vanishGrad){
+    const R=W*0.085;
+    ctx.fillStyle=vanishGrad;
+    ctx.fillRect(W/2-R,hz-R,R*2,R*2); ops++;
+  }
 }
 function drawEntity(e){
   const z=e.z-sim.dist;
@@ -1681,7 +1706,8 @@ function drawParticles(dt){
     const a=Math.max(0,p.life/p.max);
     ctx.globalAlpha=a;
     ctx.fillStyle=p.col;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.size*(0.5+a*0.5),0,Math.PI*2); ctx.fill(); ops++;
+    const sz=p.size*(0.5+a*0.5)*1.8;
+    ctx.fillRect(p.x-sz/2,p.y-sz/2,sz,sz); ops++;
   }
   ctx.globalAlpha=1;
   ctx.font=`bold ${Math.round(H*0.028)}px "Arial Black",Arial`;
@@ -1790,6 +1816,7 @@ function frameFn(now){
   }
 }
 Promise.all([imgReady, document.fonts?document.fonts.ready:Promise.resolve()]).then(()=>{
+  buildStatic(); // sky image is ready now — rebake layers
   showTitle();
   const L=$("loader");L.style.opacity="0";setTimeout(()=>L.style.display="none",500);
   const q=new URLSearchParams(location.search);
