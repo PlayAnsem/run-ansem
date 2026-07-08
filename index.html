@@ -58,7 +58,7 @@
   #newBest{color:#a3ff3c;font-size:24px;margin-top:8px;text-shadow:0 0 14px rgba(163,255,60,.9);display:none;animation:pulse 1s infinite alternate;letter-spacing:2px}
   @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.12)}}
   #againBtn{margin-top:22px;background:none;border:none;box-shadow:none;padding:0;cursor:pointer}
-  #againBtn img{width:min(52vw,250px);display:block;filter:drop-shadow(0 0 20px rgba(163,255,60,.35)) drop-shadow(0 5px 12px rgba(0,0,0,.6))}
+  #againBtn img{width:min(52vw,250px);display:block;filter:drop-shadow(0 5px 12px rgba(0,0,0,.6))}
   /* ---- topbar: modern game HUD ---- */
   #topbar{position:absolute;top:max(10px,env(safe-area-inset-top));left:8px;right:8px;display:flex;align-items:center;justify-content:center;gap:10px;z-index:8}
   .tbBtn{width:46px;height:46px;border-radius:16px;flex-shrink:0;
@@ -234,7 +234,7 @@
   #casWallet{background-image:url(./assets/hud_coin_counter.png);color:#ffd76a;
     font-family:"Lilita One","Arial Black",sans-serif;font-size:15px;font-weight:400;
     text-shadow:0 1px 3px rgba(0,0,0,.8)}
-  #potZone{display:none;flex-direction:column;align-items:center;gap:5px;z-index:1}
+  #potZone{display:none;flex-direction:column;align-items:center;gap:5px;z-index:1;position:relative}
   #potV{display:flex;align-items:center;padding:3px 12px;
     border:13px solid transparent;border-image:url(./assets/frame_pill.png) 70 fill stretch;
     color:#ffd76a;font-size:13px;font-weight:900;font-style:italic;letter-spacing:1px;
@@ -248,22 +248,23 @@
   @keyframes actPulse{from{box-shadow:0 3px 10px rgba(0,0,0,.5),0 0 7px rgba(163,255,60,.25),inset 0 1px 0 rgba(255,255,255,.18)}
     to{box-shadow:0 3px 10px rgba(0,0,0,.5),0 0 18px rgba(163,255,60,.6),inset 0 1px 0 rgba(255,255,255,.18)}}
   #felt{position:relative;width:93%;flex:0 1 auto;height:66%;margin:10px auto 6px;
-    border-radius:46% 46% 30px 30px/22% 22% 30px 30px;
+    border-radius:34px;
     background:radial-gradient(110% 85% at 50% 28%,#1a5535 0%,#124228 45%,#0b2d1d 75%,#082115 100%);
     box-shadow:0 0 0 5px #2e2410,0 0 0 7px rgba(201,161,61,.7),0 0 0 9px #1a1408,0 14px 44px rgba(0,0,0,.65),inset 0 0 90px rgba(0,0,0,.55),inset 0 2px 24px rgba(255,255,255,.05);
     display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:16px 8px 12px;box-sizing:border-box;overflow:hidden}
   #felt::before{content:"";position:absolute;inset:13px;border-radius:inherit;border:2px dashed rgba(201,161,61,.2);pointer-events:none}
-  #feltBrand{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;opacity:.42;pointer-events:none}
+  #feltBrand{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;opacity:.32;pointer-events:none;z-index:0}
   #feltBrand .bull{font-size:46px;filter:sepia(1) saturate(2.6) drop-shadow(0 0 12px rgba(201,161,61,.7))}
   #feltBrand .brand{font-size:22px;font-style:italic;letter-spacing:3px;color:#c9a13d;text-shadow:0 0 14px rgba(201,161,61,.55)}
   .area{display:flex;flex-direction:column;align-items:center;gap:4px;z-index:1}
   .cardRow{display:flex;gap:5px;justify-content:center;min-height:70px;align-items:center;z-index:1}
   #boardRow{padding:9px 13px;border-radius:16px;background:rgba(0,0,0,.28);
     box-shadow:inset 0 2px 12px rgba(0,0,0,.5),inset 0 0 0 1px rgba(201,161,61,.2)}
-  .rowLbl{display:inline-flex;align-items:center;padding:6px 14px;border-radius:999px;z-index:1;
+  .rowLbl{display:inline-flex;align-items:center;padding:5px 11px;border-radius:999px;z-index:1;
+    max-width:100%;overflow:hidden;text-overflow:ellipsis;
     border:1px solid rgba(201,161,61,.4);
     background:linear-gradient(160deg,rgba(32,27,12,.92),rgba(10,8,4,.96));
-    color:#ffe9a8;font-size:11px;font-style:italic;letter-spacing:1.4px;
+    color:#ffe9a8;font-size:10px;font-style:italic;letter-spacing:1px;
     box-shadow:0 3px 10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,235,170,.18);
     text-shadow:0 1px 2px rgba(0,0,0,.85);white-space:nowrap}
   .pcard{width:46px;height:66px;border-radius:8px;position:relative;box-sizing:border-box;
@@ -280,8 +281,8 @@
     linear-gradient(160deg,#143726,#0b2417);
     box-shadow:0 4px 10px rgba(0,0,0,.55),inset 0 0 0 2px rgba(201,161,61,.45),inset 0 0 0 4px rgba(0,0,0,.3)}
   .pcard.back::after{content:"🐂";font-size:19px;filter:sepia(1) saturate(2.2) drop-shadow(0 0 4px rgba(201,161,61,.5))}
-  .seatRow{display:flex;justify-content:space-evenly;align-items:flex-start;width:100%;z-index:1}
-  .seat{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .seatRow{display:flex;justify-content:space-evenly;align-items:flex-start;width:100%;z-index:1;padding:0 8px;box-sizing:border-box}
+  .seat{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;max-width:33%}
   .seat .cardRow{min-height:48px}
   .cardRow.stack .pcard:not(:first-child){margin-left:-18px}
   .cardRow.stack .pcard.sm:not(:first-child){margin-left:-12px}
@@ -290,7 +291,7 @@
   .pcard.sm .st{font-size:11px}
   .pcard.sm.back::after{font-size:13px}
   @keyframes dealIn{from{transform:translateY(-24px) rotate(-7deg) scale(.55);opacity:0}to{transform:none;opacity:1}}
-  #casMsg{min-height:20px;max-width:90%;padding:6px 16px;box-sizing:border-box;
+  #casMsg{min-height:20px;max-width:90%;padding:6px 16px;box-sizing:border-box;position:relative;z-index:1;
     border:15px solid transparent;border-image:url(./assets/frame_wide.png) 62 fill stretch;
     color:#ffe9a8;font-size:14px;font-style:italic;letter-spacing:.5px;text-align:center;
     filter:drop-shadow(0 4px 10px rgba(0,0,0,.45));
@@ -714,13 +715,20 @@ function setMuteIcon(){
 function toggleMute(){
   muted=!muted;
   localStorage.setItem("bullrun.muted", muted?"1":"0");
+  if(!muted){
+    initAudio().then(()=>{if(AC&&AC.state==="suspended")AC.resume();});
+  }
   if(master) master.gain.value=muted?0:1;
   setMuteIcon();
 }
+// iOS: AudioContext must resume on a user gesture
+document.addEventListener("touchend",()=>{if(AC&&AC.state==="suspended")AC.resume();},{passive:true});
+document.addEventListener("pointerdown",()=>{if(AC&&AC.state==="suspended")AC.resume();},{passive:true});
 setMuteIcon();
 async function initAudio(){
   if (AC) { if (AC.state==="suspended") AC.resume(); return; }
   AC = new (window.AudioContext||window.webkitAudioContext)();
+  if(AC.state==="suspended")AC.resume();
   master = AC.createGain(); master.connect(AC.destination);
   master.gain.value = muted?0:1;
   musicGain = AC.createGain(); musicGain.gain.value = 0.32; musicGain.connect(master);
@@ -873,7 +881,7 @@ function nextLifeTxt(){
 function refreshLives(){
   const o=livesState();
   $("livesV").textContent=o.n;
-  $("livesCd").textContent=o.n<LIFE_MAX?nextLifeTxt():"";
+  $("livesCd").textContent=o.n<LIFE_MAX?nextLifeTxt():"FULL";
 }
 setInterval(()=>{if(state==="title")refreshLives();},1000);
 function startRun(){
