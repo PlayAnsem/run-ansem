@@ -84,8 +84,8 @@
   .sideBtn img{height:48px;display:block;filter:drop-shadow(0 5px 14px rgba(0,0,0,.55))}
   .imgBtn{background:none!important;border:none!important;box-shadow:none!important;padding:0;cursor:pointer;backdrop-filter:none!important}
   .imgBtn img{display:block;height:40px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.55))}
-  .counterPlate{position:relative;width:86px;height:40px;background-size:100% 100%;background-repeat:no-repeat;
-    display:flex;align-items:center;justify-content:flex-end;padding:0 12px 0 38px;box-sizing:border-box;
+  .counterPlate{position:relative;width:78px;height:40px;background-size:100% 100%;background-repeat:no-repeat;
+    display:flex;align-items:center;justify-content:flex-end;padding:0 9px 0 31px;box-sizing:border-box;
     filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));font-style:normal}
   #celeb{position:absolute;inset:0;z-index:50;display:none;pointer-events:none;overflow:hidden}
   #celebTxt{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);text-align:center;white-space:nowrap;
@@ -101,11 +101,10 @@
   #tbLives{background-image:url(./assets/hud_heart_counter.png);color:#ffb3ad;flex-shrink:0;
     justify-content:center;font-family:"Lilita One","Arial Black",sans-serif;font-weight:400;
     text-shadow:0 1px 3px rgba(0,0,0,.8)}
-  #livesV{position:absolute;left:25%;top:48%;transform:translate(-50%,-50%);font-size:16px;color:#fff;
+  #livesV{position:absolute;left:25%;top:48%;transform:translate(-50%,-50%);font-size:15px;color:#fff;
     font-family:"Lilita One","Arial Black",sans-serif;line-height:1;
     text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.95),0 0 2px #000}
-  #tbLives{width:104px}
-  #tbLives .cd{font-size:16px;letter-spacing:.3px;font-style:normal;color:#ffd0cb}
+  #tbLives .cd{font-size:15px;letter-spacing:.3px;font-style:normal;color:#ffd0cb;margin-left:4px}
   /* ---- swap screen ---- */
   #swap{display:none;background:radial-gradient(120% 90% at 50% 20%,#0c1f16 0%,#060f0a 60%,#030705 100%);justify-content:flex-start;z-index:11}
   #swapHead{width:100%;display:flex;align-items:center;justify-content:space-between;padding:max(10px,env(safe-area-inset-top)) 12px 8px;box-sizing:border-box}
@@ -233,7 +232,7 @@
   #casRight{display:flex;align-items:center;gap:8px}
   #casTitle{font-size:20px;font-style:italic;letter-spacing:2px;background:linear-gradient(180deg,#ffe9a8,#c9a13d);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px #000)}
   #casWallet{background-image:url(./assets/hud_coin_counter.png);color:#ffd76a;
-    font-family:"Lilita One","Arial Black",sans-serif;font-size:16px;font-weight:400;
+    font-family:"Lilita One","Arial Black",sans-serif;font-size:15px;font-weight:400;
     text-shadow:0 1px 3px rgba(0,0,0,.8)}
   #potZone{display:none;flex-direction:column;align-items:center;gap:5px;z-index:1}
   #potV{display:flex;align-items:center;padding:3px 12px;
@@ -1518,26 +1517,20 @@ document.addEventListener("click",()=>{$("swDrop").style.display="none";});
 const SVG_SOUND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>';
 const SVG_TROPHY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
 const SVG_WALLET='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>';
-function buildMenu(){
-  const p=$("menuPanel");
-  p.style.left="10px";p.style.right="auto";
-  p.innerHTML="";
+function openMenuModal(){
+  const body=openModal("MENU");
   const bS=document.createElement("button");
+  bS.className="btn wItem";
   bS.innerHTML=SVG_SOUND+'<span id="mSoundLbl"></span>';
   bS.onclick=toggleMute;
-  const bL=document.createElement("button");
-  bL.innerHTML=SVG_TROPHY+"<span>LEADERBOARD</span>";
-  bL.onclick=()=>{p.style.display="none";openLead();};
-  p.append(bS,bL);
+  body.appendChild(bS);
+  wItem(body,SVG_TROPHY,"LEADERBOARD",()=>{closeModal();openLead();});
   setMuteIcon();
 }
-buildMenu();
 $("menuBtn").addEventListener("click",e=>{
   e.stopPropagation();
-  const p=$("menuPanel");
-  const open=p.style.display==="flex";
-  buildMenu();
-  p.style.display=open?"none":"flex";
+  if($("modalWrap").style.display==="flex"){closeModal();return;}
+  openMenuModal();
 });
 document.addEventListener("click",()=>{$("menuPanel").style.display="none";});
 $("menuPanel").addEventListener("click",e=>e.stopPropagation());
