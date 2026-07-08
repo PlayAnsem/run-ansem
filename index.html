@@ -46,7 +46,7 @@
     box-shadow:0 16px 48px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.14)}
   #pauseTitle{font-size:30px;color:#a3ff3c;letter-spacing:3px;text-shadow:0 0 16px rgba(163,255,60,.6),0 3px 6px #000;margin-bottom:6px}
   #pauseCard .act{width:210px;text-align:center;font-family:inherit;font-style:normal;font-size:17px}
-  #ovClose{margin-top:16px;background:none;border:none;cursor:pointer;display:none;
+  #ovClose{margin-top:16px;background:none;border:none;cursor:pointer;display:block;visibility:hidden;
     color:#9ac79b;font-size:14px;letter-spacing:1.5px;text-decoration:underline;
     font-family:"Lilita One","Arial Black",sans-serif;text-shadow:0 2px 5px #000}
   #over{background:rgba(2,8,6,.85);backdrop-filter:blur(5px);justify-content:center;display:none;font-family:"Lilita One","Arial Black",sans-serif}
@@ -702,13 +702,30 @@ const imgReady = Promise.all([
 ]);
 
 // ---------- audio (WebAudio, master mute) ----------
-let AC=null, master=null, musicGain=null, buffers={}, musicSrc=null;
+let AC=null, master=null, musicGain=null, sfxGain=null, buffers={}, musicSrc=null;
 let muted = localStorage.getItem("bullrun.muted")==="1";
+let fxMuted = localStorage.getItem("bullrun.mutefx")==="1";
+let musicMuted = localStorage.getItem("bullrun.mutemusic")==="1";
+function applyAudioPrefs(){
+  if(sfxGain)sfxGain.gain.value=fxMuted?0:1;
+  if(musicGain)musicGain.gain.value=musicMuted?0:0.32;
+}
+function toggleFx(){
+  fxMuted=!fxMuted;localStorage.setItem("bullrun.mutefx",fxMuted?"1":"0");
+  if(!fxMuted)initAudio();
+  applyAudioPrefs();setMuteIcon();
+}
+function toggleMusic(){
+  musicMuted=!musicMuted;localStorage.setItem("bullrun.mutemusic",musicMuted?"1":"0");
+  if(!musicMuted)initAudio().then(()=>{if(state==="running")startMusic();});
+  applyAudioPrefs();setMuteIcon();
+}
 const SVG_VOL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
 const SVG_VOLX='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
 function setMuteIcon(){
   $("mute").textContent = muted ? STR.muteOn : STR.muteOff;
-  const m=$("mSoundLbl"); if(m) m.textContent = muted ? "SOUND: OFF" : "SOUND: ON";
+  const m=$("mFxLbl"); if(m) m.textContent = fxMuted ? "SOUND FX: OFF" : "SOUND FX: ON";
+  const mm=$("mMusLbl"); if(mm) mm.textContent = musicMuted ? "MUSIC: OFF" : "MUSIC: ON";
   const cs=$("casSound"); if(cs) cs.innerHTML = '<img src="./assets/btn_sound_'+(muted?'off':'on')+'.png" alt="Sound">';
   const ps=$("pSound"); if(ps) ps.textContent = muted ? "SOUND: OFF" : "SOUND: ON";
 }
@@ -731,7 +748,9 @@ async function initAudio(){
   if(AC.state==="suspended")AC.resume();
   master = AC.createGain(); master.connect(AC.destination);
   master.gain.value = muted?0:1;
-  musicGain = AC.createGain(); musicGain.gain.value = 0.32; musicGain.connect(master);
+  musicGain = AC.createGain(); musicGain.connect(master);
+  sfxGain = AC.createGain(); sfxGain.connect(master);
+  applyAudioPrefs();
   const names = ["sfx_jump","sfx_coin","sfx_crash","music_loop"];
   await Promise.all(names.map(async n=>{
     try{ buffers[n]=await AC.decodeAudioData(b64ToBuf(AUDIO_B64[n])); }catch(e){}
@@ -740,7 +759,7 @@ async function initAudio(){
 function sfx(name, vol=0.9){
   if(!AC||!buffers[name]) return;
   const s=AC.createBufferSource(); s.buffer=buffers[name];
-  const g=AC.createGain(); g.gain.value=vol; s.connect(g); g.connect(master); s.start();
+  const g=AC.createGain(); g.gain.value=vol; s.connect(g); g.connect(sfxGain||master); s.start();
 }
 function startMusic(){
   if(!AC||!buffers.music_loop||musicSrc) return;
@@ -952,8 +971,8 @@ $("pClose").addEventListener("click",()=>{
 $("ovClose").addEventListener("click",showTitle);
 function gameOver(){
   state="over";
-  $("ovClose").style.display="none";
-  setTimeout(()=>{if(state==="over")$("ovClose").style.display="block";},3000);
+  $("ovClose").style.visibility="hidden";
+  setTimeout(()=>{if(state==="over")$("ovClose").style.visibility="visible";},3000);
   const d=Math.floor(sim.dist), prev=best();
   const nb = d>prev;
   if(nb) localStorage.setItem("bullrun.best", String(d));
@@ -1050,7 +1069,7 @@ function potShow(amt,label){ // center stage: amount pill + real chip stacks
 }
 function potHide(){$("potZone").style.display="none";}
 function chipSfx(n=2,spread=0.05){ // synthesized poker chip clicks
-  if(!AC||muted)return;
+  if(!AC||muted||fxMuted)return;
   const t0=AC.currentTime;
   for(let i=0;i<n;i++){
     const t=t0+i*spread+Math.random()*0.02;
@@ -1062,7 +1081,7 @@ function chipSfx(n=2,spread=0.05){ // synthesized poker chip clicks
     const bp=AC.createBiquadFilter();bp.type="bandpass";
     bp.frequency.value=1900+Math.random()*1100;bp.Q.value=7;
     const g=AC.createGain();g.gain.value=0.55;
-    src.connect(bp);bp.connect(g);g.connect(master);
+    src.connect(bp);bp.connect(g);g.connect(sfxGain||master);
     src.start(t);
   }
 }
@@ -1094,6 +1113,44 @@ function casBanner(text,win){
     {transform:"translate(-50%,-50%) scale(1)",opacity:1,offset:.82},
     {transform:"translate(-50%,-50%) scale(.9)",opacity:0}
   ],{duration:2000,easing:"ease-out"});
+}
+function tone(f,dur,type,vol,when,slide){
+  if(!AC||muted||fxMuted)return;
+  const t=AC.currentTime+(when||0);
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.type=type||"triangle";o.frequency.setValueAtTime(f,t);
+  if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+dur);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(vol||0.25,t+0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g);g.connect(sfxGain||master);
+  o.start(t);o.stop(t+dur+0.05);
+}
+function winJingle(){ // yükselen zafer arpeji
+  [523,659,784,1047].forEach((f,i)=>tone(f,0.16,"triangle",0.3,i*0.085));
+  tone(1319,0.42,"triangle",0.26,0.34);
+  tone(1047,0.42,"sine",0.18,0.34);
+}
+function loseTone(){ // düşen iki nota
+  tone(233,0.22,"sawtooth",0.16,0,170);
+  tone(155,0.4,"sawtooth",0.13,0.2,104);
+}
+function cardSfx(n=1){ // kart fiskesi: kısa yumuşak sürtünme
+  if(!AC||muted||fxMuted)return;
+  const t0=AC.currentTime;
+  for(let i=0;i<n;i++){
+    const t=t0+i*0.09;
+    const dur=0.06;
+    const buf=AC.createBuffer(1,Math.floor(AC.sampleRate*dur),AC.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let j=0;j<d.length;j++)d[j]=(Math.random()*2-1)*Math.pow(1-j/d.length,1.4);
+    const src=AC.createBufferSource();src.buffer=buf;
+    const bp=AC.createBiquadFilter();bp.type="bandpass";
+    bp.frequency.value=900+Math.random()*500;bp.Q.value=1.8;
+    const g=AC.createGain();g.gain.value=0.32;
+    src.connect(bp);bp.connect(g);g.connect(sfxGain||master);
+    src.start(t);
+  }
 }
 let casTmr=null;
 function stopTimer(){if(casTmr){clearInterval(casTmr);casTmr=null;}$("timerBar").style.display="none";}
@@ -1129,7 +1186,16 @@ function openCasino(g){
   initAudio();
   betPhase(getW()<=250?"HOUSE STAKE 🐂 GOOD LUCK":"");
 }
-$("bjBtn").addEventListener("click",()=>openCasino("bj"));
+$("bjBtn").addEventListener("click",()=>{
+  const body=openModal("HOW MANY HANDS?");
+  [1,2,3].forEach(n=>{
+    const b=document.createElement("button");
+    b.className="btn wItem";b.style.justifyContent="center";
+    b.innerHTML="<span>"+n+" HAND"+(n>1?"S":"")+"</span>";
+    b.onclick=()=>{bjHands=n;closeModal();openCasino("bj");};
+    body.appendChild(b);
+  });
+});
 $("pkBtn").addEventListener("click",()=>openCasino("pk"));
 $("casSound").addEventListener("click",e=>{e.stopPropagation();toggleMute();});
 $("casBack").addEventListener("click",()=>{casSeq++;stopTimer();$("casino").style.display="none";showTitle();});
@@ -1140,9 +1206,8 @@ function betPhase(note){
   $("boardRow").style.display=casGame==="pk"?"flex":"none";
   if(casGame==="bj"){
     mkSeat("rowTop","d","DEALER");
-    mkSeat("rowBottom","b1",BOTS.b1,true);
-    mkSeat("rowBottom","you","YOU 🐂",true);
-    mkSeat("rowBottom","b2",BOTS.b2,true);
+    const st=bjSeatIds();
+    for(const id of st.order)mkSeat("rowBottom",id,bjName(id),true);
   }else{
     mkSeat("rowTop","b1",BOTS.b1);
     mkSeat("rowTop","b2",BOTS.b2);
@@ -1179,14 +1244,21 @@ function casEnd(txt,ret,won){
   casMsg(txt);
   if(ret>0)setW(getW()+ret);
   if(won===true)recCas(true);else if(won===false)recCas(false);
-  if(won===true){chipFly();chipSfx(11,0.06);casBanner("+$"+ret,true);}
-  else if(won===false)casBanner("REKT",false);
-  if(won)sfx("sfx_coin",0.9);else if(won===false)sfx("sfx_crash",0.45);
+  if(won===true){chipFly();chipSfx(11,0.06);winJingle();casBanner("+$"+ret,true);}
+  else if(won===false){loseTone();casBanner("REKT",false);}
+  if(won)sfx("sfx_coin",0.9);else if(won===false)sfx("sfx_crash",0.35);
   bet=0;
   if(window.FB&&window.FB.submitRun) window.FB.submitRun(best(), getW());
   casCtrl([{t:"NEW HAND",cls:"act green",f:()=>betPhase()}]);
 }
-// --- Bull Jack ---
+// --- Bull Jack (multi-hand: play 1-3 hands yourself) ---
+let bjHands=1,bjBets=null,bjMy=[],bjBots_=[];
+function bjSeatIds(){
+  if(bjHands===1)return {my:["you"],bots:["b1","b2"],order:["b1","you","b2"]};
+  if(bjHands===2)return {my:["y1","y2"],bots:["b1"],order:["y1","y2","b1"]};
+  return {my:["y1","y2","y3"],bots:[],order:["y1","y2","y3"]};
+}
+const bjName=id=>id==="you"?"YOU 🐂":(id[0]==="y"?"HAND "+id[1]+" 🐂":BOTS[id]);
 const bjVal=h=>{
   let t=0,a=0;
   for(const c of h){ if(c.r===14){a++;t+=11;} else t+=Math.min(10,c.r); }
@@ -1195,67 +1267,80 @@ const bjVal=h=>{
 };
 function bjRender(hideHole){
   setCards("d",HS.d.map((c,i)=>[c,hideHole&&i===0]));
-  setCards("you",HS.you.map(c=>[c,false]));
-  setCards("b1",HS.b1.map(c=>[c,false]),true);
-  setCards("b2",HS.b2.map(c=>[c,false]),true);
   setLbl("d","DEALER"+(hideHole?"":" · "+bjVal(HS.d)));
-  setLbl("you","YOU 🐂 · "+bjVal(HS.you));
-  setLbl("b1",BOTS.b1+" · "+bjVal(HS.b1));
-  setLbl("b2",BOTS.b2+" · "+bjVal(HS.b2));
+  const sm=bjHands>1;
+  for(const id of bjMy){setCards(id,HS[id].map(c=>[c,false]),sm);setLbl(id,bjName(id)+" · "+bjVal(HS[id]));}
+  for(const id of bjBots_){setCards(id,HS[id].map(c=>[c,false]),true);setLbl(id,bjName(id)+" · "+bjVal(HS[id]));}
 }
+function bjTotalBet(){let t=0;for(const id of bjMy)t+=bjBets[id];return t;}
 function bjDeal(){
+  // additional hands each cost the same bet
+  const extra=(bjHands-1)*bet;
+  if(getW()<extra){toast("NOT ENOUGH GOLD FOR "+bjHands+" HANDS");return;}
+  if(extra>0)setW(getW()-extra);
+  const seats=bjSeatIds();bjMy=seats.my;bjBots_=seats.bots;
+  bjBets={};for(const id of bjMy)bjBets[id]=bet;
   deck=newDeck();
   const d2=()=>[deck.pop(),deck.pop()];
-  let you=d2(),dl=d2();
+  let first=d2(),dl=d2();
   const bias=casBias();
   if(Math.abs(bias)>0.02){ // balance: draw an alternative hand, give the better one to the right side
     const alt=d2();
     const sc=h=>{const v=bjVal(h);return v>21?0:v;};
-    if(bias>0){ if(sc(alt)>sc(you))you=alt; }
+    if(bias>0){ if(sc(alt)>sc(first))first=alt; }
     else { if(sc(alt)>sc(dl))dl=alt; }
   }
-  HS={you,b1:d2(),b2:d2(),d:dl};
+  HS={d:dl};
+  bjMy.forEach((id,i)=>{HS[id]=i===0?first:d2();});
+  bjBots_.forEach(id=>{HS[id]=d2();});
+  cardSfx(4);
   bjRender(true);casCtrl([]);
-  potShow(bet,"BET");
-  if(bjVal(HS.you)===21){casMsg("BLACKJACK! 🐂");casLater(800,bjBots);}
-  else bjYourTurn();
+  potShow(bjTotalBet(),"BET");
+  bjTurn(0);
 }
-function bjYourTurn(){
-  if(bjVal(HS.you)>21){stopTimer();casMsg("BUST — TABLE PLAYS ON...");return casLater(800,bjBots);}
-  const canDbl=HS.you.length===2&&getW()>=bet;
-  setActive("you");
-  casMsg("YOUR MOVE · BET $"+bet);
+function bjTurn(i){
+  if(i>=bjMy.length){setActive(null);return bjBotsPlay();}
+  const id=bjMy[i];
+  const v=bjVal(HS[id]);
+  if(v===21&&HS[id].length===2){casMsg(bjName(id)+" — BLACKJACK! 🐂");return casLater(700,()=>bjTurn(i+1));}
+  if(v>21){stopTimer();casMsg(bjName(id)+" BUST");return casLater(600,()=>bjTurn(i+1));}
+  setActive(id);
+  const canDbl=HS[id].length===2&&getW()>=bjBets[id];
+  casMsg((bjHands>1?bjName(id):"YOUR MOVE")+" · BET $"+bjBets[id]);
   casCtrl([
-    {t:"HIT",f:()=>{stopTimer();HS.you.push(deck.pop());bjRender(true);bjYourTurn();}},
-    {t:"STAND",cls:"act green",f:()=>{stopTimer();casCtrl([]);bjBots();}},
+    {t:"HIT",f:()=>{stopTimer();cardSfx(1);HS[id].push(deck.pop());bjRender(true);bjTurn(i);}},
+    {t:"STAND",cls:"act green",f:()=>{stopTimer();casCtrl([]);bjTurn(i+1);}},
     {t:"DOUBLE",dis:!canDbl,f:()=>{
-      stopTimer();chipSfx(3,0.06);setW(getW()-bet);bet*=2;potShow(bet,"BET");HS.you.push(deck.pop());bjRender(true);
-      if(bjVal(HS.you)>21){casMsg("BUST — TABLE PLAYS ON...");casLater(800,bjBots);}
-      else{casCtrl([]);bjBots();}
+      stopTimer();chipSfx(3,0.06);setW(getW()-bjBets[id]);bjBets[id]*=2;potShow(bjTotalBet(),"BET");
+      cardSfx(1);HS[id].push(deck.pop());bjRender(true);
+      casCtrl([]);casLater(500,()=>bjTurn(i+1));
     }}]);
-  startTimer(12,()=>{casCtrl([]);casMsg("TIME! AUTO-STAND");casLater(500,bjBots);});
+  startTimer(12,()=>{casCtrl([]);casMsg("TIME! AUTO-STAND");casLater(500,()=>bjTurn(i+1));});
 }
-function bjBots(){
-  casCtrl([]);setActive(null);
-  const play=(id,next)=>{
-    const hand=HS[id];
+function bjBotsPlay(){
+  casCtrl([]);
+  if(!bjBots_.length)return bjDealer();
+  const play=(k)=>{
+    if(k>=bjBots_.length)return bjDealer();
+    const id=bjBots_[k],hand=HS[id];
     setActive(id);
     const step=()=>{
       const v=bjVal(hand);
       if(v<16||(v===16&&Math.random()<0.5)){
         casMsg(BOTS[id]+" HITS...");
-        casLater(500,()=>{hand.push(deck.pop());bjRender(true);step();});
-      }else{casMsg(BOTS[id]+(v>21?" BUSTS 💥":" STANDS"));casLater(600,next);}
+        casLater(500,()=>{cardSfx(1);hand.push(deck.pop());bjRender(true);step();});
+      }else{casMsg(BOTS[id]+(v>21?" BUSTS 💥":" STANDS"));casLater(600,()=>play(k+1));}
     };
     step();
   };
-  play("b1",()=>play("b2",bjDealer));
+  play(0);
 }
 function bjDealer(){
   setActive("d");
+  cardSfx(1);
   bjRender(false);casMsg("DEALER DRAWS...");
   const step=()=>{
-    if(bjVal(HS.d)<17)casLater(550,()=>{HS.d.push(deck.pop());bjRender(false);step();});
+    if(bjVal(HS.d)<17)casLater(550,()=>{cardSfx(1);HS.d.push(deck.pop());bjRender(false);step();});
     else casLater(650,bjSettle);
   };
   step();
@@ -1263,21 +1348,28 @@ function bjDealer(){
 function bjSettle(){
   const dv=bjVal(HS.d);
   const outcome=h=>{const v=bjVal(h);if(v>21)return -1;if(dv>21)return 1;return v>dv?1:(v<dv?-1:0);};
-  for(const id of ["b1","b2"]){
+  for(const id of bjBots_){
     const o=outcome(HS[id]);
     setLbl(id,BOTS[id]+" · "+(o>0?"WIN ✅":o<0?"REKT ❌":"PUSH"));
   }
-  const natural=HS.you.length===2&&bjVal(HS.you)===21;
-  let txt,ret,won;
-  if(natural){
-    if(HS.d.length===2&&dv===21){txt="BOTH BLACKJACK — PUSH";ret=bet;}
-    else{const w=Math.floor(bet*1.5);txt="BLACKJACK! 🐂 +$"+w;ret=bet+w;won=true;}
-  }else{
-    const o=outcome(HS.you);
-    if(o>0){txt=(dv>21?"DEALER BUSTS! ":"YOU WIN! ")+"+$"+bet;ret=bet*2;won=true;}
-    else if(o<0){txt=bjVal(HS.you)>21?"BUST — REKT 🐻":"DEALER WINS 🐻";ret=0;won=false;}
-    else{txt="PUSH";ret=bet;}
+  let ret=0,wins=0,losses=0;
+  for(const id of bjMy){
+    const h=HS[id],b=bjBets[id];
+    const natural=h.length===2&&bjVal(h)===21;
+    const o=outcome(h);
+    let tag;
+    if(natural&&!(HS.d.length===2&&dv===21)){ret+=b+Math.floor(b*1.5);wins++;tag="BJ! ✅";}
+    else if(natural){ret+=b;tag="PUSH";}
+    else if(o>0){ret+=b*2;wins++;tag="WIN ✅";}
+    else if(o<0){losses++;tag="REKT ❌";}
+    else{ret+=b;tag="PUSH";}
+    setLbl(id,bjName(id)+" · "+tag);
   }
+  const stake=bjTotalBet(),net=ret-stake;
+  let txt,won;
+  if(net>0){txt=(bjHands>1?wins+"/"+bjHands+" HANDS — ":"")+(dv>21?"DEALER BUSTS! ":"YOU WIN! ")+"+$"+net;won=true;}
+  else if(net<0){txt=bjHands>1?(wins+"/"+bjHands+" HANDS — REKT 🐻"):(bjVal(HS[bjMy[0]])>21?"BUST — REKT 🐻":"DEALER WINS 🐻");won=false;}
+  else txt="PUSH";
   casEnd(txt,ret,won);
 }
 // --- Bull Poker (heads-up showdown vs dealer) ---
@@ -1347,6 +1439,7 @@ function botDecide(id,toCall,canRaise){
   return "call";
 }
 function pkDeal(){
+  cardSfx(2);
   deck=newDeck();
   const d2=()=>[deck.pop(),deck.pop()];
   let you=d2();
@@ -1369,6 +1462,7 @@ function pkStreet(){
   const u=pkSt.street<2?ante:ante*2; // bets double on turn/river
   let curBet=0;const contrib={you:0,b1:0,b2:0};
   pkSt.raises=0;
+  if(pkSt.street>0)cardSfx(pkSt.street===1?3:1);
   pkRender(PK_REVEAL[pkSt.street],false);
   casMsg(PK_NAMES[pkSt.street]+" · POT $"+pkSt.pot);
   const pay=(id,amt)=>{
@@ -1526,13 +1620,19 @@ document.addEventListener("click",()=>{$("swDrop").style.display="none";});
 const SVG_SOUND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>';
 const SVG_TROPHY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
 const SVG_WALLET='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>';
+const SVG_MUSIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
 function openMenuModal(){
   const body=openModal("MENU");
   const bS=document.createElement("button");
   bS.className="btn wItem";
-  bS.innerHTML=SVG_SOUND+'<span id="mSoundLbl"></span>';
-  bS.onclick=toggleMute;
+  bS.innerHTML=SVG_SOUND+'<span id="mFxLbl"></span>';
+  bS.onclick=toggleFx;
   body.appendChild(bS);
+  const bM=document.createElement("button");
+  bM.className="btn wItem";
+  bM.innerHTML=SVG_MUSIC+'<span id="mMusLbl"></span>';
+  bM.onclick=toggleMusic;
+  body.appendChild(bM);
   wItem(body,SVG_TROPHY,"LEADERBOARD",()=>{closeModal();openLead();});
   setMuteIcon();
 }
