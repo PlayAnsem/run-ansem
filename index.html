@@ -14,7 +14,7 @@
   canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
   .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;z-index:5}
   #title{background:#000}
-  #titleArt{position:absolute;inset:0;background-color:#000;background-size:94% auto;background-position:center center;background-repeat:no-repeat;filter:saturate(1.06)}
+  #titleArt{position:absolute;inset:0;background-color:#000;background-size:100% auto;background-position:center center;background-repeat:no-repeat;filter:saturate(1.06)}
   #titleShade{position:absolute;inset:0;background:linear-gradient(180deg,
     rgba(0,0,0,.94) 0%,rgba(0,0,0,.55) 9%,rgba(0,0,0,0) 24%,
     rgba(0,0,0,0) 52%,rgba(0,0,0,.5) 72%,rgba(0,0,0,.9) 88%,#000 100%)}
@@ -161,13 +161,24 @@
     box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 12px rgba(255,210,63,.15),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -3px 8px rgba(0,0,0,.4);
     text-shadow:0 1px 3px rgba(0,0,0,.7)}
   #casWallet img{width:22px;height:22px;filter:drop-shadow(0 0 6px rgba(255,210,63,.6))}
-  #potPill{display:none;align-items:center;gap:6px;padding:7px 16px;border-radius:999px;z-index:1;
+  #potZone{display:none;flex-direction:column;align-items:center;gap:5px;z-index:1}
+  #potV{display:flex;align-items:center;gap:6px;padding:6px 15px;border-radius:999px;
     border:1px solid rgba(255,210,63,.45);
     background:linear-gradient(160deg,rgba(62,46,10,.93),rgba(20,14,4,.96));
     color:#ffd76a;font-size:13px;font-weight:900;font-style:italic;letter-spacing:1px;
     box-shadow:0 4px 12px rgba(0,0,0,.5),0 0 14px rgba(255,210,63,.2),inset 0 1px 0 rgba(255,235,170,.2);
     text-shadow:0 1px 2px rgba(0,0,0,.8)}
-  #potPill img{width:18px;height:18px;filter:drop-shadow(0 0 5px rgba(255,210,63,.6))}
+  #potChips{display:flex;gap:7px;align-items:flex-end;min-height:54px}
+  .pile{position:relative;width:30px;height:58px}
+  .mchip{position:absolute;left:0;width:30px;height:30px;border-radius:50%;box-sizing:border-box;
+    border:3px dashed rgba(255,255,255,.72);
+    box-shadow:0 2px 5px rgba(0,0,0,.55),inset 0 1px 2px rgba(255,255,255,.3),inset 0 -2px 3px rgba(0,0,0,.3);
+    animation:chipDrop .22s ease-out both}
+  @keyframes chipDrop{from{transform:translateY(-14px) scale(.7);opacity:0}to{transform:none;opacity:1}}
+  .mchip.c10{background:radial-gradient(circle at 35% 30%,#e8c15a,#a5762a)}
+  .mchip.c25{background:radial-gradient(circle at 35% 30%,#e05a4e,#8d2b22)}
+  .mchip.c50{background:radial-gradient(circle at 35% 30%,#4ea0e0,#22538d)}
+  .mchip.c100{background:radial-gradient(circle at 35% 30%,#3a3a3a,#0a0a0a);border-color:rgba(255,215,106,.85)}
   .rowLbl.active{border-color:rgba(163,255,60,.75);color:#dfffc6;animation:actPulse .9s ease-in-out infinite alternate}
   @keyframes actPulse{from{box-shadow:0 3px 10px rgba(0,0,0,.5),0 0 7px rgba(163,255,60,.25),inset 0 1px 0 rgba(255,255,255,.18)}
     to{box-shadow:0 3px 10px rgba(0,0,0,.5),0 0 18px rgba(163,255,60,.6),inset 0 1px 0 rgba(255,255,255,.18)}}
@@ -318,7 +329,10 @@
     <div id="felt">
       <div id="feltBrand"><div class="bull">🐂</div><div class="brand">$ANSEM</div></div>
       <div class="seatRow" id="rowTop"></div>
-      <div id="potPill"><img src="./assets/coin_gold.png" alt=""><span id="potV"></span></div>
+      <div id="potZone">
+        <div id="potV"></div>
+        <div id="potChips"></div>
+      </div>
       <div class="cardRow" id="boardRow"></div>
       <div class="seatRow" id="rowBottom"></div>
     </div>
@@ -844,8 +858,26 @@ function setActive(id){
   document.querySelectorAll(".rowLbl.active").forEach(e=>e.classList.remove("active"));
   if(id){const e=$("lbl_"+id);if(e)e.classList.add("active");}
 }
-function potShow(t){$("potPill").style.display="flex";$("potV").textContent=t;}
-function potHide(){$("potPill").style.display="none";}
+function potShow(amt,label){ // orta sahnede tutar + gerçek çip yığınları
+  $("potZone").style.display="flex";
+  $("potV").textContent=(label||"POT")+" $"+amt;
+  const c=$("potChips");c.innerHTML="";
+  let a=amt;
+  for(const [v,cls] of [[100,"c100"],[50,"c50"],[25,"c25"],[10,"c10"]]){
+    let n=Math.floor(a/v);a-=n*v;
+    if(v===10&&a>0){n++;a=0;}
+    if(!n)continue;
+    const pile=document.createElement("div");pile.className="pile";
+    const shown=Math.min(n,8);
+    for(let i=0;i<shown;i++){
+      const ch=document.createElement("div");ch.className="mchip "+cls;
+      ch.style.bottom=(i*5)+"px";ch.style.animationDelay=(i*0.03)+"s";
+      pile.appendChild(ch);
+    }
+    c.appendChild(pile);
+  }
+}
+function potHide(){$("potZone").style.display="none";}
 function chipSfx(n=2,spread=0.05){ // sentezlenmiş poker çipi klikleri
   if(!AC||muted)return;
   const t0=AC.currentTime;
@@ -865,7 +897,7 @@ function chipSfx(n=2,spread=0.05){ // sentezlenmiş poker çipi klikleri
 }
 function chipFly(){ // pottan oyuncuya coin yağmuru
   const fx=$("casFx"),cas=$("casino").getBoundingClientRect();
-  const pp=$("potPill"),src=(pp.style.display!=="none"?pp:$("felt")).getBoundingClientRect();
+  const pp=$("potZone"),src=(pp.style.display!=="none"?pp:$("felt")).getBoundingClientRect();
   const dstEl=$("cards_you"),dst=(dstEl||$("felt")).getBoundingClientRect();
   const x0=src.left+src.width/2-cas.left, y0=src.top+src.height/2-cas.top;
   const x1=dst.left+dst.width/2-cas.left, y1=dst.top+dst.height/2-cas.top;
@@ -944,7 +976,8 @@ function betPhase(note){
   updateBet(note);
 }
 function updateBet(note){
-  casMsg(note||((casGame==="bj"?"BET":"ANTE")+": $"+bet+(bet?"":" · TAP A CHIP")));
+  casMsg(note||(bet>0?"DEAL WHEN READY":"PLACE YOUR "+(casGame==="bj"?"BET":"ANTE")+" · TAP A CHIP"));
+  if(bet>0)potShow(bet,casGame==="bj"?"BET":"ANTE");else potHide();
   const chips=[10,25,50,100].map(v=>({t:"$"+v,cls:"chip c"+v,dis:getW()<v,
     f:()=>{chipSfx(1);setW(getW()-v);bet+=v;updateBet();}}));
   casCtrl([...chips,
@@ -1008,7 +1041,7 @@ function bjDeal(){
   }
   HS={you,b1:d2(),b2:d2(),d:dl};
   bjRender(true);casCtrl([]);
-  potShow("BET $"+bet);
+  potShow(bet,"BET");
   if(bjVal(HS.you)===21){casMsg("BLACKJACK! 🐂");casLater(800,bjBots);}
   else bjYourTurn();
 }
@@ -1021,7 +1054,7 @@ function bjYourTurn(){
     {t:"HIT",f:()=>{stopTimer();HS.you.push(deck.pop());bjRender(true);bjYourTurn();}},
     {t:"STAND",cls:"act green",f:()=>{stopTimer();casCtrl([]);bjBots();}},
     {t:"DOUBLE",dis:!canDbl,f:()=>{
-      stopTimer();chipSfx(3,0.06);setW(getW()-bet);bet*=2;potShow("BET $"+bet);HS.you.push(deck.pop());bjRender(true);
+      stopTimer();chipSfx(3,0.06);setW(getW()-bet);bet*=2;potShow(bet,"BET");HS.you.push(deck.pop());bjRender(true);
       if(bjVal(HS.you)>21){casMsg("BUST — TABLE PLAYS ON...");casLater(800,bjBots);}
       else{casCtrl([]);bjBots();}
     }}]);
@@ -1153,7 +1186,7 @@ function pkDeal(){
   board=[deck.pop(),deck.pop(),deck.pop(),deck.pop(),deck.pop()];
   ante=bet;
   pkSt={street:0,pot:ante*3,folded:{}};
-  potShow("POT $"+pkSt.pot);
+  potShow(pkSt.pot,"POT");
   setLbl("you","YOU 🐂");setLbl("b1",BOTS.b1);setLbl("b2",BOTS.b2);
   pkStreet();
 }
@@ -1166,7 +1199,7 @@ function pkStreet(){
   const pay=(id,amt)=>{
     chipSfx(2);
     if(id==="you")setW(getW()-Math.min(amt,getW()));
-    pkSt.pot+=amt;contrib[id]+=amt;potShow("POT $"+pkSt.pot);
+    pkSt.pot+=amt;contrib[id]+=amt;potShow(pkSt.pot,"POT");
   };
   const finishStreet=()=>{
     setActive(null);
@@ -1335,7 +1368,23 @@ $("cwBtn").addEventListener("click",e=>{
   }
   const provs=solList();
   if(!provs.length){
-    toast("NO SOLANA WALLET FOUND");
+    // mobilde cüzdan enjekte edilmez — oyunu cüzdanın kendi tarayıcısında aç
+    const p=$("menuPanel");
+    p.innerHTML="";p.style.left="auto";p.style.right="10px";
+    const dapp=encodeURIComponent(location.origin+location.pathname);
+    const ref=encodeURIComponent(location.origin);
+    const links=[
+      ["PHANTOM","https://phantom.app/ul/browse/"+dapp+"?ref="+ref],
+      ["SOLFLARE","https://solflare.com/ul/v1/browse/"+dapp+"?ref="+ref]
+    ];
+    for(const [n,href] of links){
+      const b=document.createElement("button");
+      b.innerHTML=SVG_WALLET+"<span>OPEN IN "+n+"</span>";
+      b.onclick=()=>{p.style.display="none";buildMenu();location.href=href;};
+      p.appendChild(b);
+    }
+    p.style.display="flex";
+    toast("OPEN THE GAME INSIDE YOUR WALLET APP");
     return;
   }
   if(provs.length===1)return solConnect(provs[0][1]);
