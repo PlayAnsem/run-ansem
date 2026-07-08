@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>BULL RUN</title>
+<link rel="icon" type="image/png" href="./assets/logo_round.png">
+<link rel="apple-touch-icon" href="./assets/logo_round.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
 <style>
@@ -95,7 +97,39 @@
     text-shadow:0 1px 3px rgba(0,0,0,.7)}
   #tbLives svg{width:19px;height:19px;fill:#ff5a66;stroke:none;filter:drop-shadow(0 0 5px rgba(255,90,102,.55))}
   #tbLives .cd{font-size:10px;color:#ffb3ad;letter-spacing:.4px;font-style:normal}
-  /* ---- casino kazanç efektleri ---- */
+  /* ---- swap screen ---- */
+  #swap{display:none;background:radial-gradient(120% 90% at 50% 20%,#0c1f16 0%,#060f0a 60%,#030705 100%);justify-content:flex-start;z-index:11}
+  #swapHead{width:100%;display:flex;align-items:center;justify-content:space-between;padding:max(10px,env(safe-area-inset-top)) 12px 8px;box-sizing:border-box}
+  #swapTitle{font-size:20px;font-style:italic;letter-spacing:2px;background:linear-gradient(180deg,#d6ffb0,#7cd93a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px #000)}
+  #swapBody{width:92%;display:flex;flex-direction:column;align-items:stretch;margin-top:14px}
+  .swCard{border-radius:22px;padding:18px 18px 14px;box-sizing:border-box;
+    border:1px solid rgba(163,255,60,.16);
+    background:linear-gradient(165deg,rgba(24,40,30,.92),rgba(10,20,14,.96));
+    box-shadow:0 8px 24px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
+  .swLbl{color:#8fb894;font-size:13px;font-weight:700;letter-spacing:.4px;margin-bottom:10px}
+  .swRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .swAmt{font-family:"Lilita One","Arial Black",sans-serif;font-size:40px;color:#5e7a63;line-height:1}
+  .swToken{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;cursor:pointer;
+    border:1px solid rgba(163,255,60,.25);
+    background:linear-gradient(160deg,rgba(40,66,46,.9),rgba(14,28,18,.95));
+    box-shadow:0 3px 10px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.14);
+    color:#dfffc6;font-weight:900;font-size:15px;font-family:inherit;letter-spacing:.5px}
+  .swToken img{width:26px;height:26px;border-radius:50%;filter:drop-shadow(0 0 5px rgba(163,255,60,.35))}
+  .swToken svg{width:16px;height:16px;color:#8fb894}
+  .swSub{display:flex;align-items:center;justify-content:space-between;margin-top:12px;color:#5e7a63;font-size:14px;font-weight:700}
+  .swSub .swChips{display:flex;gap:7px}
+  .swSub .swChips span{padding:4px 11px;border-radius:999px;background:rgba(163,255,60,.09);border:1px solid rgba(163,255,60,.16);color:#9ac79b;font-size:12px}
+  #swFlip{align-self:center;width:46px;height:46px;border-radius:50%;margin:-14px auto;z-index:2;cursor:pointer;
+    border:3px solid #060f0a;
+    background:linear-gradient(160deg,#8fe049,#4f9922);
+    box-shadow:0 4px 14px rgba(0,0,0,.55),0 0 16px rgba(163,255,60,.35),inset 0 1px 0 rgba(255,255,255,.35);
+    display:flex;align-items:center;justify-content:center;color:#0a1f0c}
+  #swFlip svg{width:22px;height:22px}
+  #swGo{margin-top:18px;padding:16px;border-radius:18px;border:1px solid rgba(163,255,60,.3);
+    background:linear-gradient(165deg,rgba(50,84,40,.7),rgba(18,34,16,.9));
+    color:#9ac79b;font-family:"Lilita One","Arial Black",sans-serif;font-size:17px;letter-spacing:2px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+  /* ---- casino win effects ---- */
   #casFx{position:absolute;inset:0;pointer-events:none;z-index:30;overflow:hidden}
   #casFx img{position:absolute;width:26px;height:26px;filter:drop-shadow(0 0 7px rgba(255,210,63,.75))}
   #casBanner{position:absolute;left:50%;top:37%;transform:translate(-50%,-50%);z-index:31;pointer-events:none;
@@ -343,6 +377,45 @@
     </div>
     <div id="casFx"></div>
     <div id="casBanner"></div>
+  </div>
+  <div id="swap" class="screen">
+    <div id="swapHead">
+      <button id="swapBack" class="btn tbBtn" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div id="swapTitle">SWAP</div>
+      <div style="width:46px"></div>
+    </div>
+    <div id="swapBody">
+      <div class="swCard">
+        <div class="swLbl">You pay:</div>
+        <div class="swRow">
+          <div class="swAmt">0</div>
+          <button class="btn swToken">
+            <img src="./assets/coin_gold.png" alt="">
+            <span>GOLD</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </div>
+        <div class="swSub"><span>$0.00</span><span class="swChips"><span id="swBal">Balance: 0</span><span>50%</span><span>Max</span></span></div>
+      </div>
+      <button id="swFlip" class="btn" aria-label="Flip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+      </button>
+      <div class="swCard">
+        <div class="swLbl">You receive:</div>
+        <div class="swRow">
+          <div class="swAmt">0</div>
+          <button class="btn swToken">
+            <img src="./assets/logo_round.png" alt="">
+            <span>$ANSEM</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </div>
+        <div class="swSub"><span>$0.00</span></div>
+      </div>
+      <button id="swGo" class="btn" disabled>SWAP &middot; COMING SOON</button>
+    </div>
   </div>
   <div id="lead" class="screen">
     <div id="leadHead"><div id="leadTitle">🏆 LEADERBOARD</div><button id="leadClose" class="btn">✕</button></div>
@@ -732,6 +805,7 @@ function showTitle(){
   $("casino").style.display="none";
   $("mute").style.display="none";
   $("gearBtn").style.display="none";$("pause").style.display="none";userPaused=false;
+  $("swap").style.display="none";
   refreshGold();refreshLives();
   $("bestTitle").textContent = best()>0 ? `${STR.best}: ${best()} ${STR.distanceUnit}` : STR.tapToStart;
 }
@@ -858,7 +932,7 @@ function setActive(id){
   document.querySelectorAll(".rowLbl.active").forEach(e=>e.classList.remove("active"));
   if(id){const e=$("lbl_"+id);if(e)e.classList.add("active");}
 }
-function potShow(amt,label){ // orta sahnede tutar + gerçek çip yığınları
+function potShow(amt,label){ // center stage: amount pill + real chip stacks
   $("potZone").style.display="flex";
   $("potV").textContent=(label||"POT")+" $"+amt;
   const c=$("potChips");c.innerHTML="";
@@ -878,7 +952,7 @@ function potShow(amt,label){ // orta sahnede tutar + gerçek çip yığınları
   }
 }
 function potHide(){$("potZone").style.display="none";}
-function chipSfx(n=2,spread=0.05){ // sentezlenmiş poker çipi klikleri
+function chipSfx(n=2,spread=0.05){ // synthesized poker chip clicks
   if(!AC||muted)return;
   const t0=AC.currentTime;
   for(let i=0;i<n;i++){
@@ -895,7 +969,7 @@ function chipSfx(n=2,spread=0.05){ // sentezlenmiş poker çipi klikleri
     src.start(t);
   }
 }
-function chipFly(){ // pottan oyuncuya coin yağmuru
+function chipFly(){ // coin shower from pot to player
   const fx=$("casFx"),cas=$("casino").getBoundingClientRect();
   const pp=$("potZone"),src=(pp.style.display!=="none"?pp:$("felt")).getBoundingClientRect();
   const dstEl=$("cards_you"),dst=(dstEl||$("felt")).getBoundingClientRect();
@@ -947,7 +1021,7 @@ function casCtrl(btns){
 function openCasino(g){
   casGame=g;casSeq++;state="casino";
   $("title").style.display="none";$("over").style.display="none";$("casino").style.display="flex";
-  $("mute").style.display="none"; // masa başlığındaki ses düğmesi devralıyor
+  $("mute").style.display="none"; // table header sound button takes over
   setMuteIcon();
   $("casTitle").textContent=g==="bj"?"BULL JACK":"BULL POKER";
   if(getW()<25){setW(getW()+250);}else setW(getW());
@@ -984,7 +1058,7 @@ function updateBet(note){
     {t:"DEAL",cls:"act green",dis:bet<=0,f:()=>{chipSfx(3,0.06);casGame==="bj"?bjDeal():pkDeal();}},
     {t:"RESET",dis:bet<=0,f:()=>{chipSfx(2);setW(getW()+bet);bet=0;updateBet();}}]);
 }
-// %50 kazanma oranı kontrolcüsü: oran hedeften saparsa dağıtım hafifçe dengelenir
+// 50% win-rate controller: dealing gently rebalances when rate drifts off target
 function casStats(){
   try{const s=JSON.parse(localStorage.getItem("bullrun.casstats"));if(s&&typeof s.w==="number")return s;}catch(e){}
   return {w:0,l:0};
@@ -994,7 +1068,7 @@ function recCas(win){
   if(win)s.w++;else s.l++;
   localStorage.setItem("bullrun.casstats",JSON.stringify(s));
 }
-function casBias(){ // + değer → oyuncuya yardım, - → kasaya
+function casBias(){ // positive → favor player, negative → favor house
   const s=casStats(),t=s.w+s.l;
   if(t<4)return 0;
   return 0.5 - s.w/t;
@@ -1033,7 +1107,7 @@ function bjDeal(){
   const d2=()=>[deck.pop(),deck.pop()];
   let you=d2(),dl=d2();
   const bias=casBias();
-  if(Math.abs(bias)>0.02){ // dengeleme: alternatif el çek, uygun tarafa iyisini ver
+  if(Math.abs(bias)>0.02){ // balance: draw an alternative hand, give the better one to the right side
     const alt=d2();
     const sc=h=>{const v=bjVal(h);return v>21?0:v;};
     if(bias>0){ if(sc(alt)>sc(you))you=alt; }
@@ -1129,7 +1203,7 @@ function rank5(cs){
   return [0,...rs];
 }
 const cmpRank=(a,b)=>{for(let i=0;i<Math.max(a.length,b.length);i++){const d=(a[i]||0)-(b[i]||0);if(d)return d;}return 0;};
-function bestHand(cs){ // 5-7 karttan en iyi 5'li el
+function bestHand(cs){ // best 5-card hand out of 5-7 cards
   const n=cs.length;
   if(n===5)return rank5(cs);
   let best=null;
@@ -1143,7 +1217,7 @@ function bestHand(cs){ // 5-7 karttan en iyi 5'li el
   }
   return best;
 }
-// --- Bull Poker: 3 kişilik Texas Hold'em (sabit limit, sokak başına 1 artırma) ---
+// --- Bull Poker: 3-handed Texas Hold'em (fixed limit, one raise per street) ---
 const PK_REVEAL=[0,3,4,5], PK_NAMES=["PRE-FLOP","FLOP","TURN","RIVER"];
 let pkSt=null;
 function pkRender(revBoard,revBots){
@@ -1158,10 +1232,10 @@ const pkName=id=>id==="you"?"YOU 🐂":BOTS[id];
 function botDecide(id,toCall,canRaise){
   const n=PK_REVEAL[pkSt.street];
   let s;
-  if(n===0){ // el gücü: cep kartları
+  if(n===0){ // hand strength: hole cards
     const [a,b]=HS[id];
     s=a.r===b.r ? 0.62+a.r/30 : (a.r+b.r)/58+(a.s===b.s?0.05:0)+(Math.abs(a.r-b.r)<=2?0.04:0);
-  }else{ // board ile gerçek değerlendirme
+  }else{ // real evaluation with the board
     const r=bestHand([...HS[id],...board.slice(0,n)]);
     s=r[0]/8+(r[1]||0)/220;
   }
@@ -1176,7 +1250,7 @@ function pkDeal(){
   const d2=()=>[deck.pop(),deck.pop()];
   let you=d2();
   const bias=casBias();
-  if(Math.abs(bias)>0.02){ // dengeleme: cep kartlarını orana göre iyileştir/kötüleştir
+  if(Math.abs(bias)>0.02){ // balance: improve/worsen hole cards based on win rate
     const alt=d2();
     const st=h=>h[0].r===h[1].r?30+h[0].r:h[0].r+h[1].r+(h[0].s===h[1].s?2:0);
     if(bias>0){ if(st(alt)>st(you))you=alt; }
@@ -1191,7 +1265,7 @@ function pkDeal(){
   pkStreet();
 }
 function pkStreet(){
-  const u=pkSt.street<2?ante:ante*2; // turn/river'da bahis büyür
+  const u=pkSt.street<2?ante:ante*2; // bets double on turn/river
   let curBet=0;const contrib={you:0,b1:0,b2:0};
   pkSt.raises=0;
   pkRender(PK_REVEAL[pkSt.street],false);
@@ -1221,7 +1295,7 @@ function pkStreet(){
       next();
     });
   };
-  const settle=()=>{ // artırma olduysa herkes eşitlesin (tek artırma → tek tur yeter)
+  const settle=()=>{ // after a raise everyone matches (single raise cap → one pass is enough)
     const meOwes=!pkSt.folded.you&&contrib.you<curBet;
     const youPart=done=>{
       if(!meOwes)return done();
@@ -1260,7 +1334,7 @@ function pkStreet(){
   ]);
   startTimer(12,()=>{casCtrl([]);setLbl("you","YOU 🐂 · CHECK");casMsg("TIME! AUTO-CHECK");bots();});
 }
-function pkAward(id){ // herkes fold etti
+function pkAward(id){ // everyone folded
   if(id==="you")casEnd("THEY ALL FOLD — YOU TAKE $"+pkSt.pot+" 🐂",pkSt.pot,true);
   else casEnd(BOTS[id]+" TAKES THE POT",0,pkSt.folded.you?undefined:false);
 }
@@ -1280,6 +1354,13 @@ function pkShowdownFinal(){
 
 // ---------- topbar: menu / gold / leaderboard / Solana wallet ----------
 function refreshGold(){ $("tbGoldV").textContent=totalCoins(); }
+function openSwap(){
+  $("swBal").textContent="Balance: "+totalCoins();
+  $("swap").style.display="flex";
+}
+$("tbGold").style.cursor="pointer";
+$("tbGold").addEventListener("click",e=>{e.stopPropagation();openSwap();});
+$("swapBack").addEventListener("click",()=>{$("swap").style.display="none";});
 const SVG_SOUND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>';
 const SVG_TROPHY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
 const SVG_WALLET='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>';
@@ -1320,7 +1401,7 @@ function solList(){
   add("Phantom",window.phantom&&window.phantom.solana);
   add("Solflare",window.solflare);
   add("Backpack",window.backpack);
-  add("Wallet",window.solana); // diğer Phantom-uyumlu enjekte cüzdanlar
+  add("Wallet",window.solana); // other Phantom-compatible injected wallets
   return out;
 }
 async function solConnect(prov){
@@ -1330,7 +1411,7 @@ async function solConnect(prov){
     solPk=pk;solProv=prov;
     $("cwBtn").classList.add("on");toast("WALLET CONNECTED · "+shortPk(pk));
     if(window.FB&&window.FB.setWallet)window.FB.setWallet(pk);
-  }catch(e){/* kullanıcı reddetti */}
+  }catch(e){/* user rejected */}
 }
 const SVG_COPY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
 const SVG_OUT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>';
@@ -1368,7 +1449,7 @@ $("cwBtn").addEventListener("click",e=>{
   }
   const provs=solList();
   if(!provs.length){
-    // mobilde cüzdan enjekte edilmez — oyunu cüzdanın kendi tarayıcısında aç
+    // mobile browsers get no injected wallet — open the game inside the wallet app
     const p=$("menuPanel");
     p.innerHTML="";p.style.left="auto";p.style.right="10px";
     const dapp=encodeURIComponent(location.origin+location.pathname);
@@ -1672,7 +1753,7 @@ imgReady.then(()=>{
   const q=new URLSearchParams(location.search);
   if(q.has("auto")) startRun();
   const cas=q.get("cas"); if(cas==="bj"||cas==="pk") openCasino(cas);
-  if(q.has("lead")){ // anonim giriş tamamlanınca aç
+  if(q.has("lead")){ // open once anonymous sign-in completes
     let tr=0;const it=setInterval(()=>{if((window.FB&&window.FB.ready)||++tr>40){clearInterval(it);openLead();}},250);
   }
   requestAnimationFrame(frameFn);
@@ -1721,7 +1802,7 @@ try{
     FB.submitRun(Number(localStorage.getItem("bullrun.best")||0),Number(localStorage.getItem("bullrun.coins")||0));
   });
   signInAnonymously(auth).catch(()=>{});
-}catch(e){/* çevrimdışı — leaderboard kapalı kalır */}
+}catch(e){/* offline — leaderboard stays disabled */}
 </script>
 </body>
 </html>
