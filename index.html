@@ -60,7 +60,7 @@
   #againBtn{margin-top:22px;background:none;border:none;box-shadow:none;padding:0;cursor:pointer}
   #againBtn img{width:min(52vw,250px);display:block;filter:drop-shadow(0 0 20px rgba(163,255,60,.35)) drop-shadow(0 5px 12px rgba(0,0,0,.6))}
   /* ---- topbar: modern game HUD ---- */
-  #topbar{position:absolute;top:max(10px,env(safe-area-inset-top));left:8px;right:8px;display:flex;align-items:center;justify-content:center;gap:7px;z-index:8}
+  #topbar{position:absolute;top:max(10px,env(safe-area-inset-top));left:8px;right:8px;display:flex;align-items:center;justify-content:center;gap:10px;z-index:8}
   .tbBtn{width:46px;height:46px;border-radius:16px;flex-shrink:0;
     border:1px solid rgba(163,255,60,.35);
     background:linear-gradient(160deg,rgba(52,92,56,.88),rgba(9,22,15,.92));
@@ -696,6 +696,9 @@ const imgReady = Promise.all([
   loadImg("wall","./assets/wall_bear.png"), loadImg("hurdle","./assets/hurdle_low.png"),
   loadImg("coin","./assets/coin_gold.png"), loadImg("sky","./assets/skyline_far.jpg"),
   loadImg("poster","./assets/title_poster.jpg"), loadImg("playbtn","./assets/play_btn.png"),
+  ...["btn_run_again","btn_deal","btn_reset","btn_sound_on","btn_sound_off","btn_back",
+      "chip_10","chip_25","chip_50","chip_100","frame_pill","frame_wide",
+      "hud_coin_counter","hud_heart_counter","icon_coin"].map(n=>loadImg(n,"./assets/"+n+".png")),
 ]);
 
 // ---------- audio (WebAudio, master mute) ----------
@@ -1735,9 +1738,8 @@ function drawRoad(){
       if(zB<=0.03) continue;
       const pA=proj(zA), pB=proj(zB);
       const xA=W/2+lb*roadHalf(pA)*0.68, xB=W/2+lb*roadHalf(pB)*0.68;
-      const wA=W*0.012*pA, wB=W*0.012*pB;
-      if(wA<0.5) continue; // subpixel near the horizon — skip instead of shimmering
-      ctx.globalAlpha=Math.min(1,(CFG.viewDist-zA)/25); // ease dashes in from the horizon
+      const wA=Math.max(0.35,W*0.012*pA), wB=Math.max(0.3,W*0.012*pB);
+      ctx.globalAlpha=Math.min(1,(CFG.viewDist-zA)/10); // ease dashes in right at the horizon
       ctx.beginPath();
       ctx.moveTo(xA-wA,yAt(pA)); ctx.lineTo(xA+wA,yAt(pA));
       ctx.lineTo(xB+wB,yAt(pB)); ctx.lineTo(xB-wB,yAt(pB));
@@ -1930,6 +1932,7 @@ Promise.all([imgReady, document.fonts?document.fonts.ready:Promise.resolve()]).t
   const q=new URLSearchParams(location.search);
   if(q.has("auto")) startRun();
   const cas=q.get("cas"); if(cas==="bj"||cas==="pk") openCasino(cas);
+  if(q.has("refill")){localStorage.setItem("bullrun.lives",JSON.stringify({n:5,ts:Date.now()}));refreshLives();}
   if(q.has("lead")){ // open once anonymous sign-in completes
     let tr=0;const it=setInterval(()=>{if((window.FB&&window.FB.ready)||++tr>40){clearInterval(it);openLead();}},250);
   }
