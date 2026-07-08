@@ -56,6 +56,15 @@
   .pcard.red{color:#c22a1e}
   .pcard.back{background:linear-gradient(135deg,#11150c,#1d2410);border:2px solid #c9a13d;box-sizing:border-box}
   .pcard.back::after{content:"🐂";font-size:20px;filter:sepia(1) saturate(2.4)}
+  .seatRow{display:flex;justify-content:space-evenly;align-items:flex-start;width:100%;z-index:1}
+  .seat{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .seat .cardRow{min-height:48px}
+  .cardRow.stack .pcard:not(:first-child){margin-left:-18px}
+  .cardRow.stack .pcard.sm:not(:first-child){margin-left:-12px}
+  .pcard.sm{width:32px;height:46px;border-radius:5px}
+  .pcard.sm .rk{font-size:13px}
+  .pcard.sm .st{font-size:11px}
+  .pcard.sm.back::after{font-size:13px}
   @keyframes dealIn{from{transform:translateY(-16px) scale(.7);opacity:0}to{transform:none;opacity:1}}
   #casMsg{min-height:24px;color:#ffe9a8;font-size:15px;font-style:italic;text-shadow:0 2px 6px #000;text-align:center;padding:0 10px}
   #casCtrl{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;align-items:center;padding:8px 6px max(12px,env(safe-area-inset-bottom))}
@@ -106,9 +115,9 @@
     </div>
     <div id="felt">
       <div id="feltBrand"><div class="bull">🐂</div><div class="brand">$ANSEM</div></div>
-      <div class="area"><div class="rowLbl" id="dealerLbl">DEALER</div><div class="cardRow" id="dealerRow"></div></div>
+      <div class="seatRow" id="rowTop"></div>
       <div class="cardRow" id="boardRow"></div>
-      <div class="area"><div class="cardRow" id="playerRow"></div><div class="rowLbl" id="playerLbl">YOU</div></div>
+      <div class="seatRow" id="rowBottom"></div>
     </div>
     <div id="casMsg"></div>
     <div id="casCtrl"></div>
@@ -527,13 +536,22 @@ function cardEl(c,down){
 }
 const getW=()=>Number(localStorage.getItem("bullrun.coins")||0);
 const setW=v=>{localStorage.setItem("bullrun.coins",String(v));$("casWallet").textContent="$ "+v;};
-let casGame=null,casSeq=0,bet=0,deck=null,pHand=[],dHand=[],board=[];
+let casGame=null,casSeq=0,bet=0,deck=null,board=[],HS=null,pot=0,ante=0;
+const BOTS={b1:"🐻 BEAR",b2:"🦍 APE"};
 function casLater(ms,fn){const s=casSeq;setTimeout(()=>{if(s===casSeq)fn();},ms);}
 function casMsg(t){$("casMsg").textContent=t;}
-function casRows(dealer,brd,player){
-  const put=(id,arr)=>{const el=$(id);el.innerHTML="";for(const [c,down] of arr)el.appendChild(cardEl(c,down));};
-  put("dealerRow",dealer);put("boardRow",brd);put("playerRow",player);
+function mkSeat(rowId,id,label,labelBelow){
+  const s=document.createElement("div");s.className="seat";
+  const l=document.createElement("div");l.className="rowLbl";l.id="lbl_"+id;l.textContent=label;
+  const c=document.createElement("div");c.className="cardRow stack";c.id="cards_"+id;
+  if(labelBelow)s.append(c,l);else s.append(l,c);
+  $(rowId).appendChild(s);
 }
+function setCards(id,arr,sm){
+  const el=$("cards_"+id);el.innerHTML="";
+  for(const [c,down] of arr){const e=cardEl(c,down);if(sm)e.classList.add("sm");el.appendChild(e);}
+}
+function setLbl(id,t){$("lbl_"+id).textContent=t;}
 function casCtrl(btns){
   const c=$("casCtrl");c.innerHTML="";
   for(const b of btns){
@@ -554,10 +572,19 @@ $("bjBtn").addEventListener("click",()=>openCasino("bj"));
 $("pkBtn").addEventListener("click",()=>openCasino("pk"));
 $("casBack").addEventListener("click",()=>{casSeq++;$("casino").style.display="none";showTitle();});
 function betPhase(note){
-  bet=0;pHand=[];dHand=[];board=[];
-  casRows([],[],[]);
-  $("dealerLbl").textContent="DEALER";$("playerLbl").textContent="YOU";
+  bet=0;board=[];HS=null;pot=0;
+  $("rowTop").innerHTML="";$("rowBottom").innerHTML="";$("boardRow").innerHTML="";
   $("boardRow").style.display=casGame==="pk"?"flex":"none";
+  if(casGame==="bj"){
+    mkSeat("rowTop","d","DEALER");
+    mkSeat("rowBottom","b1",BOTS.b1,true);
+    mkSeat("rowBottom","you","YOU 🐂",true);
+    mkSeat("rowBottom","b2",BOTS.b2,true);
+  }else{
+    mkSeat("rowTop","b1",BOTS.b1);
+    mkSeat("rowTop","b2",BOTS.b2);
+    mkSeat("rowBottom","you","YOU 🐂",true);
+  }
   updateBet(note);
 }
 function updateBet(note){
@@ -582,47 +609,78 @@ const bjVal=h=>{
   while(t>21&&a>0){t-=10;a--;}
   return t;
 };
-function bjRows(hideHole){
-  casRows(dHand.map((c,i)=>[c,hideHole&&i===0]),[],pHand.map(c=>[c,false]));
-  $("dealerLbl").textContent="DEALER"+(hideHole?"":" · "+bjVal(dHand));
-  $("playerLbl").textContent="YOU · "+bjVal(pHand);
+function bjRender(hideHole){
+  setCards("d",HS.d.map((c,i)=>[c,hideHole&&i===0]));
+  setCards("you",HS.you.map(c=>[c,false]));
+  setCards("b1",HS.b1.map(c=>[c,false]),true);
+  setCards("b2",HS.b2.map(c=>[c,false]),true);
+  setLbl("d","DEALER"+(hideHole?"":" · "+bjVal(HS.d)));
+  setLbl("you","YOU 🐂 · "+bjVal(HS.you));
+  setLbl("b1",BOTS.b1+" · "+bjVal(HS.b1));
+  setLbl("b2",BOTS.b2+" · "+bjVal(HS.b2));
 }
 function bjDeal(){
-  deck=newDeck();pHand=[deck.pop(),deck.pop()];dHand=[deck.pop(),deck.pop()];
-  bjRows(true);casCtrl([]);
-  if(bjVal(pHand)===21){
-    bjRows(false);
-    if(bjVal(dHand)===21)return casEnd("BOTH BLACKJACK — PUSH",bet);
-    return casEnd("BLACKJACK! 🐂 +$"+Math.floor(bet*1.5),bet+Math.floor(bet*1.5),true);
-  }
-  bjTurn();
+  deck=newDeck();
+  HS={you:[deck.pop(),deck.pop()],b1:[deck.pop(),deck.pop()],b2:[deck.pop(),deck.pop()],d:[deck.pop(),deck.pop()]};
+  bjRender(true);casCtrl([]);
+  if(bjVal(HS.you)===21){casMsg("BLACKJACK! 🐂");casLater(800,bjBots);}
+  else bjYourTurn();
 }
-function bjTurn(){
-  if(bjVal(pHand)>21){bjRows(false);return casEnd("BUST — REKT 🐻",0,false);}
-  const canDbl=pHand.length===2&&getW()>=bet;
+function bjYourTurn(){
+  if(bjVal(HS.you)>21){casMsg("BUST — TABLE PLAYS ON...");return casLater(800,bjBots);}
+  const canDbl=HS.you.length===2&&getW()>=bet;
   casMsg("YOUR MOVE · BET $"+bet);
   casCtrl([
-    {t:"HIT",f:()=>{pHand.push(deck.pop());bjRows(true);bjTurn();}},
-    {t:"STAND",cls:"act green",f:bjStand},
+    {t:"HIT",f:()=>{HS.you.push(deck.pop());bjRender(true);bjYourTurn();}},
+    {t:"STAND",cls:"act green",f:()=>{casCtrl([]);bjBots();}},
     {t:"DOUBLE",dis:!canDbl,f:()=>{
-      setW(getW()-bet);bet*=2;pHand.push(deck.pop());bjRows(true);
-      if(bjVal(pHand)>21){bjRows(false);casEnd("BUST — REKT 🐻",0,false);}else bjStand();
+      setW(getW()-bet);bet*=2;HS.you.push(deck.pop());bjRender(true);
+      if(bjVal(HS.you)>21){casMsg("BUST — TABLE PLAYS ON...");casLater(800,bjBots);}
+      else{casCtrl([]);bjBots();}
     }}]);
 }
-function bjStand(){
-  casCtrl([]);bjRows(false);casMsg("DEALER DRAWS...");
+function bjBots(){
+  casCtrl([]);
+  const play=(id,next)=>{
+    const hand=HS[id];
+    const step=()=>{
+      const v=bjVal(hand);
+      if(v<16||(v===16&&Math.random()<0.5)){
+        casMsg(BOTS[id]+" HITS...");
+        casLater(500,()=>{hand.push(deck.pop());bjRender(true);step();});
+      }else{casMsg(BOTS[id]+(v>21?" BUSTS 💥":" STANDS"));casLater(600,next);}
+    };
+    step();
+  };
+  play("b1",()=>play("b2",bjDealer));
+}
+function bjDealer(){
+  bjRender(false);casMsg("DEALER DRAWS...");
   const step=()=>{
-    if(bjVal(dHand)<17){
-      casLater(550,()=>{dHand.push(deck.pop());bjRows(false);step();});
-    }else casLater(550,()=>{
-      const dv=bjVal(dHand),pv=bjVal(pHand);
-      if(dv>21)casEnd("DEALER BUSTS! +$"+bet,bet*2,true);
-      else if(pv>dv)casEnd("YOU WIN! +$"+bet,bet*2,true);
-      else if(pv<dv)casEnd("DEALER WINS 🐻",0,false);
-      else casEnd("PUSH",bet);
-    });
+    if(bjVal(HS.d)<17)casLater(550,()=>{HS.d.push(deck.pop());bjRender(false);step();});
+    else casLater(650,bjSettle);
   };
   step();
+}
+function bjSettle(){
+  const dv=bjVal(HS.d);
+  const outcome=h=>{const v=bjVal(h);if(v>21)return -1;if(dv>21)return 1;return v>dv?1:(v<dv?-1:0);};
+  for(const id of ["b1","b2"]){
+    const o=outcome(HS[id]);
+    setLbl(id,BOTS[id]+" · "+(o>0?"WIN ✅":o<0?"REKT ❌":"PUSH"));
+  }
+  const natural=HS.you.length===2&&bjVal(HS.you)===21;
+  let txt,ret,won;
+  if(natural){
+    if(HS.d.length===2&&dv===21){txt="BOTH BLACKJACK — PUSH";ret=bet;}
+    else{const w=Math.floor(bet*1.5);txt="BLACKJACK! 🐂 +$"+w;ret=bet+w;won=true;}
+  }else{
+    const o=outcome(HS.you);
+    if(o>0){txt=(dv>21?"DEALER BUSTS! ":"YOU WIN! ")+"+$"+bet;ret=bet*2;won=true;}
+    else if(o<0){txt=bjVal(HS.you)>21?"BUST — REKT 🐻":"DEALER WINS 🐻";ret=0;won=false;}
+    else{txt="PUSH";ret=bet;}
+  }
+  casEnd(txt,ret,won);
 }
 // --- Bull Poker (heads-up showdown vs dealer) ---
 const HAND_NAMES=["HIGH CARD","PAIR","TWO PAIR","TRIPS","STRAIGHT","FLUSH","FULL HOUSE","QUADS","STRAIGHT FLUSH"];
@@ -656,32 +714,55 @@ function best7(cs){
   }
   return best;
 }
-function pkRows(revBoard,revDealer){
-  casRows(dHand.map(c=>[c,!revDealer]),board.map((c,i)=>[c,i>=revBoard]),pHand.map(c=>[c,false]));
+function pkRender(revBoard,revBots){
+  setCards("b1",HS.b1.map(c=>[c,!revBots]),true);
+  setCards("b2",HS.b2.map(c=>[c,!revBots]),true);
+  setCards("you",HS.you.map(c=>[c,false]));
+  const el=$("boardRow");el.innerHTML="";
+  board.forEach((c,i)=>el.appendChild(cardEl(c,i>=revBoard)));
+}
+function pkHands(includeYou){
+  const hs=[["b1",BOTS.b1,best7([...HS.b1,...board])],["b2",BOTS.b2,best7([...HS.b2,...board])]];
+  if(includeYou)hs.push(["you","YOU 🐂",best7([...HS.you,...board])]);
+  return hs;
 }
 function pkDeal(){
-  deck=newDeck();pHand=[deck.pop(),deck.pop()];dHand=[deck.pop(),deck.pop()];
+  deck=newDeck();
+  HS={you:[deck.pop(),deck.pop()],b1:[deck.pop(),deck.pop()],b2:[deck.pop(),deck.pop()]};
   board=[deck.pop(),deck.pop(),deck.pop(),deck.pop(),deck.pop()];
-  pkRows(0,false);
-  const callCost=Math.min(bet,getW());
-  casMsg("FOLD, OR CALL +$"+callCost+" TO SEE THE BOARD");
+  ante=bet;pot=ante*3; // all three ante
+  pkRender(0,false);
+  const callCost=Math.min(ante,getW());
+  casMsg("POT $"+pot+" · FOLD, OR CALL +$"+callCost);
   casCtrl([
-    {t:"FOLD",cls:"act red",f:()=>{pkRows(5,true);casEnd("FOLDED — ANTE LOST 🐻",0);}},
-    {t:"CALL +$"+callCost,cls:"act green",f:()=>{setW(getW()-callCost);bet+=callCost;pkShowdown();}}]);
+    {t:"FOLD",cls:"act red",f:pkFold},
+    {t:"CALL +$"+callCost,cls:"act green",f:()=>{setW(getW()-callCost);pot=ante*6;pkShowdown();}}]);
+}
+function pkFold(){
+  pkRender(5,true);
+  const hs=pkHands(false);
+  for(const [id,name,r] of hs)setLbl(id,name+" · "+HAND_NAMES[r[0]]);
+  const w=cmpRank(hs[0][2],hs[1][2])>=0?hs[0]:hs[1];
+  casEnd("FOLDED — "+w[1]+" TAKES THE POT",0);
 }
 function pkShowdown(){
-  casCtrl([]);casMsg("FLOP...");
-  casLater(650,()=>{pkRows(3,false);casMsg("TURN...");
-  casLater(750,()=>{pkRows(4,false);casMsg("RIVER...");
-  casLater(750,()=>{pkRows(5,false);casMsg("SHOWDOWN 🐂");
+  casCtrl([]);casMsg("BEAR & APE CALL · POT $"+pot);
+  casLater(700,()=>{pkRender(3,false);casMsg("POT $"+pot+" · FLOP...");
+  casLater(750,()=>{pkRender(4,false);casMsg("POT $"+pot+" · TURN...");
+  casLater(750,()=>{pkRender(5,false);casMsg("POT $"+pot+" · RIVER...");
   casLater(800,()=>{
-    pkRows(5,true);
-    const pr=best7([...pHand,...board]),dr=best7([...dHand,...board]),c=cmpRank(pr,dr);
-    const pn=HAND_NAMES[pr[0]],dn=HAND_NAMES[dr[0]];
-    casLater(700,()=>{
-      if(c>0)casEnd(pn+" BEATS "+dn+" — +$"+bet,bet*2,true);
-      else if(c<0)casEnd(dn+" BEATS "+pn+" — REKT 🐻",0,false);
-      else casEnd(pn+" — PUSH",bet);
+    pkRender(5,true);casMsg("SHOWDOWN 🐂");
+    const hs=pkHands(true);
+    let best=null;for(const h of hs)if(!best||cmpRank(h[2],best[2])>0)best=h;
+    const winners=hs.filter(h=>cmpRank(h[2],best[2])===0);
+    for(const [id,name,r] of hs)setLbl(id,name+" · "+HAND_NAMES[r[0]]);
+    casLater(800,()=>{
+      if(winners.some(w=>w[0]==="you")){
+        const share=Math.floor(pot/winners.length);
+        casEnd(winners.length>1?"SPLIT POT — +$"+share:"YOU WIN $"+pot+" — "+HAND_NAMES[best[2][0]]+" 🐂",share,true);
+      }else{
+        casEnd(winners[0][1]+" WINS — "+HAND_NAMES[best[2][0]],0,false);
+      }
     });
   });});});});
 }
