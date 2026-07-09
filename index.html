@@ -1866,7 +1866,7 @@ function renderTasks(rows){
     const btn=document.createElement("button");btn.className="btn taskBtn";
     row.append(ic,ti,btn);list.appendChild(row);
     if(done[t.id]){btn.classList.add("done");btn.innerHTML="<span>DONE ✓</span>";btn.disabled=true;continue;}
-    btn.innerHTML='<img src="./assets/icon_coin.png" alt="">+'+(t.reward||0);
+    btn.innerHTML='<img src="./assets/icon_coin.png" alt="">+'+(Number(t.reward)||0);
     btn.onclick=()=>{
       if(btn.disabled)return;
       btn.disabled=true;
@@ -2283,7 +2283,7 @@ Promise.all([imgReady, document.fonts?document.fonts.ready:Promise.resolve()]).t
   const cas=q.get("cas"); if(cas==="bj"||cas==="pk") openCasino(cas);
   const rp=q.get("ref");
   if(rp&&!localStorage.getItem("bullrun.refby"))localStorage.setItem("bullrun.refby",rp);
-  if(q.has("refill")){localStorage.setItem("bullrun.lives",JSON.stringify({n:5,ts:Date.now()}));refreshLives();}
+  if(q.get("refill")==="bull"){localStorage.setItem("bullrun.lives",JSON.stringify({n:5,ts:Date.now()}));refreshLives();}
   if(q.has("lead")){ // open once anonymous sign-in completes
     let tr=0;const it=setInterval(()=>{if((window.FB&&window.FB.ready)||++tr>40){clearInterval(it);openLead();}},250);
   }
@@ -2309,35 +2309,60 @@ try{
   const app=initializeApp(cfg);
   const auth=getAuth(app), db=getFirestore(app);
   const myName=()=>FB.wallet?(FB.wallet.slice(0,4)+"…"+FB.wallet.slice(-4)):("BULL-"+(FB.uid||"0000").slice(0,4).toUpperCase());
-  FB.submitRun=(best,coins)=>{
-    if(!FB.ready)return;
+  FB._lastWrite=0;FB._lastSnap="";FB._lastBest=Number(localStorage.getItem("bullrun.best")||0);FB._pending=null;FB._t=null;
+  FB._flush=()=>{
+    if(!FB.ready||!FB._pending)return;
+    const p=FB._pending;
+    const snap=JSON.stringify([p.best,p.coins,FB.wallet||null,localStorage.getItem("bullrun.refby")||null]);
+    if(snap===FB._lastSnap){FB._pending=null;return;} // no change — skip the write
+    const now=Date.now();
+    const bestUp=p.best>FB._lastBest;
+    if(now-FB._lastWrite<20000&&!bestUp){ // at most one write per 20s (new records flush instantly)
+      clearTimeout(FB._t);
+      FB._t=setTimeout(FB._flush,20000-(now-FB._lastWrite)+80);
+      return;
+    }
+    FB._pending=null;FB._lastWrite=now;FB._lastSnap=snap;FB._lastBest=p.best;
     setDoc(doc(db,"players",FB.uid),{
       name:myName(),wallet:FB.wallet||null,
       refBy:localStorage.getItem("bullrun.refby")||null,
-      best:Number(best)||0,coins:Number(coins)||0,
+      best:p.best,coins:p.coins,
       updatedAt:serverTimestamp()
     },{merge:true}).catch(()=>{});
+  };
+  FB.submitRun=(best,coins)=>{
+    if(!FB.ready)return;
+    FB._pending={best:Math.max(0,Math.min(999999,Number(best)||0)),coins:Math.max(0,Math.min(999999999,Number(coins)||0))};
+    FB._flush();
   };
   FB.setWallet=w=>{
     FB.wallet=w;
     if(w)localStorage.setItem("bullrun.wallet",w);else localStorage.removeItem("bullrun.wallet");
     FB.submitRun(Number(localStorage.getItem("bullrun.best")||0),Number(localStorage.getItem("bullrun.coins")||0));
   };
-  FB.tasks=async()=>{
-    const snap=await getDocs(collection(db,"tasks"));
+  FB._c={};
+  const cached=async(key,ttl,fn)=>{
+    const c=FB._c[key];
+    if(c&&Date.now()-c.at<ttl)return c.v;
+    const v=await fn();
+    FB._c[key]={v,at:Date.now()};
+    return v;
+  };
+  FB.tasks=()=>cached("tasks",300000,async()=>{
+    const snap=await getDocs(query(collection(db,"tasks"),limit(50)));
     const rows=[];snap.forEach(d=>rows.push({id:d.id,...d.data()}));
     return rows.filter(r=>r.active!==false).sort((a,b)=>(a.order||0)-(b.order||0));
-  };
-  FB.frens=async uid=>{
-    const snap=await getDocs(query(collection(db,"players"),where("refBy","==",uid)));
+  });
+  FB.frens=uid=>cached("frens",600000,async()=>{
+    const snap=await getDocs(query(collection(db,"players"),where("refBy","==",uid),limit(300)));
     const rows=[];snap.forEach(d=>rows.push({uid:d.id,...d.data()}));
     return rows;
-  };
-  FB.top=async n=>{
-    const snap=await getDocs(query(collection(db,"players"),orderBy("best","desc"),limit(n)));
+  });
+  FB.top=n=>cached("top",60000,async()=>{
+    const snap=await getDocs(query(collection(db,"players"),orderBy("best","desc"),limit(Math.min(n||100,100))));
     const rows=[];snap.forEach(d=>rows.push({uid:d.id,...d.data()}));
     return rows;
-  };
+  });
   onAuthStateChanged(auth,u=>{
     if(!u)return;
     FB.uid=u.uid;FB.ready=true;
