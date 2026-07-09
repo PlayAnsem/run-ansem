@@ -842,14 +842,17 @@ function startMusic(){
 $("mute").addEventListener("click", e=>{ e.stopPropagation(); toggleMute(); });
 
 // ---------- canvas sizing ----------
-const DPR_CAP = 2;
+const DPR_CAP = 1.75;
 let W=0,H=0;
 let DPR=1;
+// adaptive quality: FPS düşerse çözünürlük kademeli iner, toparlarsa geri çıkar
+let perfScale=Math.min(1,Math.max(0.6,Number(localStorage.getItem("bullrun.perfscale"))||1));
 function resize(){
   const r = frame.getBoundingClientRect();
   let dpr = Math.min(devicePixelRatio||1, DPR_CAP);
   // cap total pixel area so weak GPUs keep a steady frame rate
-  if(r.width*r.height*dpr*dpr > 1500000) dpr=Math.max(1,Math.sqrt(1500000/(r.width*r.height)));
+  if(r.width*r.height*dpr*dpr > 1300000) dpr=Math.sqrt(1300000/(r.width*r.height));
+  dpr=Math.max(0.6,dpr*perfScale);
   DPR=dpr;
   W = r.width; H = r.height;
   canvas.width = Math.round(W*dpr); canvas.height = Math.round(H*dpr);
@@ -984,6 +987,7 @@ function startRun(){
   state="running"; crashT=0;
   $("title").style.display="none"; $("over").style.display="none"; $("hud").style.display="block";
   $("gearBtn").style.display="flex"; $("mute").style.display="none";
+  hudLastD=-1;hudLastC=-1;
   for(const p of parts)p.on=false; for(const p of pops)p.on=false;
   initAudio().then(startMusic);
 }
@@ -1988,7 +1992,7 @@ $("leadClose").addEventListener("click",()=>{$("lead").style.display="none";refr
 // ---------- pre-rendered static layers (sky + road) — rebuilt on resize ----------
 // per-frame gradient allocation and shadowBlur were the main stutter sources;
 // everything static is baked once into offscreen canvases and blitted per frame
-let offSky=null, offRoad=null, vanishGrad=null;
+let offBG=null, vanishGrad=null;
 function buildStatic(){
   if(!W||!H)return;
   const hz=horizonY(), by=bottomY();
@@ -1999,7 +2003,7 @@ function buildStatic(){
     c.setTransform(DPR,0,0,DPR,0,0);
     return [o,c];
   };
-  // sky layer
+  // single combined layer: sky + ground + road (one blit per frame)
   const [o1,c1]=mk();
   const g=c1.createLinearGradient(0,0,0,hz*1.25);
   g.addColorStop(0,"#0a2e26"); g.addColorStop(0.62,"#14523c"); g.addColorStop(1,"#7cd93a");
@@ -2016,9 +2020,8 @@ function buildStatic(){
   const gg=c1.createLinearGradient(0,hz-14,0,hz+22);
   gg.addColorStop(0,"rgba(163,255,60,0)"); gg.addColorStop(0.5,"rgba(163,255,60,.5)"); gg.addColorStop(1,"rgba(163,255,60,0)");
   c1.fillStyle=gg; c1.fillRect(0,hz-14,W,36);
-  offSky=o1;
-  // road layer: ground + asphalt + layered edge glow (no shadowBlur)
-  const [o2,c2]=mk();
+  // ground + asphalt + layered edge glow (no shadowBlur) — same canvas
+  const c2=c1;
   const gnd=c2.createLinearGradient(0,hz,0,H);
   gnd.addColorStop(0,"#0c1f1a"); gnd.addColorStop(1,"#071009");
   c2.fillStyle=gnd; c2.fillRect(0,hz,W,H-hz);
@@ -2040,7 +2043,7 @@ function buildStatic(){
       c2.stroke();
     }
   }
-  offRoad=o2;
+  offBG=o1;
   // cached vanish-point glow gradient
   const R=W*0.085;
   vanishGrad=ctx.createRadialGradient(W/2,hz,0,W/2,hz,R);
@@ -2049,11 +2052,10 @@ function buildStatic(){
   vanishGrad.addColorStop(1,"rgba(163,255,60,0)");
 }
 function drawSky(){
-  if(offSky){ctx.drawImage(offSky,0,0,W,H);ops++;}
+  if(offBG){ctx.drawImage(offBG,0,0,W,H);ops++;}
 }
 function drawRoad(){
   const hz=horizonY(), by=bottomY();
-  if(offRoad){ctx.drawImage(offRoad,0,0,W,H);ops++;}
   // dashed yellow lane dividers, scrolling with distance
   const dist = sim?sim.dist:0;
   ctx.fillStyle="#ffd23f";
@@ -2203,6 +2205,8 @@ function runningDust(dt){
 const STEP=1000/60;
 let acc=0,last=performance.now(),paused=false;
 let frames=0,fpsAt=last,fps=0,opsShown=0;
+let hudLastD=-1,hudLastC=-1;
+let perfFrames=0,perfAt=performance.now();
 addEventListener("blur",()=>paused=true);
 addEventListener("focus",()=>{paused=false;last=performance.now();});
 document.addEventListener("visibilitychange",()=>{ if(document.hidden)paused=true; else {paused=false;last=performance.now();} });
@@ -2213,6 +2217,23 @@ function frameFn(now){
   acc+=now-last; last=now;
   if(acc>250)acc=250;
   pollPad();
+  // adaptif kalite: 2 sn'lik pencerede FPS ölç, koşu sırasında ayarla
+  perfFrames++;
+  if(now-perfAt>=2000){
+    const pfps=perfFrames*1000/(now-perfAt);
+    perfFrames=0;perfAt=now;
+    if(state==="running"){
+      if(pfps<45&&perfScale>0.6){
+        perfScale=Math.max(0.6,perfScale*0.85);
+        localStorage.setItem("bullrun.perfscale",String(perfScale));
+        resize();
+      }else if(pfps>57&&perfScale<1){
+        perfScale=Math.min(1,perfScale*1.08);
+        localStorage.setItem("bullrun.perfscale",String(perfScale));
+        resize();
+      }
+    }
+  }
   while(acc>=STEP){
     if(state==="running"&&sim&&sim.alive){
       stepSim(sim, STEP/1000, pending);
@@ -2244,8 +2265,9 @@ function frameFn(now){
   if(flashT>0){ flashT-=dt; $("flash").style.opacity=Math.max(0,flashT*2.2); }
   // HUD
   if(state==="running"&&sim){
-    $("hudDist").textContent=Math.floor(sim.dist);
-    $("hudCoinsV").textContent=fmtNum(sim.coins);
+    const dInt=Math.floor(sim.dist);
+    if(dInt!==hudLastD){hudLastD=dInt;$("hudDist").textContent=dInt;}
+    if(sim.coins!==hudLastC){hudLastC=sim.coins;$("hudCoinsV").textContent=fmtNum(sim.coins);}
   }
   if(dev&&(frames++,now-fpsAt>=500)){
     fps=Math.round(frames*1000/(now-fpsAt));frames=0;fpsAt=now;opsShown=ops;
