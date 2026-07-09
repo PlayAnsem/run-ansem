@@ -148,6 +148,51 @@
     background:linear-gradient(165deg,rgba(50,84,40,.7),rgba(18,34,16,.9));
     color:#9ac79b;font-family:"Lilita One","Arial Black",sans-serif;font-size:17px;letter-spacing:2px;
     box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+  /* ---- tasks & frens ---- */
+  .roundNav{position:absolute;top:64px;width:54px;height:54px;border-radius:50%;z-index:8;cursor:pointer;
+    border:1px solid rgba(163,255,60,.4);
+    background:linear-gradient(160deg,rgba(52,92,56,.9),rgba(9,22,15,.94));
+    box-shadow:0 5px 16px rgba(0,0,0,.55),0 0 14px rgba(163,255,60,.18),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -3px 8px rgba(0,0,0,.4);
+    display:flex;align-items:center;justify-content:center;color:#c8ff9a}
+  .roundNav svg{width:25px;height:25px;filter:drop-shadow(0 0 5px rgba(163,255,60,.45))}
+  #tasksBtn{left:12px}
+  #frensBtn{right:12px}
+  .pageScr{display:none;background:radial-gradient(120% 90% at 50% 20%,#0c1f16 0%,#060f0a 60%,#030705 100%);justify-content:flex-start;z-index:11}
+  .pageHead{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:max(10px,env(safe-area-inset-top)) 12px 8px;box-sizing:border-box}
+  .pageTitle{font-size:20px;font-style:italic;letter-spacing:2px;font-weight:900;
+    background:linear-gradient(180deg,#d6ffb0,#7cd93a);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 2px 3px #000)}
+  .pageBody{width:94%;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:13px;
+    padding:10px 2px max(14px,env(safe-area-inset-bottom));box-sizing:border-box}
+  .taskRow{display:flex;align-items:center;gap:10px;padding:5px 8px;flex-shrink:0;
+    border:15px solid transparent;border-image:url(./assets/frame_wide.png) 62 fill stretch;
+    filter:drop-shadow(0 4px 10px rgba(0,0,0,.4))}
+  .taskIc{width:38px;height:38px;border-radius:50%;flex-shrink:0;background:#000;
+    display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 2px 6px rgba(0,0,0,.5)}
+  .taskIc svg{width:19px;height:19px;color:#fff}
+  .taskIc.like{background:linear-gradient(160deg,#5c1620,#2a080d)}
+  .taskIc.like svg{color:#ff5a66}
+  .taskTitle{flex:1;min-width:0;font-size:12px;color:#eaffdb;letter-spacing:.5px;font-weight:800;overflow:hidden;text-overflow:ellipsis}
+  .taskBtn{display:flex;align-items:center;justify-content:center;gap:5px;min-width:74px;padding:1px 4px;cursor:pointer;flex-shrink:0;
+    border:11px solid transparent;border-image:url(./assets/frame_pill.png) 70 fill stretch;
+    color:#ffd76a;font-weight:900;font-size:13px;font-family:inherit;
+    font-family:"Lilita One","Arial Black",sans-serif;letter-spacing:.5px}
+  .taskBtn img{width:17px;height:17px}
+  .taskBtn.done{opacity:.5}
+  .frCard{display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;padding:16px 14px;flex-shrink:0;
+    border-radius:20px;border:1px solid rgba(163,255,60,.3);
+    background:linear-gradient(165deg,rgba(20,42,28,.95),rgba(6,16,11,.97));
+    box-shadow:0 8px 26px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12)}
+  .frBig{font-family:"Lilita One","Arial Black",sans-serif;font-size:21px;letter-spacing:1px;
+    background:linear-gradient(180deg,#fff3b0,#ffd23f 45%,#ff9a1a);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 2px 3px #000)}
+  .frTxt{color:#9ac79b;font-size:12px;letter-spacing:.4px;line-height:1.6}
+  .frStats{display:flex;gap:10px;width:100%;justify-content:center}
+  .frStat{flex:1;max-width:110px;padding:9px 6px;border-radius:14px;text-align:center;
+    border:1px solid rgba(255,210,63,.25);background:rgba(20,16,5,.55)}
+  .frStat .v{font-family:"Lilita One","Arial Black",sans-serif;font-size:18px;color:#ffd76a;text-shadow:0 1px 3px #000}
+  .frStat .k{font-size:9px;color:#8fb894;letter-spacing:1px;margin-top:2px}
   /* ---- centered modal ---- */
   #modalWrap{position:absolute;inset:0;z-index:40;display:none;align-items:center;justify-content:center;
     background:rgba(2,8,5,.72);backdrop-filter:blur(5px)}
@@ -351,6 +396,12 @@
       <button id="cwBtn" class="btn imgBtn" aria-label="Connect Wallet"><img src="./assets/btn_wallet.png" alt="Connect Wallet"></button>
     </div>
     <div id="menuPanel"></div>
+    <button id="tasksBtn" class="btn roundNav" aria-label="Tasks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="6" height="6" rx="1"/><path d="m4 17 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>
+    </button>
+    <button id="frensBtn" class="btn roundNav" aria-label="Frens">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </button>
     <div id="playRow">
       <button id="bjBtn" class="btn sideBtn"><img src="./assets/btn_bjack.png" alt="B-JACK"></button>
       <button id="playBtn" class="btn" aria-label="Play"><img src="./assets/play_btn.png" alt="PLAY"></button>
@@ -434,6 +485,36 @@
         <div class="swSub"><span>$0.00</span></div>
       </div>
       <button id="swGo" class="btn" disabled>SWAP &middot; COMING SOON</button>
+    </div>
+  </div>
+  <div id="tasks" class="screen pageScr">
+    <div class="pageHead">
+      <button id="tasksBack" class="btn imgBtn" aria-label="Back"><img src="./assets/btn_back.png" alt="Back"></button>
+      <div class="pageTitle">TASKS</div>
+      <div class="counterPlate" style="background-image:url(./assets/hud_coin_counter.png);color:#ffd76a;font-family:'Lilita One','Arial Black',sans-serif;font-size:15px"><span id="tasksGoldV">0</span></div>
+    </div>
+    <div id="taskList" class="pageBody"><div class="frTxt" style="text-align:center">LOADING...</div></div>
+  </div>
+  <div id="frens" class="screen pageScr">
+    <div class="pageHead">
+      <button id="frensBack" class="btn imgBtn" aria-label="Back"><img src="./assets/btn_back.png" alt="Back"></button>
+      <div class="pageTitle">FRENS</div>
+      <div class="counterPlate" style="background-image:url(./assets/hud_coin_counter.png);color:#ffd76a;font-family:'Lilita One','Arial Black',sans-serif;font-size:15px"><span id="frensGoldV">0</span></div>
+    </div>
+    <div class="pageBody">
+      <div class="frCard">
+        <div class="frBig">INVITE A FREN</div>
+        <div class="frTxt">EARN <b style="color:#ffd76a">5%</b> OF EVERY FREN'S GOLD EARNINGS — FOREVER.<br>PAID INTO YOUR BALANCE ONCE A DAY.</div>
+        <button id="frCopy" class="btn wItem" style="justify-content:center"><span>COPY INVITE LINK</span></button>
+      </div>
+      <div class="frCard">
+        <div class="frStats">
+          <div class="frStat"><div class="v" id="frCount">0</div><div class="k">FRENS</div></div>
+          <div class="frStat"><div class="v" id="frGold">0</div><div class="k">THEIR GOLD</div></div>
+          <div class="frStat"><div class="v" id="frShare">0</div><div class="k">YOUR 5%</div></div>
+        </div>
+        <div class="frTxt" id="frNote"></div>
+      </div>
     </div>
   </div>
   <div id="lead" class="screen">
@@ -863,6 +944,7 @@ function showTitle(){
   $("mute").style.display="none";
   $("gearBtn").style.display="none";$("pause").style.display="none";userPaused=false;
   $("swap").style.display="none";
+  $("tasks").style.display="none";$("frens").style.display="none";
   refreshGold();refreshLives();
   $("bestTitle").textContent = best()>0 ? `${STR.best}: ${best()} ${STR.distanceUnit}` : STR.tapToStart;
 }
@@ -1736,6 +1818,134 @@ $("cwBtn").addEventListener("click",e=>{
   if($("modalWrap").style.display==="flex"){closeModal();return;}
   if(solPk)openWalletInfo();else openWalletConnect();
 });
+// --- tasks & frens ---
+const SVG_X='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 1.1h3.7l-8.1 9.3 9.5 12.5h-7.4l-5.8-7.6-6.7 7.6H.4l8.7-9.9L0 1.1h7.6l5.3 7 6-7z"/></svg>';
+const SVG_HEART='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>';
+function taskClaimed(){try{return JSON.parse(localStorage.getItem("bullrun.tasksdone")||"{}");}catch(e){return {};}}
+function awardGold(amount,fromEl,goldSpanId){
+  const from=totalCoins(), total=from+amount;
+  localStorage.setItem("bullrun.coins",String(total));
+  goldShown=total; // ana sayfada tekrar animasyon oynamasın
+  if(window.FB&&window.FB.submitRun)window.FB.submitRun(best(),total);
+  const scr=fromEl.closest(".screen"),gold=$(goldSpanId).closest(".counterPlate");
+  const sr=fromEl.getBoundingClientRect(),gr=gold.getBoundingClientRect(),fr=scr.getBoundingClientRect();
+  const x0=sr.left+sr.width/2-fr.left,y0=sr.top+sr.height/2-fr.top;
+  const x1=gr.left+gr.width/2-fr.left,y1=gr.top+gr.height/2-fr.top;
+  const layer=document.createElement("div");
+  layer.style.cssText="position:absolute;inset:0;pointer-events:none;z-index:30";
+  scr.appendChild(layer);
+  const n=Math.min(12,4+Math.floor(amount/80));
+  for(let i=0;i<n;i++){
+    const img=document.createElement("img");img.src="./assets/icon_coin.png";
+    img.style.cssText="position:absolute;width:24px;height:24px;left:"+(x0-12)+"px;top:"+(y0-12)+"px;filter:drop-shadow(0 0 7px rgba(255,210,63,.7))";
+    layer.appendChild(img);
+    const dx=x1-x0+(Math.random()-0.5)*50, dy=y1-y0+(Math.random()-0.5)*24;
+    img.animate([
+      {transform:"translate(0,0) scale(.5)",opacity:0},
+      {transform:"translate("+(dx*0.4)+"px,"+(dy*0.5-42)+"px) scale(1.1)",opacity:1,offset:.45},
+      {transform:"translate("+dx+"px,"+dy+"px) scale(.45)",opacity:.9}
+    ],{duration:750,delay:i*70,easing:"cubic-bezier(.3,.5,.4,1)"}).onfinish=()=>img.remove();
+  }
+  setTimeout(()=>{
+    layer.remove();
+    sfx("sfx_coin",.8);chipSfx(6,0.06);
+    gold.animate([{transform:"scale(1)"},{transform:"scale(1.2)"},{transform:"scale(1)"}],{duration:420});
+    const t0=performance.now(),dur=850,el=$(goldSpanId);
+    const iv=setInterval(()=>{
+      const k=Math.min(1,(performance.now()-t0)/dur);
+      el.textContent=fmtNum(Math.round(from+amount*k));
+      if(k>=1)clearInterval(iv);
+    },40);
+  },780+n*70);
+}
+function renderTasks(rows){
+  const list=$("taskList");list.innerHTML="";
+  const done=taskClaimed();
+  if(!rows.length){list.innerHTML='<div class="frTxt" style="text-align:center">NO TASKS YET — CHECK BACK SOON!</div>';return;}
+  for(const t of rows){
+    const row=document.createElement("div");row.className="taskRow";
+    const ic=document.createElement("div");ic.className="taskIc"+(t.icon==="like"?" like":"");
+    ic.innerHTML=t.icon==="like"?SVG_HEART:SVG_X;
+    const ti=document.createElement("div");ti.className="taskTitle";ti.textContent=t.title||"TASK";
+    const btn=document.createElement("button");btn.className="btn taskBtn";
+    row.append(ic,ti,btn);list.appendChild(row);
+    if(done[t.id]){btn.classList.add("done");btn.innerHTML="<span>DONE ✓</span>";btn.disabled=true;continue;}
+    btn.innerHTML='<img src="./assets/icon_coin.png" alt="">+'+(t.reward||0);
+    btn.onclick=()=>{
+      if(btn.disabled)return;
+      btn.disabled=true;
+      window.open(t.url||"#","_blank");
+      let n=5;
+      btn.innerHTML="<span>"+n+"</span>";
+      const iv=setInterval(()=>{
+        n--;
+        if(n>0){btn.innerHTML="<span>"+n+"</span>";return;}
+        clearInterval(iv);
+        const d2=taskClaimed();d2[t.id]=true;
+        localStorage.setItem("bullrun.tasksdone",JSON.stringify(d2));
+        btn.classList.add("done");btn.innerHTML="<span>DONE ✓</span>";
+        awardGold(Number(t.reward)||0,btn,"tasksGoldV");
+      },1000);
+    };
+  }
+}
+function openTasks(){
+  $("tasks").style.display="flex";
+  $("tasksGoldV").textContent=fmtNum(totalCoins());
+  const list=$("taskList");
+  list.innerHTML='<div class="frTxt" style="text-align:center">LOADING...</div>';
+  if(!window.FB||!window.FB.tasks){list.innerHTML='<div class="frTxt" style="text-align:center">OFFLINE — TRY AGAIN LATER</div>';return;}
+  const tryLoad=(att)=>{
+    if(!window.FB.ready){
+      if(att>20){list.innerHTML='<div class="frTxt" style="text-align:center">OFFLINE — TRY AGAIN LATER</div>';return;}
+      return setTimeout(()=>tryLoad(att+1),400);
+    }
+    window.FB.tasks().then(renderTasks).catch(()=>{list.innerHTML='<div class="frTxt" style="text-align:center">COULD NOT LOAD TASKS</div>';});
+  };
+  tryLoad(0);
+}
+function openFrens(){
+  $("frens").style.display="flex";
+  $("frensGoldV").textContent=fmtNum(totalCoins());
+  $("frNote").textContent="";
+  const fill=(rows)=>{
+    const total=rows.reduce((a,r)=>a+(Number(r.coins)||0),0);
+    const share=Math.floor(total*0.05);
+    $("frCount").textContent=fmtNum(rows.length);
+    $("frGold").textContent=fmtNum(total);
+    $("frShare").textContent=fmtNum(share);
+    const paid=Number(localStorage.getItem("bullrun.refpaid")||0);
+    const today=new Date().toDateString();
+    const delta=share-paid;
+    if(delta>0&&localStorage.getItem("bullrun.refpaidday")!==today){
+      localStorage.setItem("bullrun.refpaid",String(share));
+      localStorage.setItem("bullrun.refpaidday",today);
+      $("frNote").textContent="DAILY PAYOUT: +$"+delta+" ADDED!";
+      setTimeout(()=>awardGold(delta,$("frShare"),"frensGoldV"),600);
+    }else{
+      $("frNote").textContent=rows.length?"PAYOUTS UPDATE ONCE A DAY":"SHARE YOUR LINK TO START EARNING";
+    }
+  };
+  const tryLoad=(att)=>{
+    if(!window.FB||!window.FB.ready){
+      if(att>20){$("frNote").textContent="OFFLINE — TRY AGAIN LATER";return;}
+      return setTimeout(()=>tryLoad(att+1),400);
+    }
+    window.FB.frens(window.FB.uid).then(fill).catch(()=>{$("frNote").textContent="COULD NOT LOAD FRENS";});
+  };
+  tryLoad(0);
+}
+$("tasksBtn").addEventListener("click",openTasks);
+$("frensBtn").addEventListener("click",openFrens);
+$("tasksBack").addEventListener("click",()=>{$("tasks").style.display="none";refreshGold();});
+$("frensBack").addEventListener("click",()=>{$("frens").style.display="none";refreshGold();});
+$("frCopy").addEventListener("click",()=>{
+  if(!window.FB||!window.FB.uid){toast("CONNECTING... TRY AGAIN");return;}
+  const link=location.origin+location.pathname+"?ref="+window.FB.uid;
+  (navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject())
+    .then(()=>toast("INVITE LINK COPIED"))
+    .catch(()=>toast(link));
+});
 // --- leaderboard ---
 function openLead(){
   $("lead").style.display="flex";
@@ -2034,6 +2244,8 @@ Promise.all([imgReady, document.fonts?document.fonts.ready:Promise.resolve()]).t
   const q=new URLSearchParams(location.search);
   if(q.has("auto")) startRun();
   const cas=q.get("cas"); if(cas==="bj"||cas==="pk") openCasino(cas);
+  const rp=q.get("ref");
+  if(rp&&!localStorage.getItem("bullrun.refby"))localStorage.setItem("bullrun.refby",rp);
   if(q.has("refill")){localStorage.setItem("bullrun.lives",JSON.stringify({n:5,ts:Date.now()}));refreshLives();}
   if(q.has("lead")){ // open once anonymous sign-in completes
     let tr=0;const it=setInterval(()=>{if((window.FB&&window.FB.ready)||++tr>40){clearInterval(it);openLead();}},250);
@@ -2045,7 +2257,7 @@ Promise.all([imgReady, document.fonts?document.fonts.ready:Promise.resolve()]).t
 // ---------- Firebase: anonim auth + Firestore leaderboard ----------
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import {getFirestore,doc,setDoc,getDocs,collection,query,orderBy,limit,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import {getFirestore,doc,setDoc,getDocs,collection,query,orderBy,limit,where,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 const cfg={
   apiKey:"AIzaSyAcshv0yrq3RJtif-2oCSeN0-HbZvW8bRU",
   authDomain:"playansem.firebaseapp.com",
@@ -2064,6 +2276,7 @@ try{
     if(!FB.ready)return;
     setDoc(doc(db,"players",FB.uid),{
       name:myName(),wallet:FB.wallet||null,
+      refBy:localStorage.getItem("bullrun.refby")||null,
       best:Number(best)||0,coins:Number(coins)||0,
       updatedAt:serverTimestamp()
     },{merge:true}).catch(()=>{});
@@ -2073,6 +2286,16 @@ try{
     if(w)localStorage.setItem("bullrun.wallet",w);else localStorage.removeItem("bullrun.wallet");
     FB.submitRun(Number(localStorage.getItem("bullrun.best")||0),Number(localStorage.getItem("bullrun.coins")||0));
   };
+  FB.tasks=async()=>{
+    const snap=await getDocs(collection(db,"tasks"));
+    const rows=[];snap.forEach(d=>rows.push({id:d.id,...d.data()}));
+    return rows.filter(r=>r.active!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+  };
+  FB.frens=async uid=>{
+    const snap=await getDocs(query(collection(db,"players"),where("refBy","==",uid)));
+    const rows=[];snap.forEach(d=>rows.push({uid:d.id,...d.data()}));
+    return rows;
+  };
   FB.top=async n=>{
     const snap=await getDocs(query(collection(db,"players"),orderBy("best","desc"),limit(n)));
     const rows=[];snap.forEach(d=>rows.push({uid:d.id,...d.data()}));
@@ -2081,6 +2304,7 @@ try{
   onAuthStateChanged(auth,u=>{
     if(!u)return;
     FB.uid=u.uid;FB.ready=true;
+    if(localStorage.getItem("bullrun.refby")===u.uid)localStorage.removeItem("bullrun.refby");
     FB.submitRun(Number(localStorage.getItem("bullrun.best")||0),Number(localStorage.getItem("bullrun.coins")||0));
     FB.top(1).then(r=>{FB.globalBest=(r[0]&&r[0].best)||0;}).catch(()=>{});
   });
