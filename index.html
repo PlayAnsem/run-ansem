@@ -776,9 +776,16 @@ const imgReady = Promise.all([
 
 // ---------- audio (WebAudio, master mute) ----------
 let AC=null, master=null, musicGain=null, sfxGain=null, buffers={}, musicSrc=null;
-let muted = localStorage.getItem("bullrun.muted")==="1";
 let fxMuted = localStorage.getItem("bullrun.mutefx")==="1";
 let musicMuted = localStorage.getItem("bullrun.mutemusic")==="1";
+// migrate the legacy master mute into the two channels, then retire it
+if(localStorage.getItem("bullrun.muted")==="1"){
+  fxMuted=true;musicMuted=true;
+  localStorage.setItem("bullrun.mutefx","1");
+  localStorage.setItem("bullrun.mutemusic","1");
+}
+localStorage.removeItem("bullrun.muted");
+const allMuted=()=>fxMuted&&musicMuted;
 function applyAudioPrefs(){
   if(sfxGain)sfxGain.gain.value=fxMuted?0:1;
   if(musicGain)musicGain.gain.value=musicMuted?0:0.32;
@@ -796,20 +803,20 @@ function toggleMusic(){
 const SVG_VOL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
 const SVG_VOLX='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
 function setMuteIcon(){
-  $("mute").textContent = muted ? STR.muteOn : STR.muteOff;
+  const all=allMuted();
+  $("mute").textContent = all ? STR.muteOn : STR.muteOff;
   const m=$("mFxLbl"); if(m) m.textContent = fxMuted ? "SOUND FX: OFF" : "SOUND FX: ON";
   const mm=$("mMusLbl"); if(mm) mm.textContent = musicMuted ? "MUSIC: OFF" : "MUSIC: ON";
-  const cs=$("casSound"); if(cs) cs.innerHTML = '<img src="./assets/btn_sound_'+(muted?'off':'on')+'.png" alt="Sound">';
-  const ps=$("pSound"); if(ps) ps.textContent = muted ? "SOUND: OFF" : "SOUND: ON";
+  const cs=$("casSound"); if(cs) cs.innerHTML = '<img src="./assets/btn_sound_'+(all?'off':'on')+'.png" alt="Sound">';
+  const ps=$("pSound"); if(ps) ps.textContent = all ? "SOUND: OFF" : "SOUND: ON";
 }
-function toggleMute(){
-  muted=!muted;
-  localStorage.setItem("bullrun.muted", muted?"1":"0");
-  if(!muted){
-    initAudio().then(()=>{if(AC&&AC.state==="suspended")AC.resume();});
-  }
-  if(master) master.gain.value=muted?0:1;
-  setMuteIcon();
+function toggleMute(){ // tüm sesler: iki kanal birlikte
+  const to=!allMuted();
+  fxMuted=to;musicMuted=to;
+  localStorage.setItem("bullrun.mutefx",to?"1":"0");
+  localStorage.setItem("bullrun.mutemusic",to?"1":"0");
+  if(!to)initAudio().then(()=>{if(AC&&AC.state==="suspended")AC.resume();});
+  applyAudioPrefs();setMuteIcon();
 }
 // iOS: AudioContext must resume on a user gesture
 document.addEventListener("touchend",()=>{if(AC&&AC.state==="suspended")AC.resume();},{passive:true});
@@ -820,7 +827,7 @@ async function initAudio(){
   AC = new (window.AudioContext||window.webkitAudioContext)();
   if(AC.state==="suspended")AC.resume();
   master = AC.createGain(); master.connect(AC.destination);
-  master.gain.value = muted?0:1;
+  master.gain.value = 1;
   musicGain = AC.createGain(); musicGain.connect(master);
   sfxGain = AC.createGain(); sfxGain.connect(master);
   applyAudioPrefs();
@@ -1147,7 +1154,7 @@ function potShow(amt,label){ // center stage: amount pill + real chip stacks
 }
 function potHide(){$("potZone").style.display="none";}
 function chipSfx(n=2,spread=0.05){ // synthesized poker chip clicks
-  if(!AC||muted||fxMuted)return;
+  if(!AC||fxMuted)return;
   const t0=AC.currentTime;
   for(let i=0;i<n;i++){
     const t=t0+i*spread+Math.random()*0.02;
@@ -1193,7 +1200,7 @@ function casBanner(text,win){
   ],{duration:2000,easing:"ease-out"});
 }
 function tone(f,dur,type,vol,when,slide){
-  if(!AC||muted||fxMuted)return;
+  if(!AC||fxMuted)return;
   const t=AC.currentTime+(when||0);
   const o=AC.createOscillator(),g=AC.createGain();
   o.type=type||"triangle";o.frequency.setValueAtTime(f,t);
@@ -1213,8 +1220,8 @@ function loseTone(){ // düşen iki nota
   tone(233,0.22,"sawtooth",0.16,0,170);
   tone(155,0.4,"sawtooth",0.13,0.2,104);
 }
-function cardSfx(n=1){ // kart fiskesi: kısa yumuşak sürtünme
-  if(!AC||muted||fxMuted)return;
+function cardSfx(n=1){ // card flick: short soft rustle
+  if(!AC||fxMuted)return;
   const t0=AC.currentTime;
   for(let i=0;i<n;i++){
     const t=t0+i*0.09;
