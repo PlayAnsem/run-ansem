@@ -60,7 +60,7 @@
   #againBtn{margin-top:22px;background:none;border:none;box-shadow:none;padding:0;cursor:pointer}
   #againBtn img{width:min(52vw,250px);display:block;filter:drop-shadow(0 5px 12px rgba(0,0,0,.6))}
   /* ---- topbar: modern game HUD ---- */
-  #topbar{position:absolute;top:max(10px,env(safe-area-inset-top));left:8px;right:8px;display:flex;align-items:center;justify-content:center;gap:10px;z-index:8}
+  #topbar{position:absolute;top:max(10px,env(safe-area-inset-top));left:8px;right:8px;display:flex;align-items:center;justify-content:space-between;z-index:8}
   .tbBtn{width:46px;height:46px;border-radius:16px;flex-shrink:0;
     border:1px solid rgba(163,255,60,.35);
     background:linear-gradient(160deg,rgba(52,92,56,.88),rgba(9,22,15,.92));
@@ -149,14 +149,11 @@
     color:#9ac79b;font-family:"Lilita One","Arial Black",sans-serif;font-size:17px;letter-spacing:2px;
     box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
   /* ---- tasks & frens ---- */
-  .roundNav{position:absolute;top:64px;width:54px;height:54px;border-radius:50%;z-index:8;cursor:pointer;
-    border:1px solid rgba(163,255,60,.4);
-    background:linear-gradient(160deg,rgba(52,92,56,.9),rgba(9,22,15,.94));
-    box-shadow:0 5px 16px rgba(0,0,0,.55),0 0 14px rgba(163,255,60,.18),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -3px 8px rgba(0,0,0,.4);
-    display:flex;align-items:center;justify-content:center;color:#c8ff9a}
-  .roundNav svg{width:25px;height:25px;filter:drop-shadow(0 0 5px rgba(163,255,60,.45))}
-  #tasksBtn{left:12px}
-  #frensBtn{right:12px}
+  .roundNav{position:absolute;top:132px;width:56px;height:56px;z-index:8;cursor:pointer;
+    background:none;border:none;box-shadow:none;padding:0}
+  .roundNav img{width:56px;height:56px;display:block;filter:drop-shadow(0 5px 14px rgba(0,0,0,.55))}
+  #tasksBtn{left:8px}
+  #frensBtn{right:8px}
   .pageScr{display:none;background:radial-gradient(120% 90% at 50% 20%,#0c1f16 0%,#060f0a 60%,#030705 100%);justify-content:flex-start;z-index:11}
   .pageHead{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:max(10px,env(safe-area-inset-top)) 12px 8px;box-sizing:border-box}
   .pageTitle{font-size:20px;font-style:italic;letter-spacing:2px;font-weight:900;
@@ -204,10 +201,10 @@
   #modalTitle{text-align:center;font-family:"Lilita One","Arial Black",sans-serif;font-size:20px;letter-spacing:2px;margin-bottom:4px;
     background:linear-gradient(180deg,#d6ffb0,#7cd93a);-webkit-background-clip:text;background-clip:text;color:transparent;
     filter:drop-shadow(0 2px 3px #000)}
-  #modalX{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:10px;cursor:pointer;
+  #modalX{position:absolute;top:6px;right:6px;width:42px;height:42px;border-radius:12px;cursor:pointer;
     border:1px solid rgba(163,255,60,.35);background:rgba(10,25,16,.7);color:#a3ff3c;
-    display:flex;align-items:center;justify-content:center}
-  #modalX svg{width:16px;height:16px}
+    display:flex;align-items:center;justify-content:center;z-index:2}
+  #modalX svg{width:18px;height:18px;pointer-events:none}
   .wItem img{border-radius:8px}
   #modalBody{display:flex;flex-direction:column;gap:13px}
   .wItem{display:flex;align-items:center;justify-content:center;gap:11px;padding:5px 10px;cursor:pointer;
@@ -396,12 +393,8 @@
       <button id="cwBtn" class="btn imgBtn" aria-label="Connect Wallet"><img src="./assets/btn_wallet.png" alt="Connect Wallet"></button>
     </div>
     <div id="menuPanel"></div>
-    <button id="tasksBtn" class="btn roundNav" aria-label="Tasks">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="6" height="6" rx="1"/><path d="m4 17 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>
-    </button>
-    <button id="frensBtn" class="btn roundNav" aria-label="Frens">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    </button>
+    <button id="tasksBtn" class="btn roundNav" aria-label="Tasks"><img src="./assets/btn_tasks.png" alt="Tasks"></button>
+    <button id="frensBtn" class="btn roundNav" aria-label="Frens"><img src="./assets/btn_frens.png" alt="Frens"></button>
     <div id="playRow">
       <button id="bjBtn" class="btn sideBtn"><img src="./assets/btn_bjack.png" alt="B-JACK"></button>
       <button id="playBtn" class="btn" aria-label="Play"><img src="./assets/play_btn.png" alt="PLAY"></button>
@@ -1336,8 +1329,8 @@ function casEnd(txt,ret,won){
 // --- Bull Jack (multi-hand: play 1-3 hands yourself) ---
 let bjHands=1,bjBets=null,bjMy=[],bjBots_=[];
 function bjSeatIds(){
-  if(bjHands===1)return {my:["you"],bots:["b1","b2"],order:["b1","you","b2"]};
-  if(bjHands===2)return {my:["y1","y2"],bots:["b1"],order:["y1","y2","b1"]};
+  if(bjHands===1)return {my:["you"],bots:[],order:["you"]};
+  if(bjHands===2)return {my:["y1","y2"],bots:[],order:["y1","y2"]};
   return {my:["y1","y2","y3"],bots:[],order:["y1","y2","y3"]};
 }
 const bjName=id=>id==="you"?"YOU 🐂":(id[0]==="y"?"HAND "+id[1]+" 🐂":BOTS[id]);
@@ -1769,7 +1762,8 @@ function openModal(title){
   return $("modalBody");
 }
 function closeModal(){$("modalWrap").style.display="none";}
-$("modalX").addEventListener("click",closeModal);
+$("modalX").addEventListener("click",e=>{e.stopPropagation();e.preventDefault();closeModal();});
+$("modalX").addEventListener("touchend",e=>{e.stopPropagation();e.preventDefault();closeModal();},{passive:false});
 $("modalWrap").addEventListener("click",e=>{if(e.target===$("modalWrap"))closeModal();});
 function wItem(body,ic,label,fn,danger){
   const b=document.createElement("button");
