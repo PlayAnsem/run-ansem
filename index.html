@@ -1627,6 +1627,10 @@ function pkShowdownFinal(){
 
 // ---------- topbar: menu / gold / leaderboard / Solana wallet ----------
 let goldShown=null;
+window.onServerSync=function(){
+  goldShown=null;
+  if(state==="title"){refreshGold();}
+};
 function refreshGold(){
   const t=totalCoins();
   if(goldShown===null||t<=goldShown||state!=="title"){
@@ -2294,7 +2298,7 @@ Promise.all([imgReady, document.fonts?document.fonts.ready:Promise.resolve()]).t
 // ---------- Firebase: anonim auth + Firestore leaderboard ----------
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import {getFirestore,doc,setDoc,getDocs,collection,query,orderBy,limit,where,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import {getFirestore,doc,setDoc,getDoc,getDocs,collection,query,orderBy,limit,where,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 const cfg={
   apiKey:"AIzaSyAcshv0yrq3RJtif-2oCSeN0-HbZvW8bRU",
   authDomain:"playansem.firebaseapp.com",
@@ -2309,29 +2313,42 @@ try{
   const app=initializeApp(cfg);
   const auth=getAuth(app), db=getFirestore(app);
   const myName=()=>FB.wallet?(FB.wallet.slice(0,4)+"…"+FB.wallet.slice(-4)):("BULL-"+(FB.uid||"0000").slice(0,4).toUpperCase());
-  FB._lastWrite=0;FB._lastSnap="";FB._lastBest=Number(localStorage.getItem("bullrun.best")||0);FB._pending=null;FB._t=null;
+  // server-authoritative balance: Firestore holds the truth; increases are
+  // rate-limited by security rules (max +1500 per write, 30s apart), so big
+  // legit wins sync up in chunks and injected values are rate-bounded
+  FB._srv=null;              // last known server state {best,coins}
+  FB._meta="";               // last written wallet/refBy snapshot
+  FB._lastWrite=0;FB._pending=null;FB._t=null;
+  const plan=()=>{clearTimeout(FB._t);FB._t=setTimeout(FB._flush,33000);};
   FB._flush=()=>{
-    if(!FB.ready||!FB._pending)return;
-    const p=FB._pending;
-    const snap=JSON.stringify([p.best,p.coins,FB.wallet||null,localStorage.getItem("bullrun.refby")||null]);
-    if(snap===FB._lastSnap){FB._pending=null;return;} // no change — skip the write
-    const now=Date.now();
-    const bestUp=p.best>FB._lastBest;
-    if(now-FB._lastWrite<20000&&!bestUp){ // at most one write per 20s (new records flush instantly)
-      clearTimeout(FB._t);
-      FB._t=setTimeout(FB._flush,20000-(now-FB._lastWrite)+80);
-      return;
+    if(!FB.ready||!FB._pending||!FB._srv)return;
+    clearTimeout(FB._t);
+    const now=Date.now(),p=FB._pending;
+    const meta=JSON.stringify([FB.wallet||null,localStorage.getItem("bullrun.refby")||null]);
+    let tBest=Math.max(p.best,FB._srv.best);
+    let tCoins=p.coins;
+    if(tBest===FB._srv.best&&tCoins===FB._srv.coins&&meta===FB._meta){FB._pending=null;return;}
+    if(tBest>FB._srv.best+15000)tBest=FB._srv.best+15000; // rules cap per write
+    const inc=tCoins>FB._srv.coins;
+    if(inc){
+      if(now-FB._lastWrite<32000)return void(FB._t=setTimeout(FB._flush,32000-(now-FB._lastWrite)+150));
+      if(tCoins>FB._srv.coins+1500)tCoins=FB._srv.coins+1500; // chunked credit
+    }else if(now-FB._lastWrite<15000&&tBest<=FB._srv.best){
+      return void(FB._t=setTimeout(FB._flush,15000-(now-FB._lastWrite)+150));
     }
-    FB._pending=null;FB._lastWrite=now;FB._lastSnap=snap;FB._lastBest=p.best;
+    FB._lastWrite=now;
     setDoc(doc(db,"players",FB.uid),{
       name:myName(),wallet:FB.wallet||null,
       refBy:localStorage.getItem("bullrun.refby")||null,
-      best:p.best,coins:p.coins,
+      best:tBest,coins:tCoins,
       updatedAt:serverTimestamp()
-    },{merge:true}).catch(()=>{});
+    },{merge:true}).then(()=>{
+      FB._srv={best:tBest,coins:tCoins};FB._meta=meta;
+      if(FB._pending&&(FB._pending.best>tBest||FB._pending.coins!==tCoins))plan(); // hedefe devam
+      else FB._pending=null;
+    }).catch(plan); // reddedildi/ağ hatası — sonra tekrar dene
   };
   FB.submitRun=(best,coins)=>{
-    if(!FB.ready)return;
     FB._pending={best:Math.max(0,Math.min(999999,Number(best)||0)),coins:Math.max(0,Math.min(999999999,Number(coins)||0))};
     FB._flush();
   };
@@ -2363,10 +2380,22 @@ try{
     const rows=[];snap.forEach(d=>rows.push({uid:d.id,...d.data()}));
     return rows;
   });
-  onAuthStateChanged(auth,u=>{
+  onAuthStateChanged(auth,async u=>{
     if(!u)return;
-    FB.uid=u.uid;FB.ready=true;
+    FB.uid=u.uid;
     if(localStorage.getItem("bullrun.refby")===u.uid)localStorage.removeItem("bullrun.refby");
+    try{ // server is the source of truth for the balance
+      const snap=await getDoc(doc(db,"players",u.uid));
+      if(snap.exists()){
+        const d=snap.data();
+        FB._srv={best:Number(d.best)||0,coins:Number(d.coins)||0};
+        localStorage.setItem("bullrun.coins",String(FB._srv.coins));
+        if(FB._srv.best>Number(localStorage.getItem("bullrun.best")||0))
+          localStorage.setItem("bullrun.best",String(FB._srv.best));
+        if(window.onServerSync)window.onServerSync();
+      }else FB._srv={best:0,coins:0};
+    }catch(e){FB._srv={best:Number(localStorage.getItem("bullrun.best")||0),coins:Number(localStorage.getItem("bullrun.coins")||0)};}
+    FB.ready=true;
     FB.submitRun(Number(localStorage.getItem("bullrun.best")||0),Number(localStorage.getItem("bullrun.coins")||0));
     FB.top(1).then(r=>{FB.globalBest=(r[0]&&r[0].best)||0;}).catch(()=>{});
   });
