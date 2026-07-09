@@ -988,6 +988,7 @@ function refreshLives(){
 }
 setInterval(()=>{if(state==="title")refreshLives();},1000);
 function startRun(){
+  if(!requireWallet())return;
   if(!spendLife()){toast("NO LIVES LEFT — NEXT ❤ IN "+nextLifeTxt());refreshLives();return;}
   refreshLives();
   sim = createSim((Date.now() ^ (Math.random()*1e9))>>>0);
@@ -1272,6 +1273,7 @@ function openCasino(g){
   betPhase(getW()<=250?"HOUSE STAKE 🐂 GOOD LUCK":"");
 }
 $("bjBtn").addEventListener("click",()=>{
+  if(!requireWallet())return;
   const body=openModal("HOW MANY HANDS?");
   [1,2,3].forEach(n=>{
     const b=document.createElement("button");
@@ -1281,7 +1283,7 @@ $("bjBtn").addEventListener("click",()=>{
     body.appendChild(b);
   });
 });
-$("pkBtn").addEventListener("click",()=>openCasino("pk"));
+$("pkBtn").addEventListener("click",()=>{if(!requireWallet())return;openCasino("pk");});
 $("casSound").addEventListener("click",e=>{e.stopPropagation();toggleMute();});
 $("casBack").addEventListener("click",()=>{casSeq++;stopTimer();$("casino").style.display="none";showTitle();});
 function betPhase(note){
@@ -1739,6 +1741,13 @@ function toast(t){
 }
 // --- Solana wallet ---
 let solPk=null,solProv=null;
+// Play is gated behind a connected wallet — no wallet, no game.
+function requireWallet(){
+  if(solPk)return true;
+  toast("CONNECT WALLET TO PLAY");
+  openWalletConnect();
+  return false;
+}
 const shortPk=pk=>pk.slice(0,4)+"…"+pk.slice(-4);
 function solList(){
   const out=[],seen=new Set();
@@ -1758,6 +1767,20 @@ async function solConnect(prov){
     if(window.FB&&window.FB.setWallet)window.FB.setWallet(pk);
   }catch(e){/* user rejected */}
 }
+// Silently restore a previously-approved wallet on page load so the play gate
+// only stops players who never connected.
+(function solEager(){
+  const go=()=>{solList().forEach(([_,p])=>{
+    if(solPk)return;
+    p.connect({onlyIfTrusted:true}).then(r=>{
+      if(solPk)return;
+      const pk=((r&&r.publicKey)?r.publicKey:p.publicKey).toString();
+      solPk=pk;solProv=p;$("cwBtn").classList.add("on");
+      if(window.FB&&window.FB.setWallet)window.FB.setWallet(pk);
+    }).catch(()=>{});
+  });};
+  if(document.readyState==="complete")go();else window.addEventListener("load",go);
+})();
 const SVG_COPY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
 const SVG_OUT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>';
 function solDisconnect(){
