@@ -149,7 +149,7 @@
     color:#9ac79b;font-family:"Lilita One","Arial Black",sans-serif;font-size:17px;letter-spacing:2px;
     box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
   /* ---- tasks & frens ---- */
-  .roundNav{position:absolute;top:132px;width:56px;height:56px;z-index:8;cursor:pointer;
+  .roundNav{position:absolute;top:100px;width:56px;height:56px;z-index:8;cursor:pointer;
     background:none;border:none;box-shadow:none;padding:0}
   .roundNav img{width:56px;height:56px;display:block;filter:drop-shadow(0 5px 14px rgba(0,0,0,.55))}
   #tasksBtn{left:8px}
@@ -442,10 +442,8 @@
   </div>
   <div id="swap" class="screen">
     <div id="swapHead">
-      <button id="swapBack" class="btn tbBtn" aria-label="Back">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-      </button>
-      <div id="swapTitle">SWAP</div>
+      <button id="swapBack" class="btn imgBtn" aria-label="Back"><img src="./assets/btn_back.png" alt="Back"></button>
+      <div></div>
       <div style="width:46px"></div>
     </div>
     <div id="swapBody">
@@ -483,7 +481,7 @@
   <div id="tasks" class="screen pageScr">
     <div class="pageHead">
       <button id="tasksBack" class="btn imgBtn" aria-label="Back"><img src="./assets/btn_back.png" alt="Back"></button>
-      <div class="pageTitle">TASKS</div>
+      <div></div>
       <div class="counterPlate" style="background-image:url(./assets/hud_coin_counter.png);color:#ffd76a;font-family:'Lilita One','Arial Black',sans-serif;font-size:15px"><span id="tasksGoldV">0</span></div>
     </div>
     <div id="taskList" class="pageBody"><div class="frTxt" style="text-align:center">LOADING...</div></div>
@@ -491,14 +489,15 @@
   <div id="frens" class="screen pageScr">
     <div class="pageHead">
       <button id="frensBack" class="btn imgBtn" aria-label="Back"><img src="./assets/btn_back.png" alt="Back"></button>
-      <div class="pageTitle">FRENS</div>
+      <div></div>
       <div class="counterPlate" style="background-image:url(./assets/hud_coin_counter.png);color:#ffd76a;font-family:'Lilita One','Arial Black',sans-serif;font-size:15px"><span id="frensGoldV">0</span></div>
     </div>
     <div class="pageBody">
       <div class="frCard">
         <div class="frBig">INVITE A FREN</div>
         <div class="frTxt">EARN <b style="color:#ffd76a">5%</b> OF EVERY FREN'S GOLD EARNINGS — FOREVER.<br>PAID INTO YOUR BALANCE ONCE A DAY.</div>
-        <button id="frCopy" class="btn wItem" style="justify-content:center"><span>COPY INVITE LINK</span></button>
+        <button id="frInvite" class="btn wItem" style="justify-content:center"><span>INVITE A FREN</span></button>
+        <button id="frCopy" class="btn" style="background:none;border:none;cursor:pointer;color:#9ac79b;font-size:12px;letter-spacing:1px;text-decoration:underline;font-family:inherit;font-weight:800">COPY LINK</button>
       </div>
       <div class="frCard">
         <div class="frStats">
@@ -511,7 +510,7 @@
     </div>
   </div>
   <div id="lead" class="screen">
-    <div id="leadHead"><div id="leadTitle">🏆 LEADERBOARD</div><button id="leadClose" class="btn">✕</button></div>
+    <div id="leadHead"><div></div><button id="leadClose" class="btn">✕</button></div>
     <div id="leadMsg"></div>
     <div id="leadList"></div>
   </div>
@@ -1762,8 +1761,7 @@ function openModal(title){
   return $("modalBody");
 }
 function closeModal(){$("modalWrap").style.display="none";}
-$("modalX").addEventListener("click",e=>{e.stopPropagation();e.preventDefault();closeModal();});
-$("modalX").addEventListener("touchend",e=>{e.stopPropagation();e.preventDefault();closeModal();},{passive:false});
+$("modalX").addEventListener("pointerdown",e=>{e.stopPropagation();e.preventDefault();closeModal();});
 $("modalWrap").addEventListener("click",e=>{if(e.target===$("modalWrap"))closeModal();});
 function wItem(body,ic,label,fn,danger){
   const b=document.createElement("button");
@@ -1933,12 +1931,35 @@ $("tasksBtn").addEventListener("click",openTasks);
 $("frensBtn").addEventListener("click",openFrens);
 $("tasksBack").addEventListener("click",()=>{$("tasks").style.display="none";refreshGold();});
 $("frensBack").addEventListener("click",()=>{$("frens").style.display="none";refreshGold();});
+function frLink(){
+  return location.origin+location.pathname+"?ref="+(window.FB&&window.FB.uid?window.FB.uid:"");
+}
+$("frInvite").addEventListener("click",async()=>{
+  if(!window.FB||!window.FB.uid){toast("CONNECTING... TRY AGAIN");return;}
+  const link=frLink();
+  const data={
+    title:"BULL RUN",
+    text:"Run with me in BULL RUN! 🐂 Dodge the bears, stack gold, hit the casino. Come and start earning now: "+link,
+    url:link
+  };
+  try{ // oyun görselini pakete ekle (destekleyen platformlarda)
+    const blob=await fetch("./assets/logo_round.png").then(r=>r.blob());
+    const file=new File([blob],"bullrun.png",{type:"image/png"});
+    if(navigator.canShare&&navigator.canShare({files:[file]}))data.files=[file];
+  }catch(e){}
+  if(navigator.share){
+    navigator.share(data).catch(()=>{});
+  }else{
+    (navigator.clipboard?navigator.clipboard.writeText(data.text):Promise.reject())
+      .then(()=>toast("INVITE MESSAGE COPIED"))
+      .catch(()=>toast(link));
+  }
+});
 $("frCopy").addEventListener("click",()=>{
   if(!window.FB||!window.FB.uid){toast("CONNECTING... TRY AGAIN");return;}
-  const link=location.origin+location.pathname+"?ref="+window.FB.uid;
-  (navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject())
+  (navigator.clipboard?navigator.clipboard.writeText(frLink()):Promise.reject())
     .then(()=>toast("INVITE LINK COPIED"))
-    .catch(()=>toast(link));
+    .catch(()=>toast(frLink()));
 });
 // --- leaderboard ---
 function openLead(){
